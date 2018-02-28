@@ -1,8 +1,10 @@
 "use strict";
-const config = require('@config');
 const DB = require('@DB');
+const logs=require('@logs')(module);
+
+
 
 exports.init = async (app) => {
     await DB.connect();
-    console.log('+Tools: configured');
+    logs.info('configured');
 };
