@@ -19,7 +19,7 @@ function connect() {
             logs.error('DB disconnected')
         });
         database.on('error', error => {
-            logs.error('DB connection error:', err.message);
+            logs.error('DB connection error:', error.message);
             reject(error);
         });
     })

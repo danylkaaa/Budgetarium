@@ -7,7 +7,7 @@
 var app = require('../app');
 var debug = require('debug')('server:server');
 var http = require('http');
-const logs = require('../services/logs')(module);
+const logs = require('../app/logs')(module);
 /**
  * Get port from environment and store in Express.
  */

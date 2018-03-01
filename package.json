@@ -15,11 +15,11 @@
     "@server": "./src/server",
     "@config": "./src/server/config/index.js",
     "@routes": "./src/server/routes",
-    "@DBfolder": "./src/server/services/database",
-    "@DB": "./src/server/services/database/index",
-    "@services": "./src/server/services/index",
-    "@utils": "./src/server/services/utils/index.js",
-    "@logs": "./src/server/services/logs.js",
+    "@DBfolder": "./src/server/app/database",
+    "@DB": "./src/server/app/database/index",
+    "@services": "./src/server/app/index",
+    "@utils": "./src/server/app/utils/index.js",
+    "@logs": "./src/server/app/logs.js",
     "@API": "./src/server/routes/api/index.js"
   },
   "dependencies": {
