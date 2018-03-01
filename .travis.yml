@@ -4,7 +4,7 @@ node_js:
 sudo: false
 install:
 - npm install -g codecov
-- npm install -g nyc
+- npm install  nyc@next
 script:
 - npm run coverage
 - codecov
