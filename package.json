@@ -9,7 +9,7 @@
     "start": "NODE_ENV=production node ./src/server/bin/www",
     "dev": "NODE_ENV=development nodemon ./src/server/bin/www ",
     "test": "NODE_ENV=test mocha ",
-    "coverage": "NODE_ENV=test nyc --reporter=lcov --reporter=text-lcov  mocha > coverage.lcov"
+    "coverage": "NODE_ENV=test nyc --reporter=text-lcov  mocha > coverage.lcov"
   },
   "_moduleAliases": {
     "@server": "./src/server",
