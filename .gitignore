@@ -59,7 +59,9 @@ typings/
 #idea files
 .idea/
 idea/
-
+idea
 #dev scripts
 *.sh
+.nyc-output/
+
 
