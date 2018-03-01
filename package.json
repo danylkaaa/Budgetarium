@@ -20,7 +20,8 @@
     "@services": "./src/server/app/index",
     "@utils": "./src/server/app/utils/index.js",
     "@logs": "./src/server/app/logs.js",
-    "@API": "./src/server/routes/api/index.js"
+    "@API": "./src/server/routes/api/index.js",
+    "@validator":"./src/server/app/services/validator/index.js"
   },
   "dependencies": {
     "assert": "^1.4.1",
@@ -37,11 +38,16 @@
     "debug": "~2.6.9",
     "dotenv": "^5.0.1",
     "express": "~4.15.5",
+    "express-useragent": "^1.0.12",
     "mocha": "^5.0.1",
     "module-alias": "^2.0.6",
     "mongoose": "^5.0.7",
     "morgan": "~1.9.0",
     "nyc": "^11.4.1",
+    "passport": "^0.4.0",
+    "passport-facebook-token": "^3.3.0",
+    "passport-http": "^0.3.0",
+    "passport-http-bearer": "^1.0.1",
     "serve-favicon": "~2.4.5",
     "winston": "^2.4.0"
   },

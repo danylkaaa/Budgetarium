@@ -15,7 +15,8 @@ const logs = require('@logs')(module);
 const app = express();
 
 function init() {
-// run static file server
+    logs.info(require('@validator')('', "user.displayedName"));
+    // run static file server
     app.use(express.static(path.join(__dirname, 'public')));
     // app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.ico')));
     //don't show logs in test mode
@@ -26,16 +27,10 @@ function init() {
     app.use(bodyParser.urlencoded({extended: false}));
     app.use(busboyBodyParser());
     app.use(cookieParser());
-// enable cors
-    var corsOption = {
-        origin: true,
-        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-        credentials: true,
-        exposedHeaders: ['x-auth-token']
-    };
-    app.use(cors(corsOption));
+    app.use(cors());
     services.init(app);
     app.use(require('@routes/index'));
+    logs.info('+Up');
 }
 
 init();

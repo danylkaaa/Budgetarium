@@ -14,5 +14,6 @@ module.exports = {
             REFRESH: process.env.TOKEN_REFRESH_SECRET,
         }
     },
+    validationRules:require('./validationRules')
 }
 
