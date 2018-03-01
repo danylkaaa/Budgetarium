@@ -1,9 +1,7 @@
 module.exports = {
     isDev: false,
     ROOT_URL: `https://budgetarium.herokuapp.com/`,
-    DB_URL: process.env.DB_ADDRESS_PROD
-        .replace(`<dbuser>`, process.env.DB_USER_PROD)
-        .replace(`<dbpassword>`, process.env.DB_PSW_PROD),
+    DB_URL: `mongodb://${process.env.DB_USER_PROD}:${process.env.DB_PSW_PROD}@ds012188.mlab.com:12188/budgetarium_prod`,
     PORT: process.env.PORT || 3000,
     security: {
         SERVER_SALT: process.env.SERVER_SALT,
