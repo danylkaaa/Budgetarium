@@ -1,12 +1,10 @@
 language: node_js
-node_js:
-- node
 sudo: false
 install:
 - npm install -g codecov
+- npm install -g nyc
 script:
 - npm run coverage
-- npm i nyc
 - codecov
 cache:
   directories:
