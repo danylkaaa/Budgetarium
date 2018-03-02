@@ -5,6 +5,7 @@ sudo: false
 install:
 - npm install -g codecov
 - npm install -g nyc
+- npm install
 script:
 - npm run coverage
 - codecov
