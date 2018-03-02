@@ -1,7 +1,7 @@
 const Utils = require('@utils');
 const logs = require('@logs')(module);
 const validators = Utils.loadModulesFromDir(__dirname);
-
+const ValidationResult = require('./ValidationResult');
 
 /**
  * checks, is value is allowed for specified path
@@ -11,14 +11,12 @@ const validators = Utils.loadModulesFromDir(__dirname);
  */
 
 function validate(value, path) {
-    logs.debug(validators);
     let destination = path.split('.');
-    let result = true;
     if (validators[destination[0]]) {
-        result = Boolean(validators[destination[0]](value, destination));
+        return validators[destination[0]](value, destination);
+    } else {
+        new ValidationResult(true);
     }
-    logs.debug(`validate '${value}' in path '${path}': ${result}`);
-    return result;
 }
 
 module.exports = validate;

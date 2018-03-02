@@ -15,7 +15,6 @@ const logs = require('@logs')(module);
 const app = express();
 
 function init() {
-    logs.info(require('@validator')('', "user.displayedName"));
     // run static file server
     app.use(express.static(path.join(__dirname, 'public')));
     // app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.ico')));

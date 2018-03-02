@@ -1,6 +1,7 @@
 const config = require('@config');
 const mongoose = require('mongoose');
 const logs = require('@logs')(module);
+const UserDriver = require('./driver/user');
 
 /**
  * connects to MongoDB server
@@ -28,4 +29,5 @@ function connect() {
 
 module.exports = {
     connect,
+    UserDriver
 };

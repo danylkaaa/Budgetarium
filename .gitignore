@@ -64,3 +64,6 @@ idea
 *.sh
 .nyc-output/
 
+# coverage data
+*.lcov
+.nyc_output/

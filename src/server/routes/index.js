@@ -5,7 +5,7 @@ const logs = require('@logs')(module);
 const path=require('path');
 
 // API processing
-router.use('/api/', APIRouter);
+router.use('/api', APIRouter);
 
 // send root file
 router.use('*', (req, res, next) => {

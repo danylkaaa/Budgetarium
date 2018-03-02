@@ -1,34 +1,47 @@
 const logs = require('@logs')(module);
 const config = require('@config');
+const ValidationResult = require('./ValidationResult');
 
 
 /**
- * validates user's displayedName
+ * validates user's name
  * @param value value for validation
- * @return {boolean} true, if value is valid
+ * @return {ValidationResult} object, that describes validation
  */
-function displayedName(value) {
-    const displayedNameRegexp = new RegExp(config.validationRules.user.displayedName);
-    return displayedNameRegexp.test(value);
+function name(value) {
+    const nameRegex = new RegExp(config.validationRules.user.displayedName);
+    return new ValidationResult(nameRegex.test(value), "Name should contain only letters and start with uppercase letter");
+}
+
+/**
+ * validates user's email
+ * @param value value for validation
+ * @return {ValidationResult} object, that describes validation
+ */
+function email(value) {
+    const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return new ValidationResult(emailRegex.test(value), "Email is not a valid string");
+
 }
 
 const validators = {
-    displayedName
+    name,
+    email
 }
 
 /**
  * checks, is value is allowed for specified path
  * @param value value to check
  * @param destination path of validation
- * @return {boolean} true, if value is valid
+ * @return {ValidationResult} object, that describes validation
  */
 function validate(value, destination) {
     let endpoint = destination[destination.length - 1];
-    let result = true;
     if (validators[endpoint]) {
-        result = validators[endpoint](value);
+        return validators[endpoint](value);
+    } else {
+        return new ValidationResult(true);
     }
-    return result;
 }
 
 

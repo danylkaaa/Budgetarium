@@ -2,50 +2,73 @@
 const Mongoose = require('mongoose');
 const Utils = require('@utils');
 const config = require('@config');
+const validator = require('@validator');
 
+// defines new Schema
 let User = new Mongoose.Schema({
-    displayedName:{
-      type:String,
-      required:true,
-    },
     name: {
         type: String,
         required: true,
-    },
-    email:
-        {
-            type: String,
-            validate: {
-                validator: (value) => validator.user.email(value).valid,
-                message: "{VALUE} is not a valid email"
-            },
+        validate: {
+            isAsync: true,
+            validator: function (v, cb) {
+                let result = validator(v, 'user.name');
+                cb(result.valid, result.message);
+            }
         },
+        message: 'Validation failed'
+    },
+    password: {
+        type: String,
+        require: true
+    },
+    salt: {
+        type: String
+    },
+    email: {
+        type: String,
+        required: true,
+        validate: {
+            isAsync: true,
+            validator: function (v, cb) {
+                let result = validator(v, 'user.email');
+                cb(result.valid, result.message);
+            }
+        },
+        message: 'Validation failed'
+    },
     created: {
         type: Date,
-        default: Date.now
+        default: Date.now()
     },
-    facebook: {
-        access: String,
-        refresh: String,
-        id: String,
-        picture: String
-    },
+    // facebook: {
+    //     access: String,
+    //     refresh: String,
+    //     id: String,
+    //     picture: String,
+    //     email: String,
+    //     name: String
+    // },
     role: {
         type: String,
         enum: ['user', 'admin'],
         default: 'user'
-    }
-
+    },
+    secrets: {
+        access: {
+            type: String
+        },
+        refresh: {
+            type: String
+        }
+    },
 });
-/**
- * add plugin do schema
- */
+
+// add plugin do Schema
 User.plugin(require('mongoose-paginate'));
 
-/**
- * make new index in database by username
- */
-// User.index({email: 1}, {unique: true});
+// make new index in database by username
+User.index({email: 1}, {unique: true});
 
 /**
  * Before save a user document, Make sure:
@@ -53,22 +76,22 @@ User.plugin(require('mongoose-paginate'));
  * 2. Regenerate secrets
  */
 User.pre('save', async function (next) {
-    // if (!this.isUsedBasicAuth && this.isNew) {
-    //     this.password = await Utils.crypto.random(10);
-    //     this.email = this.email || Mongoose.Types.ObjectId();
-    // }
-    // if (this.isModified('password') || this.isNew) {
-    //     this.password = await Utils.crypto.hash(this.password, config.security.SERVER_SALT);
-    // }
+    if (this.isModified('password') || this.isNew) {
+        this.salt = await Utils.crypto.random(32);
+        this.password = await Utils.crypto.hash(this.password, this.salt);
+        // fill tokens by random bytes
+        this.generateSecret('access');
+        this.generateSecret('refresh');
+    }
     next();
 });
-
-User.pre('remove', async function (doc, next) {
-    await PositionDB.remove.byUser(doc.id);
-    await CompanyDB.remove.byAdmin(doc.id);
-    await InviteDB.remove.byCompany(doc.id);
-    next();
-});
+/**
+ * generate new token's secret for user
+ * @param name name of token
+ */
+User.methods.generateSecret = function (name) {
+    this.secrets[name] = Utils.crypto.random(config.security.TOKEN_SECRET_LENGTH);
+}
 
 /**
  * compare, is this user, has such password
@@ -76,78 +99,80 @@ User.pre('remove', async function (doc, next) {
  * @returns {boolean} is the password used by the user
  */
 User.methods.comparePasswords = function (password) {
-    return this.isUsedBasicAuth && Utils.crypto.compare(password, this.password, config.security.SERVER_SALT);
-};
+    return Utils.crypto.compare(password, this.password, this.salt);
+}
 
+/**
+ * generates new pair of tokens and returns them
+ * @return {{access: *, refresh: *}} generated tokens
+ */
+User.methods.getNewTokens = function () {
+    return {
+        access: this.accessToken,
+        refresh: this.refreshToken
+    }
+}
 
+//create new virtual property
+User.virtual('isAdmin').get(function () {
+    return this.role == 'admin';
+});
 /**
  * define virtual property, accessToken, generate token
  */
-User.virtual('accessToken')
-    .get(function () {
-        return Utils.tokens.generate('access', this.payloadAccess)
-    });
+User.virtual('accessToken').get(function () {
+    return Utils.tokens.generate('access', this.payloadAccess);
+});
 
 /**
  * define virtual property, refreshToken, generate token
  */
-User.virtual('refreshToken')
-    .get(function () {
-        return Utils.tokens.generate('refresh', this.payloadRefresh)
-    });
-/**
- * define virtual property, payloadRefresh, contains id of user and his secret
- */
-User.virtual('payloadRefresh')
-    .get(function () {
-        return {
-            id: this.id,
-            email: this.email
-        }
-    });
-/**
- * define virtual property, payloadAccess, contains id of user and his secret
- */
-User.virtual('payloadAccess')
-    .get(function () {
-        return {
-            id: this.id,
-            email: this.email
-        }
-    });
-User.virtual('isAdmin')
-    .get(function () {
-        return this.role == 'admin';
-    });
-/**
- * define virtual property, credentials, eq. {tokens.access.value, tokens.refresh.value}
- */
-User.virtual('credentials')
-    .get(function () {
-        return {
-            access: this.accessToken,
-            refresh: this.refreshToken
-        }
-    });
+User.virtual('refreshToken').get(function () {
+    return Utils.tokens.generate('refresh', this.payloadRefresh);
+});
 
-
-User.methods.info = function () {
-    let info = {
+/**
+ * define virtual property, payload for access token generation
+ */
+User.virtual('payloadAccess').get(function () {
+    return {
         id: this.id,
-        role: this.role,
-        name: this.name,
-        created: this.created,
-        email: this.email,
-        picture: this.picture,
-        facebook: {
-            id: this.facebook.id,
-            link: this.facebook.link
-        }
-    };
-    return info;
-};
+        secret: this.secrets.access
+    }
+});
 
-// define an user model
-let userModel = Mongoose.model('User', User);
-module.exports = userModel;
-module.exports=UserModel;
+/**
+ * define virtual property, payload for refresg token generation
+ */
+User.virtual('payloadRefresh').get(function () {
+    return {
+        id: this.id,
+        secret: this.secrets.refresh
+    }
+});
+/**
+ * check, is token valid
+ * @param name name of token, eq. 'access' or 'refresh'
+ * @param decode string with decoded token
+ * @returns {boolean} is token is valid
+ */
+User.methods.verifyToken = function (name, decode) {
+    return decode.secret == this.secrets[name];
+}
+
+User.virtual('displayedName').get(function () {
+    return this.name;
+})
+
+User.virtual('info').get(function () {
+    return {
+        email:this.email,
+        id: this._id,
+        name: this.displayedName,
+        role: this.role,
+        created: this.created
+    }
+})
+// create an user model
+let UserModel = Mongoose.model('User', User);
+module.exports = UserModel;

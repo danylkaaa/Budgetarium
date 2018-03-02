@@ -1,5 +1,5 @@
 {
-    "user":{
-      "displayedName":"[A-Z][a-z]+"
+    "user": {
+      "name": "^([A-Za-z]{2,20}?\\s?)+$"
     }
 }
