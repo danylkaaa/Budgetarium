@@ -67,3 +67,4 @@ idea
 # coverage data
 *.lcov
 .nyc_output/
+coverage/
