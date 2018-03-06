@@ -1,12 +1,12 @@
-const jwt = require('jsonwebtoken');
-const config = require('@config');
+const jwt = require("jsonwebtoken");
+const config = require("@config");
 module.exports = {
-    algorithm: 'HS256',
+    algorithm: "HS256",
     secret(name) {
         switch (name) {
-            case 'access':
+            case "access":
                 return config.security.secrets.ACCESS;
-            case 'refresh':
+            case "refresh":
                 return config.security.secrets.REFRESH;
             default:
                 throw new Error("Invalid token name");
@@ -14,7 +14,7 @@ module.exports = {
     },
     /**
      * generate new token, with specified name and data
-     * @param name one of 'access' or 'refresh'
+     * @param name one of "access" or "refresh"
      * @param data data to store in token
      * @returns {String} string created token
      */
@@ -30,7 +30,7 @@ module.exports = {
     },
     /**
      * decode token
-     * @param name one of 'access', 'refresh'
+     * @param name one of "access", "refresh"
      * @param token string with token
      * @returns {{}} decoded token
      */
@@ -41,6 +41,6 @@ module.exports = {
             {
                 algorithms: [this.algorithm]
             }
-        )
+        );
     }
-}
+};

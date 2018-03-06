@@ -1,14 +1,14 @@
-const UserModel = require('../models/User');
-const logs = require('@logs');
-const DB = require('../abstractDriver');
+const UserModel = require("../models/User");
+// const logs = require("@logs");
+const DB = require("../abstractDriver");
 
 module.exports.create = {
     basic: (data) => DB.create(UserModel, data),
-}
+};
 module.exports.remove = {
     byId: (id) => DB.remove.byId(UserModel, id),
     byEmail: (email) => DB.remove.byQuery(UserModel, {email: email})
-}
+};
 
 module.exports.get = {
     async byToken(name, token) {
@@ -30,4 +30,4 @@ module.exports.get = {
     async byEmail(email) {
         return DB.get.oneByQuery(UserModel, {email: email});
     }
-}
+};

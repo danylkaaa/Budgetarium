@@ -1,4 +1,4 @@
-const crypto = require('crypto');
+const crypto = require("crypto");
 module.exports = {
     /**
      * get hash of string, with this salt
@@ -8,9 +8,9 @@ module.exports = {
      */
     hash: (plainData, salt) => {
         return crypto
-            .createHmac('sha512', salt)
+            .createHmac("sha512", salt)
             .update(plainData)
-            .digest('hex');
+            .digest("hex");
     },
     /**
      * Compare two strings, plain and hashed
@@ -30,6 +30,6 @@ module.exports = {
     random: (length) => {
         return crypto
             .randomBytes(length + 1)
-            .toString('base64').substr(0, length);
+            .toString("base64").substr(0, length);
     }
-}
+};
