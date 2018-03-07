@@ -1,5 +1,6 @@
 let chai = require("chai");
 let chaiHttp = require("chai-http");
+require("module-alias/register");
 let server = require("../../src/server/bin/www");
 let UserDB = require("../../src/server/app/database/models/User");
 chai.should();
