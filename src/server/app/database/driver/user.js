@@ -31,3 +31,4 @@ module.exports.get = {
         return DB.get.oneByQuery(UserModel, {email: email});
     }
 };
+module.exports.model = UserModel;

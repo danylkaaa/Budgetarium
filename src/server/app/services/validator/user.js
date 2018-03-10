@@ -8,7 +8,7 @@ const ValidationResult = require("./ValidationResult");
  * @return {ValidationResult} object, that describes validation
  */
 function name(value) {
-    const nameRegex = new RegExp(config.validationRules.user.displayedName);
+    const nameRegex = /^([A-Z][A-Za-z]{1,20}?\s?)+$/;
     return new ValidationResult(nameRegex.test(value), "Name should contain only letters and start with uppercase letter");
 }
 
@@ -26,7 +26,7 @@ function email(value) {
 const validators = {
     name,
     email
-}
+};
 
 /**
  * checks, is value is allowed for specified path

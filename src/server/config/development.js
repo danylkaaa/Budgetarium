@@ -13,7 +13,6 @@ module.exports = {
             ACCESS: process.env.TOKEN_ACCESS_SECRET,
             REFRESH: process.env.TOKEN_REFRESH_SECRET,
         }
-    },
-    validationRules: require("./validationRules")
+    }
 };
 

@@ -1,10 +1,10 @@
-var router = require('express').Router();
-const UserDB = require('@DB').UserDriver;
-const logs = require('@logs')(module);
-const Utils = require('@utils');
-const config = require('@config');
+var router = require("express").Router();
+const UserDB = require("@DB").UserDriver;
+const logs = require("@logs")(module);
+// const Utils = require("@utils");
+// const config = require("@config");
 
-router.post('/register',
+router.post("/signup",
     (req, res, next) => {
         req.args = {name, email, password} = req.body;
         next();
@@ -12,7 +12,7 @@ router.post('/register',
     async (req, res, next) => {
         try {
             let user = await UserDB.create.basic(req.args);
-            logs.debug('User registered');
+            logs.debug("User registered");
             return res.json({
                 user: user.info,
                 tokens: user.getNewTokens()
