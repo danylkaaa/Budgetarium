@@ -1,9 +1,12 @@
-// let mongoose = require("mongoose");
 require("module-alias/register");
-//Подключаем dev-dependencies
-let chai = require("chai");
-let chaiHttp = require("chai-http");
-// let server = require("../src/server/bin/www");
-chai.should();
-chai.use(chaiHttp);
 
+//config chai
+const chai = require("chai");
+const chaiHttp = require("chai-http");
+const chaiPromised = require("chai-as-promised");
+chai.use(chaiHttp);
+chai.use(chaiPromised);
+//run server
+require("@server/bin/www");
+//Include tests
+require("./routes/tests-order");

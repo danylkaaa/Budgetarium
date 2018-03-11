@@ -7,6 +7,7 @@ const validator = require("@validator");
 // defines new Schema
 let User = new Mongoose.Schema({
     name: {
+        trim: true,
         type: String,
         required: true,
         validate: {
@@ -18,14 +19,8 @@ let User = new Mongoose.Schema({
         },
         message: "Validation failed"
     },
-    hashedPassword: {
-        type: String,
-        require: true
-    },
-    salt: {
-        type: String
-    },
     email: {
+        trim: true,
         type: String,
         required: true,
         validate: {
@@ -40,6 +35,10 @@ let User = new Mongoose.Schema({
     created: {
         type: Date,
         default: Date.now()
+    },
+    password: {
+        type: String,
+        required: true
     },
     // facebook: {
     //     access: String,
@@ -70,23 +69,39 @@ User.plugin(require("mongoose-paginate"));
 // make new index in database by username
 User.index({email: 1}, {unique: true});
 
+
+/**
+ * check is path 'password' is required
+ * @param user ref to user
+ * @returns {*|boolean} true, if path is required
+ */
+function passwordIsRequired(user) {
+    return !user._password;
+}
+
 /**
  * Before save a user document, Make sure:
  * 1. Hash user"s password
  * 2. Regenerate secrets
  */
 User.pre("save", async function (next) {
-    if (this.isModified("password") || this.isNew) {
-
+    if (this.isNew || this.isModified("password")) {
+        let result = validator(this.password, "user.password");
+        if (!result.valid) {
+            throw this.invalidate("password", result.message, this.password);
+        }
+        this.password = await Utils.crypto.hash(this.password, 10);
+        await Promise.all([this.generateSecret("access"), this.generateSecret("refresh")]);
     }
     next();
 });
+
 /**
  * generate new token"s secret for user
  * @param name name of token
  */
-User.methods.generateSecret = function (name) {
-    this.secrets[name] = Utils.crypto.random(config.security.TOKEN_SECRET_LENGTH);
+User.methods.generateSecret = async function (name) {
+    this.secrets[name] = await Utils.crypto.random(config.security.TOKEN_SECRET_LENGTH);
 };
 
 /**
@@ -137,16 +152,6 @@ User.virtual("payloadAccess").get(function () {
     };
 });
 
-/**
- * define virtual property for password setter
- */
-User.virtual("password").set(async function (password) {
-    this.salt = await Utils.crypto.random(32);
-    this.hashedPassword = await Utils.crypto.hash(password, this.salt);
-    // fill tokens by random bytes
-    this.generateSecret("access");
-    this.generateSecret("refresh");
-});
 /**
  * define virtual property, payload for refresh token generation
  */
