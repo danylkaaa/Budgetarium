@@ -1,4 +1,4 @@
-var bcrypt = require('bcrypt');
+var bcrypt = require("bcrypt");
 module.exports = {
     /**
      * get hash of string, with this salt

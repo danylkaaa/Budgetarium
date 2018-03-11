@@ -19,9 +19,6 @@ let User = new Mongoose.Schema({
         },
         message: "Validation failed"
     },
-    salt: {
-        type: String
-    },
     email: {
         trim: true,
         type: String,
@@ -41,19 +38,7 @@ let User = new Mongoose.Schema({
     },
     password: {
         type: String,
-        require: true,
-        validate: {
-            isAsync: true,
-            validator: function (v, cb) {
-                if (!this.isModified("password")) {
-                    cb(true);
-                } else {
-                    let result = validator(v, "user.password");
-                    cb(result.valid, result.message);
-                }
-            }
-        },
-        message: "Validation failed"
+        required: true
     },
     // facebook: {
     //     access: String,
@@ -84,21 +69,33 @@ User.plugin(require("mongoose-paginate"));
 // make new index in database by username
 User.index({email: 1}, {unique: true});
 
+
+/**
+ * check is path 'password' is required
+ * @param user ref to user
+ * @returns {*|boolean} true, if path is required
+ */
+function passwordIsRequired(user) {
+    return !user._password;
+}
+
 /**
  * Before save a user document, Make sure:
  * 1. Hash user"s password
  * 2. Regenerate secrets
  */
 User.pre("save", async function (next) {
-    if (this.isModified("password") || this.isNew) {
-        this.salt = await Utils.crypto.random(32);
-        this.password = await Utils.crypto.hash(this.password, this.salt);
-        // fill tokens by random bytes
-        this.generateSecret("access");
-        this.generateSecret("refresh");
+    if (this.isNew || this.isModified("password")) {
+        let result = validator(this.password, "user.password");
+        if (!result.valid) {
+            throw this.invalidate("password", result.message, this.password);
+        }
+        this.password = await Utils.crypto.hash(this.password, 10);
+        await Promise.all([this.generateSecret("access"), this.generateSecret("refresh")]);
     }
     next();
 });
+
 /**
  * generate new token"s secret for user
  * @param name name of token

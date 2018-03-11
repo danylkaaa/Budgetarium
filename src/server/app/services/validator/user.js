@@ -1,9 +1,9 @@
-const config = require("@config");
+// const config = require("@config");
 const ValidationResult = require("./ValidationResult");
 
 
 /**
- * validates user"s name
+ * validates user's name
  * @param value value for validation
  * @return {ValidationResult} object, that describes validation
  */
@@ -13,7 +13,18 @@ function name(value) {
 }
 
 /**
- * validates user"s email
+ * validates user's password
+ * @param value value for validation
+ * @return {ValidationResult} object, that describes validation
+ */
+function password(value) {
+    const nameRegex = /^(?=.*\d.*)(?=.*[a-z].*)(?=.*[A-Z].*)(?=.*[!#\$%&\?]*.*).{8,20}$/;
+    return new ValidationResult(nameRegex.test(value), "Password must be minimum 8, and maximum 20 characters at least: 1 Uppercase Alphabet, 1 Lowercase Alphabet, 1 Number");
+}
+
+
+/**
+ * validates user's email
  * @param value value for validation
  * @return {ValidationResult} object, that describes validation
  */
@@ -25,7 +36,8 @@ function email(value) {
 
 const validators = {
     name,
-    email
+    email,
+    password
 };
 
 /**
