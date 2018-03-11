@@ -10,8 +10,8 @@
     "start": "NODE_ENV=production node ./src/server/bin/www",
     "dev": "NODE_ENV=development nodemon ./src/server/bin/www ",
     "test": "NODE_ENV=test mocha test/index.js",
-    "test:coverage": "NODE_ENV=test PORT=4000 nyc --all mocha test/index",
-    "coverage": "NODE_ENV=test PORT=4000 nyc --reporter=text-lcov --all mocha test/index> coverage.lcov"
+    "test:coverage": "NODE_ENV=test PORT=4000 nyc  mocha test/index",
+    "coverage": "NODE_ENV=test PORT=4000 nyc --reporter=text-lcov mocha test/index> coverage.lcov"
   },
   "_moduleAliases": {
     "@server": "./src/server",
