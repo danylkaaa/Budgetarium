@@ -1,6 +1,9 @@
 # Budgetarium
-[![Build Status][ci-travis]](https://travis-ci.org/ZulusK/Budgetarium)
-[![codecov][ci-codecov]](https://codecov.io/gh/ZulusK/Budgetarium)
+|   Build  |  Dev    |
+| ------: | :------ |
+| [![Build Status][travis-master]](https://travis-ci.org/ZulusK/Budgetarium) | [![Build Status][travis-dev]](https://travis-ci.org/ZulusK/Budgetarium) | 
+| [![codecov][codecov-master]](https://codecov.io/gh/ZulusK/Budgetarium) | [![codecov][codecov-dev]](https://codecov.io/gh/ZulusK/Budgetarium) | 
+
 #### [Demo](https://budgetarium.herokuapp.com/)
 
 Each of us makes a lot of money transactions every day. Someone buys milk in the store, someone pays for the Internet. The goals are different, but the essence is one - we spend money. Sometimes, at the end of the month, it becomes unclear where all that cache happened, which so pleased us 30 days ago. The memory of a person is not ideal, therefore it is impossible to remember absolutely all operations with your wallet.
@@ -73,5 +76,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
 
 
-[ci-codecov]: https://codecov.io/gh/ZulusK/Budgetarium/branch/master/graph/badge.svg "Code coverage"
-[ci-travis]: https://travis-ci.org/ZulusK/Budgetarium.svg?branch=master "Travis CI build status"
+[codecov-dev]: https://codecov.io/gh/ZulusK/Budgetarium/branch/dev/graph/badge.svg "Code coverage dev"
+[codecov-master]: https://codecov.io/gh/ZulusK/Budgetarium/branch/master/graph/badge.svg "Code coverage master"
+[travis-dev]: https://travis-ci.org/ZulusK/Budgetarium.svg?branch=dev "Travis CI build status"
+[travis-master]: https://travis-ci.org/ZulusK/Budgetarium.svg?branch=master "Travis CI build status"

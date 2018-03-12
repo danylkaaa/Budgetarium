@@ -1,0 +1,3 @@
+describe("/auth", () => {
+    require("./signup");
+});

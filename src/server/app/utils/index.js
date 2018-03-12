@@ -1,7 +1,9 @@
 const logs = require("@logs")(module);
 const path = require("path");
 const crypto = require("./crypto");
-const tokens=require("./tokens");
+const tokens = require("./tokens");
+const errorHandler = require("./errorHandler");
+
 /**
  * load all modules from specific directory
  * @param dir full name of dir
@@ -22,5 +24,6 @@ function loadModulesFromDir(dir) {
 module.exports = {
     loadModulesFromDir,
     crypto,
-    tokens
+    tokens,
+    errorHandler
 };
