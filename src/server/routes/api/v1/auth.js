@@ -47,4 +47,13 @@ router.post("/logout",
     }
 );
 
+router.use("/token",
+    passport.authenticate(["refresh-token"],{session:false}),
+    async (req, res) => {
+        res.json({
+            token:await req.user.nextAccessToken
+        });
+    }
+);
+
 module.exports = router;

@@ -119,8 +119,8 @@ User.methods.comparePasswords = function (password) {
  */
 User.methods.getNewTokens = function () {
     return {
-        access: this.accessToken,
-        refresh: this.refreshToken
+        access: this.nextAccessToken,
+        refresh: this.nextRefreshToken
     };
 };
 
@@ -129,16 +129,16 @@ User.virtual("isAdmin").get(function () {
     return this.role == "admin";
 });
 /**
- * define virtual property, accessToken, generate token
+ * define virtual property, nextAccessToken, generate token
  */
-User.virtual("accessToken").get(function () {
+User.virtual("nextAccessToken").get(function () {
     return Utils.tokens.generate("access", this.payloadAccess);
 });
 
 /**
- * define virtual property, refreshToken, generate token
+ * define virtual property, nextRefreshToken, generate token
  */
-User.virtual("refreshToken").get(function () {
+User.virtual("nextRefreshToken").get(function () {
     return Utils.tokens.generate("refresh", this.payloadRefresh);
 });
 
