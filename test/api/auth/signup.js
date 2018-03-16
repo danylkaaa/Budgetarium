@@ -1,10 +1,10 @@
-const chai = require("chai");
-const expect = chai.expect;
-const server = require("@server/bin/www");
-const faker = require("faker");
-const UserDB = require("@DB").UserDriver.model;
-const URL = "/api/v1/auth/signup";
-const ObjectId = require("mongoose").Types.ObjectId;
+const chai = require("chai"),
+    expect = chai.expect,
+    server = require("@server/bin/www"),
+    faker = require("faker"),
+    UserDB = require("@DB").UserDriver.model,
+    URL = "/api/v1/auth/signup",
+    ObjectId = require("mongoose").Types.ObjectId;
 
 function generateUser() {
     return {
@@ -135,6 +135,21 @@ describe("/signup", () => {
         });
     });
     describe("reject if send invalid email", () => {
+        it("user already exits", (done) => {
+            let user = generateUser();
+            chai.request(server)
+                .post(URL)
+                .send(user)
+                .end(() => {
+                    chai.request(server)
+                        .post(URL)
+                        .send(user)
+                        .end((err, res) => {
+                            expect(res).have.status(400);
+                            done();
+                        });
+                });
+        });
         it("excluded from request", (done) => {
             let user = generateUser();
             delete user.email;
