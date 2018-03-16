@@ -19,7 +19,7 @@ module.exports = function init() {
                 }
             } catch (err) {
                 logs.error(err);
-                return done(err);
+                return done(null,false);
             }
         }
     ));

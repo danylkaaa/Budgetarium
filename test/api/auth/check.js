@@ -5,7 +5,8 @@ const chai = require("chai"),
     UserDB = require("@DB").UserDriver.model,
     URLSignin = "/api/v1/auth/signin",
     URLSignup = "/api/v1/auth/signup",
-    URLCheck= "/api/v1/auth/check";
+    URLCheck = "/api/v1/auth/check",
+    URLLogout = "/api/v1/auth/logout";
 
 function generateUser() {
     return {
@@ -15,24 +16,24 @@ function generateUser() {
     };
 }
 
-describe("/check", () => {
-    let USER = generateUser();
-    let tokens;
-    before((done) => {
-        chai.request(server)
-            .post(URLSignup)
-            .send(USER)
-            .end((err, res) => {
-                tokens = res.body.tokens;
-                done();
-            });
-    });
-    describe("refresh", () => {
+function runBearerTest(name) {
+    describe(`/${name}`, () => {
+        let USER = generateUser();
+        let token;
+        before((done) => {
+            chai.request(server)
+                .post(URLSignup)
+                .send(USER)
+                .end((err, res) => {
+                    token = res.body.tokens[name];
+                    done();
+                });
+        });
         describe("valid args", () => {
             it("should return true, if token is correct and actual", (done) => {
                 chai.request(server)
                     .post(URLCheck)
-                    .set("authorization", `Bearer ${tokens.refresh}`)
+                    .set("authorization", `Bearer ${token}`)
                     .end((err, res) => {
                         expect(res).have.status(200);
                         done();
@@ -45,7 +46,7 @@ describe("/check", () => {
                     .end(() => {
                         chai.request(server)
                             .post(URLCheck)
-                            .set("authorization", `Bearer ${tokens.refresh}`)
+                            .set("authorization", `Bearer ${token}`)
                             .end((err, res) => {
                                 expect(res).have.status(200);
                                 done();
@@ -53,30 +54,37 @@ describe("/check", () => {
                     });
             });
         });
-    });
-
-    describe("invalid args", () => {
-        it("reject if user doesn't exist", (done) => {
-            const newUser = generateUser();
-            chai.request(server)
-                .post(URLSignin)
-                .auth(newUser.email, newUser.password)
-                .end((err, res) => {
-                    expect(res).have.status(401);
-                    done();
-                });
+        describe("invalid args", () => {
+            it("should reject, if token invalid", (done) => {
+                chai.request(server)
+                    .post(URLCheck)
+                    .set("authorization", "Bearer 123")
+                    .end((err, res) => {
+                        expect(res).have.status(401);
+                        done();
+                    });
+            });
+            it("should reject, if user had set secret", (done) => {
+                chai.request(server)
+                    .post(URLLogout)
+                    .auth(USER.email, USER.password)
+                    .end(() => {
+                        chai.request(server)
+                            .post(URLCheck)
+                            .set("authorization", `Bearer ${token}`)
+                            .end((err,res) => {
+                                expect(res).have.status(401);
+                                done();
+                            });
+                    });
+            });
         });
-        it("reject if password is invalid", (done) => {
-            chai.request(server)
-                .post(URLSignin)
-                .auth(USER.email, USER.password + 123)
-                .end((err, res) => {
-                    expect(res).have.status(401);
-                    done();
-                });
+        after((done) => {
+            UserDB.remove({}, err => done(err));
         });
     });
-    after((done) => {
-        UserDB.remove({}, err => done(err));
-    });
+}
+describe("/check", () => {
+    runBearerTest('access');
+    runBearerTest('refresh');
 });

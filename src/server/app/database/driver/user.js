@@ -13,7 +13,7 @@ module.exports.remove = {
 module.exports.get = {
     async byToken(name, token) {
         const user = await DB.get.byId(UserModel, token.id);
-        if (user && user.verifyToken(name, token)) return user;
+        if (user && await user.verifyToken(name, token)) return user;
         else return null;
     },
     async byCredentials(email, password) {

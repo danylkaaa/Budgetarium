@@ -33,7 +33,7 @@ router.post("/signin",
     });
 
 router.post("/check",
-    passport.authenticate(["access-token", "refresh-token", "basic"],{session:false}),
+    passport.authenticate(["access-token","refresh-token"],{session:false}),
     (req, res) => {
         return res.json({success: true});
     });
