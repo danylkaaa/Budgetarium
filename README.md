@@ -1,5 +1,5 @@
 # Budgetarium
-|   Build  |  Dev    |
+| Master  |  Dev    |
 | ------: | :------ |
 | [![Build Status][travis-master]](https://travis-ci.org/ZulusK/Budgetarium) | [![Build Status][travis-dev]](https://travis-ci.org/ZulusK/Budgetarium) | 
 | [![codecov][codecov-master]](https://codecov.io/gh/ZulusK/Budgetarium) | [![codecov][codecov-dev]](https://codecov.io/gh/ZulusK/Budgetarium) | 

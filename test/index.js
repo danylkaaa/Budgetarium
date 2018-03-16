@@ -8,5 +8,6 @@ chai.use(chaiHttp);
 chai.use(chaiPromised);
 //run server
 require("@server/bin/www");
+
 //Include tests
-require("./routes/tests-order");
+require("./api/tests-order");

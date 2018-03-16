@@ -26,7 +26,7 @@ module.exports = {
                 algorithm: this.algorithm,
                 expiresIn: config.security.tokenLife[name.toUpperCase()]
             }
-        )
+        );
     },
     /**
      * decode token

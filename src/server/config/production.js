@@ -1,4 +1,5 @@
 module.exports = {
+    ...require("./basic"),
     isDev: false,
     ROOT_URL: "https://budgetarium.herokuapp.com/",
     DB_URL: `mongodb://${process.env.DB_USER_PROD}:${process.env.DB_PSW_PROD}@ds012188.mlab.com:12188/budgetarium_prod`,
