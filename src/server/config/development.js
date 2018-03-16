@@ -1,4 +1,5 @@
 module.exports = {
+    ...require("./basic"),
     isDev: true,
     ROOT_URL: `localhost:${this.PORT}`,
     DB_URL: `mongodb://${process.env.DB_USER_DEV}:${process.env.DB_PSW_DEV}@ds012168.mlab.com:12168/budgetarium_dev`,
