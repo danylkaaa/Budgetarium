@@ -17,36 +17,36 @@ You need have installed Node.js environment and npm manager. [Here is link to tu
 
 ## Getting Started
 
-Make sure you have npm installed. Then install dependencies with command
-```bash
-npm install
-```
-Create `.env` file with environment variables using this [template](template.env)    
+1. Make sure you have npm installed. Then install dependencies with command
+    ```bash
+    npm install
+    ```
+2. Create `.env` file with environment variables using this [template](template.env)    
 
-### Installing
-You can run server in dev or production mode.
-**Dev mode** allows you watch all logs in terminal and provides more information about service lifecycle. To run server in development mode, just use next command
-```bash
-npm run dev
-```
-**Production mode** allows you watch, how services will works in production and provides minimum information about service lifecycle. To run server in production mode, just use next command
-```bash
-npm start
-```
+3. **Dev mode** allows you watch all logs in terminal and provides more information about service lifecycle. To run 
+server in development mode, just use next command
+    ```bash
+    npm run dev
+    ```
+4.  **Production mode** allows you watch, how services will works in production and provides minimum information about 
+service lifecycle. To run server in production mode, just use next command
+    ```bash
+    npm start
+    ```
 ## Running the tests
-Note, all tests require created .env file
+**Note**, all tests require created .env file
 
-### Unit tests
+####Unit test
 Run unit tests with command
 ```bash
 npm run test
 ```    
-### Lint code
+####Lint code
 Lint code of server using rules, defined in [.eslintrc.js](.eslintrc.js) file
 ```bash
 npm run lint
 ```    
-### Code coverage
+#### Code coverage
 If you want to look code coverage data, just use next command
 ```bash
 npm run test:coverage
@@ -54,13 +54,15 @@ npm run test:coverage
 
 ## Deployment
 
-Add additional notes about how to deploy this on a live system
+()additional notes about how to deploy this on a live system)
 
 ## Built With
 
 * [Node.js](https://nodejs.org/)
 * [Express](http://expressjs.com)
 * [MongoDB](https://www.mongodb.com/)
+* [Chai](http://chaijs.com)
+* [Mocha](https://mochajs.org)
 
 
 ## Versioning
