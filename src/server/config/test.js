@@ -2,7 +2,7 @@ module.exports = {
     ...require("./basic"),
     isDev: true,
     ROOT_URL: "https://budgetarium.herokuapp.com/",
-    DB_URL:process.env.DB_ADDRESS_TEST.replace("<dbuser>",process.env.DB_USER_TEST).replace("<dbpassword>",process.env.DB_PSW_TEST),
+    DB_URL:`DB_ADDRESS_TEST=mongodb://${process.env.DB_USER_TEST}:${process.env.DB_PSW_TEST}@ds012168.mlab.com:12168/budgetarium_test`,
     PORT: process.env.PORT || 3000,
     security: {
         TOKEN_SECRET_LENGTH: 10,
