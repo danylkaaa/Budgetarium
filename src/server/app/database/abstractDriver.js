@@ -39,7 +39,7 @@ module.exports.get = {
             return model.paginate(query, pagination);
         }
     }
-}
+};
 
 /**
  * create new document
@@ -57,7 +57,7 @@ module.exports.create = (model, data) => {
             else resolve(id);
         });
     });
-}
+};
 
 module.exports.remove = {
     /**
@@ -78,7 +78,7 @@ module.exports.remove = {
     byQuery(model, query) {
         return model.remove(query).exec();
     }
-}
+};
 module.exports.update = {
     /**
      * find doc by id and update it
@@ -90,4 +90,4 @@ module.exports.update = {
     byId(model, id, data) {
         return model.findByIdAndUpdate(id, data).exec();
     }
-}
+};

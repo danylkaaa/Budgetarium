@@ -8,6 +8,7 @@ const UserDriver = require("./driver/user");
  * @returns {Promise<any>} error, if smth is going wrong
  */
 function connect() {
+    logs.debug(`try to connect to ${config.DB_URL}`);
     mongoose.connect(config.DB_URL);
     const database = mongoose.connection;
     return new Promise((resolve, reject) => {
