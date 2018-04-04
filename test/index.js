@@ -7,11 +7,7 @@ const chaiPromised = require("chai-as-promised");
 chai.use(chaiHttp);
 chai.use(chaiPromised);
 
-try {
-    //run server
-    require("@server/bin/www");
-    //Include tests
-    require("./api/tests-order");
-}catch (e) {
-    console.log(e);
-}
+//run server
+require("@server/bin/www");
+//Include tests
+require("./api/tests-order");
