@@ -2,7 +2,7 @@ module.exports = {
     ...require("./basic"),
     isDev: true,
     ROOT_URL: `localhost:${this.PORT}`,
-    DB_URL: `mongodb://${process.env.DB_USER_DEV}:${process.env.DB_PSW_DEV}@ds012168.mlab.com:12168/budgetarium_dev`,
+    DB_URL:process.env.DB_ADDRESS_DEV.replace("<dbuser>",process.env.DB_USER_DEV).replace("<dbpassword>",process.env.DB_PSW_DEV),
     PORT: process.env.PORT || 3000,
     security: {
         TOKEN_SECRET_LENGTH: 10,

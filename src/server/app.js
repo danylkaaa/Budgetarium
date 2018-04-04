@@ -10,20 +10,24 @@ const services = require("@services"),
     app = express();
 
 function init() {
-    // run static file server
-    app.use(express.static(path.join(__dirname, "public")));
-    // app.use(favicon(path.join(__dirname, "public", "images", "favicon.ico")));
-    // don"t show logs in test mode
-    if (process.env.NODE_ENV !== "test") {
-        app.use(require("morgan")("combined")); //"combined" prints logs in apache style
+    try {
+        // run static file server
+        app.use(express.static(path.join(__dirname, "public")));
+        // app.use(favicon(path.join(__dirname, "public", "images", "favicon.ico")));
+        // don"t show logs in test mode
+        if (process.env.NODE_ENV !== "test") {
+            app.use(require("morgan")("combined")); //"combined" prints logs in apache style
+        }
+        app.use(require("body-parser").json());
+        app.use(require("body-parser").urlencoded({extended: false}));
+        app.use(require("busboy-body-parser")());
+        app.use(require("cors")());
+        services.init(app);
+        app.use(require("@routes/index"));
+        logs.info("+Up");
+    }catch (e) {
+        process.exit(1);
     }
-    app.use(require("body-parser").json());
-    app.use(require("body-parser").urlencoded({extended: false}));
-    app.use(require("busboy-body-parser")());
-    app.use(require("cors")());
-    services.init(app);
-    app.use(require("@routes/index"));
-    logs.info("+Up");
 }
 
 init();
