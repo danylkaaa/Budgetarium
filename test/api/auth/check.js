@@ -47,7 +47,7 @@ function runBearerTest(name) {
                         done();
                     });
             });
-            it("should return true, even user created new token", (done) => {
+            it("should return true, even user had created a new token", (done) => {
                 chai.request(server)
                     .post(URLSignin)
                     .auth(USER.email, USER.password)
