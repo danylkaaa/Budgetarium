@@ -6,7 +6,7 @@
   "private": true,
   "main": "./src/server/bin/www",
   "scripts": {
-    "lint": "eslint **/*.js",
+    "lint": "eslint . **/*.js",
     "start": "NODE_ENV=production node ./src/server/bin/www",
     "dev": "NODE_ENV=development nodemon ./src/server/bin/www ",
     "test": "NODE_ENV=test mocha test/index.js",
