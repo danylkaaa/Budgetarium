@@ -23,7 +23,8 @@
     "@utils": "./src/server/app/utils/index.js",
     "@logs": "./src/server/app/services/logs.js",
     "@API": "./src/server/routes/api/index.js",
-    "@validator": "./src/server/app/services/validator/index.js"
+    "@validator": "./src/server/app/services/validator/index.js",
+    "@test":"./test"
   },
   "dependencies": {
     "assert": "^1.4.1",

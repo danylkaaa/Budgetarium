@@ -1,7 +1,7 @@
 const chai = require("chai"),
     expect = chai.expect,
+    Utils=require("@test/utils"),
     server = require("@server/bin/www"),
-    faker = require("faker"),
     UserDB = require("@DB").UserDriver.model,
     serverConfig = require("@config"),
     URLSignin = "/api/v1/auth/signin",
@@ -10,17 +10,11 @@ const chai = require("chai"),
     URLLogout = "/api/v1/auth/logout",
     URLToken = "/api/v1/auth/token";
 
-function generateUser() {
-    return {
-        name: faker.name.firstName(),
-        email: faker.internet.email(),
-        password: faker.internet.password()
-    };
-}
+
 
 
 describe("/token", () => {
-    let USER = generateUser();
+    let USER = Utils.generateUser();
     let refresh;
     before((done) => {
         chai.request(server)

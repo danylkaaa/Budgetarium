@@ -1,21 +1,13 @@
 const chai = require("chai"),
     expect = chai.expect,
     server = require("@server/bin/www"),
-    faker = require("faker"),
+    Utils=require("@test/utils"),
     UserDB = require("@DB").UserDriver.model,
     URLSignin = "/api/v1/auth/signin",
     URLSignup = "/api/v1/auth/signup";
 
-function generateUser() {
-    return {
-        name: faker.name.firstName(),
-        email: faker.internet.email(),
-        password: faker.internet.password()
-    };
-}
-
 describe("/signin", () => {
-    let USER = generateUser();
+    let USER = Utils.generateUser();
     before((done) => {
         chai.request(server)
             .post(URLSignup)
@@ -55,7 +47,7 @@ describe("/signin", () => {
     });
     describe("invalid args", () => {
         it("reject if user doesn't exist", (done) => {
-            const newUser = generateUser();
+            const newUser = Utils.generateUser();
             chai.request(server)
                 .post(URLSignin)
                 .auth(newUser.email, newUser.password)

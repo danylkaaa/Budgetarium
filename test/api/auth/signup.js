@@ -1,18 +1,10 @@
 const chai = require("chai"),
     expect = chai.expect,
     server = require("@server/bin/www"),
-    faker = require("faker"),
+    Utils=require("@test/utils"),
     UserDB = require("@DB").UserDriver.model,
     URL = "/api/v1/auth/signup",
     ObjectId = require("mongoose").Types.ObjectId;
-
-function generateUser() {
-    return {
-        name: faker.name.firstName(),
-        email: faker.internet.email(),
-        password: faker.internet.password()
-    };
-}
 
 describe("/signup", () => {
     beforeEach((done) => {
@@ -20,7 +12,7 @@ describe("/signup", () => {
     });
     describe("send valid user", () => {
         it("should create user, with specified valid fields", (done) => {
-            let user = generateUser();
+            let user = Utils.generateUser();
             chai.request(server)
                 .post(URL)
                 .send(user)
@@ -37,7 +29,7 @@ describe("/signup", () => {
                 });
         });
         it("should generate & send valid tokens", (done) => {
-            let user = generateUser();
+            let user = Utils.generateUser();
             chai.request(server)
                 .post(URL)
                 .send(user)
@@ -52,7 +44,7 @@ describe("/signup", () => {
                 });
         });
         it("should encrypt password", (done) => {
-            let user = generateUser();
+            let user = Utils.generateUser();
             chai.request(server)
                 .post(URL)
                 .send(user)
@@ -68,7 +60,7 @@ describe("/signup", () => {
     });
     describe("reject if send invalid name", () => {
         it("excluded from request", (done) => {
-            let user = generateUser();
+            let user = Utils.generateUser();
             delete user.name;
             chai.request(server)
                 .post(URL)
@@ -79,7 +71,7 @@ describe("/signup", () => {
                 });
         });
         it("empty", (done) => {
-            let user = generateUser();
+            let user = Utils.generateUser();
             user.name = "";
             chai.request(server)
                 .post(URL)
@@ -90,7 +82,7 @@ describe("/signup", () => {
                 });
         });
         it("starts with number", (done) => {
-            let user = generateUser();
+            let user = Utils.generateUser();
             user.name = "123 Dima";
             chai.request(server)
                 .post(URL)
@@ -101,7 +93,7 @@ describe("/signup", () => {
                 });
         });
         it("ends  with number", (done) => {
-            let user = generateUser();
+            let user = Utils.generateUser();
             user.name = "Dima123";
             chai.request(server)
                 .post(URL)
@@ -112,7 +104,7 @@ describe("/signup", () => {
                 });
         });
         it("starts with lowercase letter", (done) => {
-            let user = generateUser();
+            let user = Utils.generateUser();
             user.name = "dima";
             chai.request(server)
                 .post(URL)
@@ -123,7 +115,7 @@ describe("/signup", () => {
                 });
         });
         it("too short name", (done) => {
-            let user = generateUser();
+            let user = Utils.generateUser();
             user.name = "D";
             chai.request(server)
                 .post(URL)
@@ -136,7 +128,7 @@ describe("/signup", () => {
     });
     describe("reject if send invalid email", () => {
         it("user already exits", (done) => {
-            let user = generateUser();
+            let user = Utils.generateUser();
             chai.request(server)
                 .post(URL)
                 .send(user)
@@ -151,7 +143,7 @@ describe("/signup", () => {
                 });
         });
         it("excluded from request", (done) => {
-            let user = generateUser();
+            let user = Utils.generateUser();
             delete user.email;
             chai.request(server)
                 .post(URL)
@@ -162,7 +154,7 @@ describe("/signup", () => {
                 });
         });
         it("empty", (done) => {
-            let user = generateUser();
+            let user = Utils.generateUser();
             user.email = "";
             chai.request(server)
                 .post(URL)
@@ -173,7 +165,7 @@ describe("/signup", () => {
                 });
         });
         it("starts with number", (done) => {
-            let user = generateUser();
+            let user = Utils.generateUser();
             user.email = "1";
             chai.request(server)
                 .post(URL)
@@ -184,7 +176,7 @@ describe("/signup", () => {
                 });
         });
         it("ends with number", (done) => {
-            let user = generateUser();
+            let user = Utils.generateUser();
             user.email += "1";
             chai.request(server)
                 .post(URL)
@@ -197,7 +189,7 @@ describe("/signup", () => {
     });
     describe("reject if send invalid password", () => {
         it("too short", (done) => {
-            let user = generateUser();
+            let user = Utils.generateUser();
             user.password = "1";
             chai.request(server)
                 .post(URL)
@@ -208,7 +200,7 @@ describe("/signup", () => {
                 });
         });
         it("too long", (done) => {
-            let user = generateUser();
+            let user = Utils.generateUser();
             user.password = "1As".repeat(10);
             chai.request(server)
                 .post(URL)
@@ -219,7 +211,7 @@ describe("/signup", () => {
                 });
         });
         it("doesn't contain any digits", (done) => {
-            let user = generateUser();
+            let user = Utils.generateUser();
             user.password = "As".repeat(5);
             chai.request(server)
                 .post(URL)
@@ -230,7 +222,7 @@ describe("/signup", () => {
                 });
         });
         it("doesn't contain any uppercase letter", (done) => {
-            let user = generateUser();
+            let user = Utils.generateUser();
             user.password = "4s".repeat(5);
             chai.request(server)
                 .post(URL)
@@ -241,7 +233,7 @@ describe("/signup", () => {
                 });
         });
         it("doesn't contain any lowercase letter", (done) => {
-            let user = generateUser();
+            let user = Utils.generateUser();
             user.password = "4S".repeat(5);
             chai.request(server)
                 .post(URL)
