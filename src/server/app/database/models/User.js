@@ -71,15 +71,6 @@ User.index({email: 1}, {unique: true});
 
 
 /**
- * check is path 'password' is required
- * @param user ref to user
- * @returns {*|boolean} true, if path is required
- */
-function passwordIsRequired(user) {
-    return !user._password;
-}
-
-/**
  * Before save a user document, Make sure:
  * 1. Hash user"s password
  * 2. Regenerate secrets

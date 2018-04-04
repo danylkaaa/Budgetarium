@@ -4,12 +4,12 @@ module.exports = {
     algorithm: "HS256",
     secret(name) {
         switch (name) {
-            case "access":
-                return config.security.secrets.ACCESS;
-            case "refresh":
-                return config.security.secrets.REFRESH;
-            default:
-                throw new Error("Invalid token name");
+        case "access":
+            return config.security.secrets.ACCESS;
+        case "refresh":
+            return config.security.secrets.REFRESH;
+        default:
+            throw new Error("Invalid token name");
         }
     },
     /**

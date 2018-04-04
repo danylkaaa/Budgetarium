@@ -18,7 +18,7 @@ function name(value) {
  * @return {ValidationResult} object, that describes validation
  */
 function password(value) {
-    const nameRegex = /^(?=.*\d.*)(?=.*[a-z].*)(?=.*[A-Z].*)(?=.*[!#\$%&\?]*.*).{8,20}$/;
+    const nameRegex = /^(?=.*\d.*)(?=.*[a-z].*)(?=.*[A-Z].*)(?=.*[!#$%&?]*.*).{8,20}$/;
     return new ValidationResult(nameRegex.test(value), "Password must be minimum 8, and maximum 20 characters at least: 1 Uppercase Alphabet, 1 Lowercase Alphabet, 1 Number");
 }
 
@@ -29,7 +29,7 @@ function password(value) {
  * @return {ValidationResult} object, that describes validation
  */
 function email(value) {
-    const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return new ValidationResult(emailRegex.test(value), "Email is not a valid string");
 
 }

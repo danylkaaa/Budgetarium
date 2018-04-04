@@ -1,3 +1,4 @@
+"use strict";
 var router = require("express").Router();
 const UserDB = require("@DB").UserDriver;
 const logs = require("@logs")(module);
@@ -7,7 +8,8 @@ const passport = require("passport");
 
 router.post("/signup",
     (req, res, next) => {
-        req.args = {name, email, password} = req.body;
+        let {name, email, password} = req.body;
+        req.args={name,email,password};
         next();
     },
     async (req, res, next) => {

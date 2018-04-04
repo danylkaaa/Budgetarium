@@ -105,6 +105,6 @@ function runBearerTest(name) {
 }
 
 describe("/check", () => {
-    runBearerTest('access');
-    runBearerTest('refresh');
+    runBearerTest("access");
+    runBearerTest("refresh");
 });

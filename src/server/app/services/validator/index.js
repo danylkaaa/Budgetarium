@@ -1,5 +1,5 @@
 const Utils = require("@utils");
-const logs = require("@logs")(module);
+// const logs = require("@logs")(module);
 const validators = Utils.loadModulesFromDir(__dirname);
 const ValidationResult = require("./ValidationResult");
 
