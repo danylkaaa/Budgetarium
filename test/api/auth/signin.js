@@ -2,22 +2,20 @@ const chai = require("chai"),
     expect = chai.expect,
     server = require("@server/bin/www"),
     Utils=require("@test/utils"),
-    UserDB = require("@DB").UserDriver.model,
-    URLSignin = "/api/v1/auth/signin",
-    URLSignup = "/api/v1/auth/signup";
+    UserDB = require("@DB").UserDriver.model;
 
 describe("/signin", () => {
     let USER = Utils.generateUser();
     before((done) => {
         chai.request(server)
-            .post(URLSignup)
+            .post(Utils.URL.SIGNUP)
             .send(USER)
             .end(() => done());
     });
     describe("valid args", () => {
         it("should return user tokens", (done) => {
             chai.request(server)
-                .post(URLSignin)
+                .post(Utils.URL.SIGNIN)
                 .auth(USER.email, USER.password)
                 .end((err, res) => {
                     expect(res).have.status(200);
@@ -31,11 +29,11 @@ describe("/signin", () => {
         });
         it("should return new tokens each times", (done) => {
             chai.request(server)
-                .post(URLSignin)
+                .post(Utils.URL.SIGNIN)
                 .auth(USER.email, USER.password)
                 .end((err1, res1) => {
                     setTimeout(() => chai.request(server)
-                        .post(URLSignin)
+                        .post(Utils.URL.SIGNIN)
                         .auth(USER.email, USER.password)
                         .end((err1, res2) => {
                             expect(res2.body.tokens.access).to.not.equal(res1.body.tokens.access);
@@ -49,7 +47,7 @@ describe("/signin", () => {
         it("reject if user doesn't exist", (done) => {
             const newUser = Utils.generateUser();
             chai.request(server)
-                .post(URLSignin)
+                .post(Utils.URL.SIGNIN)
                 .auth(newUser.email, newUser.password)
                 .end((err, res) => {
                     expect(res).have.status(401);
@@ -58,7 +56,7 @@ describe("/signin", () => {
         });
         it("reject if password is invalid", (done) => {
             chai.request(server)
-                .post(URLSignin)
+                .post(Utils.URL.SIGNIN)
                 .auth(USER.email, USER.password + 123)
                 .end((err, res) => {
                     expect(res).have.status(401);

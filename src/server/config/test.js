@@ -7,8 +7,8 @@ module.exports = {
     security: {
         TOKEN_SECRET_LENGTH: 10,
         tokenLife: {
-            ACCESS: 1, // 2 seconds
-            REFRESH: 1, //4 seconds
+            ACCESS: 2, // 2 seconds
+            REFRESH: 3, //4 seconds
         },
         secrets: {
             ACCESS: process.env.TOKEN_ACCESS_SECRET,

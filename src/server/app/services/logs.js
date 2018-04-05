@@ -7,7 +7,7 @@ function getLogger(module) {
             new winston.transports.Console({
                 colorize: true,
                 level: process.env.NODE_ENV.startsWith("dev") ? "debug" : "info",
-                // silent: process.env.NODE_ENV.startsWith("test"),
+                silent: process.env.NODE_ENV.startsWith("test"),
                 label: path
             }),
         ]

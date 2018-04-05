@@ -3,7 +3,7 @@ const path = require("path");
 const crypto = require("./crypto");
 const tokens = require("./tokens");
 const errorHandler = require("./errorHandler");
-
+const Pagination=require("./Pagination");
 /**
  * load all modules from specific directory
  * @param dir full name of dir
@@ -25,5 +25,7 @@ module.exports = {
     loadModulesFromDir,
     crypto,
     tokens,
-    errorHandler
+    errorHandler,
+    Pagination
+
 };

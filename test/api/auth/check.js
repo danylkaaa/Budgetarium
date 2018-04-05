@@ -3,11 +3,7 @@ const chai = require("chai"),
     server = require("@server/bin/www"),
     Utils=require("@test/utils"),
     UserDB = require("@DB").UserDriver.model,
-    serverConfig = require("@config"),
-    URLSignin = "/api/v1/auth/signin",
-    URLSignup = "/api/v1/auth/signup",
-    URLCheck = "/api/v1/auth/check-token",
-    URLLogout = "/api/v1/auth/logout";
+    serverConfig = require("@config");
 
 
 function runBearerTest(name) {
@@ -16,13 +12,13 @@ function runBearerTest(name) {
         let token;
         before((done) => {
             chai.request(server)
-                .post(URLSignup)
+                .post(Utils.URL.SIGNUP)
                 .send(USER)
                 .end(done);
         });
         beforeEach((done) => {
             chai.request(server)
-                .post(URLSignin)
+                .post(Utils.URL.SIGNIN)
                 .auth(USER.email, USER.password)
                 .end((err, res) => {
                     token = res.body.tokens[name];
@@ -32,7 +28,7 @@ function runBearerTest(name) {
         describe("valid args", () => {
             it("should return true, if token is correct and actual", (done) => {
                 chai.request(server)
-                    .post(URLCheck)
+                    .post(Utils.URL.CHECK)
                     .set("authorization", `Bearer ${token}`)
                     .end((err, res) => {
                         expect(res).have.status(200);
@@ -41,11 +37,11 @@ function runBearerTest(name) {
             });
             it("should return true, even user had created a new token", (done) => {
                 chai.request(server)
-                    .post(URLSignin)
+                    .post(Utils.URL.SIGNIN)
                     .auth(USER.email, USER.password)
                     .end(() => {
                         chai.request(server)
-                            .post(URLCheck)
+                            .post(Utils.URL.CHECK)
                             .set("authorization", `Bearer ${token}`)
                             .end((err, res) => {
                                 expect(res).have.status(200);
@@ -57,7 +53,7 @@ function runBearerTest(name) {
         describe("invalid args", () => {
             it("should reject, if token invalid", (done) => {
                 chai.request(server)
-                    .post(URLCheck)
+                    .post(Utils.URL.CHECK)
                     .set("authorization", "Bearer 123")
                     .end((err, res) => {
                         expect(res).have.status(401);
@@ -66,11 +62,11 @@ function runBearerTest(name) {
             });
             it("should reject, if user had set secret", (done) => {
                 chai.request(server)
-                    .post(URLLogout)
+                    .post(Utils.URL.LOGOUT)
                     .auth(USER.email, USER.password)
                     .end(() => {
                         chai.request(server)
-                            .post(URLCheck)
+                            .post(Utils.URL.CHECK)
                             .set("authorization", `Bearer ${token}`)
                             .end((err, res) => {
                                 expect(res).have.status(401);
@@ -81,7 +77,7 @@ function runBearerTest(name) {
             it("should reject, if token is outdated", (done) => {
                 setTimeout(() => {
                     chai.request(server)
-                        .post(URLCheck)
+                        .post(Utils.URL.CHECK)
                         .set("authorization", `Bearer ${token}`)
                         .end((err, res) => {
                             expect(res).have.status(401);

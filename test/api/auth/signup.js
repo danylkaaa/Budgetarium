@@ -3,7 +3,6 @@ const chai = require("chai"),
     server = require("@server/bin/www"),
     Utils=require("@test/utils"),
     UserDB = require("@DB").UserDriver.model,
-    URL = "/api/v1/auth/signup",
     ObjectId = require("mongoose").Types.ObjectId;
 
 describe("/signup", () => {
@@ -14,7 +13,7 @@ describe("/signup", () => {
         it("should create user, with specified valid fields", (done) => {
             let user = Utils.generateUser();
             chai.request(server)
-                .post(URL)
+                .post(Utils.URL.SIGNUP)
                 .send(user)
                 .end((err, res) => {
                     expect(res).have.status(200);
@@ -31,7 +30,7 @@ describe("/signup", () => {
         it("should generate & send valid tokens", (done) => {
             let user = Utils.generateUser();
             chai.request(server)
-                .post(URL)
+                .post(Utils.URL.SIGNUP)
                 .send(user)
                 .end((err, res) => {
                     expect(res).have.status(200);
@@ -46,7 +45,7 @@ describe("/signup", () => {
         it("should encrypt password", (done) => {
             let user = Utils.generateUser();
             chai.request(server)
-                .post(URL)
+                .post(Utils.URL.SIGNUP)
                 .send(user)
                 .end(async () => {
                     let createdUser = await UserDB.findOne({email: user.email}).exec();
@@ -63,7 +62,7 @@ describe("/signup", () => {
             let user = Utils.generateUser();
             delete user.name;
             chai.request(server)
-                .post(URL)
+                .post(Utils.URL.SIGNUP)
                 .send(user)
                 .end((err, res) => {
                     expect(res).have.status(400);
@@ -74,7 +73,7 @@ describe("/signup", () => {
             let user = Utils.generateUser();
             user.name = "";
             chai.request(server)
-                .post(URL)
+                .post(Utils.URL.SIGNUP)
                 .send(user)
                 .end((err, res) => {
                     expect(res).have.status(400);
@@ -85,7 +84,7 @@ describe("/signup", () => {
             let user = Utils.generateUser();
             user.name = "123 Dima";
             chai.request(server)
-                .post(URL)
+                .post(Utils.URL.SIGNUP)
                 .send(user)
                 .end((err, res) => {
                     expect(res).have.status(400);
@@ -96,7 +95,7 @@ describe("/signup", () => {
             let user = Utils.generateUser();
             user.name = "Dima123";
             chai.request(server)
-                .post(URL)
+                .post(Utils.URL.SIGNUP)
                 .send(user)
                 .end((err, res) => {
                     expect(res).have.status(400);
@@ -107,7 +106,7 @@ describe("/signup", () => {
             let user = Utils.generateUser();
             user.name = "dima";
             chai.request(server)
-                .post(URL)
+                .post(Utils.URL.SIGNUP)
                 .send(user)
                 .end((err, res) => {
                     expect(res).have.status(400);
@@ -118,7 +117,7 @@ describe("/signup", () => {
             let user = Utils.generateUser();
             user.name = "D";
             chai.request(server)
-                .post(URL)
+                .post(Utils.URL.SIGNUP)
                 .send(user)
                 .end((err, res) => {
                     expect(res).have.status(400);
@@ -130,11 +129,11 @@ describe("/signup", () => {
         it("user already exits", (done) => {
             let user = Utils.generateUser();
             chai.request(server)
-                .post(URL)
+                .post(Utils.URL.SIGNUP)
                 .send(user)
                 .end(() => {
                     chai.request(server)
-                        .post(URL)
+                        .post(Utils.URL.SIGNUP)
                         .send(user)
                         .end((err, res) => {
                             expect(res).have.status(400);
@@ -146,7 +145,7 @@ describe("/signup", () => {
             let user = Utils.generateUser();
             delete user.email;
             chai.request(server)
-                .post(URL)
+                .post(Utils.URL.SIGNUP)
                 .send(user)
                 .end((err, res) => {
                     expect(res).have.status(400);
@@ -157,7 +156,7 @@ describe("/signup", () => {
             let user = Utils.generateUser();
             user.email = "";
             chai.request(server)
-                .post(URL)
+                .post(Utils.URL.SIGNUP)
                 .send(user)
                 .end((err, res) => {
                     expect(res).have.status(400);
@@ -168,7 +167,7 @@ describe("/signup", () => {
             let user = Utils.generateUser();
             user.email = "1";
             chai.request(server)
-                .post(URL)
+                .post(Utils.URL.SIGNUP)
                 .send(user)
                 .end((err, res) => {
                     expect(res).have.status(400);
@@ -179,7 +178,7 @@ describe("/signup", () => {
             let user = Utils.generateUser();
             user.email += "1";
             chai.request(server)
-                .post(URL)
+                .post(Utils.URL.SIGNUP)
                 .send(user)
                 .end((err, res) => {
                     expect(res).have.status(400);
@@ -192,7 +191,7 @@ describe("/signup", () => {
             let user = Utils.generateUser();
             user.password = "1";
             chai.request(server)
-                .post(URL)
+                .post(Utils.URL.SIGNUP)
                 .send(user)
                 .end((err, res) => {
                     expect(res).have.status(400);
@@ -203,7 +202,7 @@ describe("/signup", () => {
             let user = Utils.generateUser();
             user.password = "1As".repeat(10);
             chai.request(server)
-                .post(URL)
+                .post(Utils.URL.SIGNUP)
                 .send(user)
                 .end((err, res) => {
                     expect(res).have.status(400);
@@ -214,7 +213,7 @@ describe("/signup", () => {
             let user = Utils.generateUser();
             user.password = "As".repeat(5);
             chai.request(server)
-                .post(URL)
+                .post(Utils.URL.SIGNUP)
                 .send(user)
                 .end((err, res) => {
                     expect(res).have.status(400);
@@ -225,7 +224,7 @@ describe("/signup", () => {
             let user = Utils.generateUser();
             user.password = "4s".repeat(5);
             chai.request(server)
-                .post(URL)
+                .post(Utils.URL.SIGNUP)
                 .send(user)
                 .end((err, res) => {
                     expect(res).have.status(400);
@@ -236,7 +235,7 @@ describe("/signup", () => {
             let user = Utils.generateUser();
             user.password = "4S".repeat(5);
             chai.request(server)
-                .post(URL)
+                .post(Utils.URL.SIGNUP)
                 .send(user)
                 .end((err, res) => {
                     expect(res).have.status(400);

@@ -22,21 +22,32 @@ module.exports.get = {
      * @param query query to search
      * @return {Promise} result of search
      */
-    oneByQuery(model, query) {
-        return model.findOne(query).exec();
+    oneByQuery(model, query,fields) {
+        let Q=model.findOne(query);
+        if(fields) {
+            return Q.select(fields).exec();
+        }else{
+            return Q.exec();
+        }
     },
     /**
      *
      * @param model model to use
      * @param query query to search
      * @param pagination pagination options (page, limit, sort)
+     * @param fields fields of docs, which should be selected
      * @return {*} paginated or not paginated list of entities
      */
-    byQuery(model, query, pagination) {
-        if (!pagination) {
-            return model.find(query).exec();
-        } else {
+    byQuery(model, query, pagination, fields) {
+        if (pagination) {
             return model.paginate(query, pagination);
+        } else {
+            let Q = model.find(query);
+            if (fields) {
+                return Q.select(fields).exec();
+            } else {
+                return Q.exec();
+            }
         }
     }
 };

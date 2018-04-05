@@ -1,7 +1,7 @@
 const UserModel = require("../models/User");
 // const logs = require("@logs");
 const DB = require("../abstractDriver");
-
+// const config=require("@config");
 module.exports.create = {
     basic: (data) => DB.create(UserModel, data),
 };
@@ -11,6 +11,9 @@ module.exports.remove = {
 };
 
 module.exports.get = {
+    async byQuery(query,pagination,fields){
+        return DB.get.byQuery(UserModel,query,pagination,fields);
+    },
     async byToken(name, token) {
         const user = await DB.get.byId(UserModel, token.id);
         if (user && await user.verifyToken(name, token)) return user;
