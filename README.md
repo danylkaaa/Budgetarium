@@ -54,7 +54,7 @@ npm run test:coverage
 
 ## Deployment
 
-()additional notes about how to deploy this on a live system)
+(additional notes about how to deploy this on a live system)
 
 ## Built With
 
