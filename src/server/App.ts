@@ -1,17 +1,19 @@
 "use strict";
 require("module-alias/register");
 import * as path from "path";
-import * as dotenv from "dotenv";
 import * as bodyParser from "body-parser";
 import * as lusca from "lusca";
 import * as expressValidator from "express-validator";
 import * as cors from "cors";
 import * as errorhandler from "errorhandler";
 import * as express from "express";
+import config from "@config";
+
 import Logger from "@logger";
-import {Response, Request, Application, NextFunction} from "express";
+import {Application} from "express";
 
 const busboyBodyParser = require("busboy-body-parser");
+
 const logs = Logger(module);
 
 class App {
@@ -23,30 +25,21 @@ class App {
     }
 
     private static instance: App;
-    private app: Application;
+
+    private readonly app: Application;
 
     private constructor() {
         this.app = express();
+        this.configure();
         // configure app
-        this.config();
+        this.usePlugins();
         // configure routes
         this.routes();
+
     }
 
     public getApp(): Application {
         return this.app;
-    }
-
-    private up() {
-        this.app.use(errorhandler());
-        this.app.use(cors());
-        this.app.use(bodyParser.urlencoded({extended: true}));
-        this.app.use(expressValidator());
-        this.app.use(lusca.xframe("SAMEORIGIN"));
-        this.app.use(lusca.xssProtection(true));
-        this.app.use(
-            express.static(path.join(__dirname, "public"), {maxAge: "10h"}));
-        this.app.use(busboyBodyParser);
     }
 
     private normalizePort(val: string): any {
@@ -62,18 +55,25 @@ class App {
         return false;
     }
 
-    private config() {
-        this.app.use((req: Request, res: Response) => {
-            return res.json({status: "OK"});
-        });
+    private configure() {
         this.app.set("port", this.normalizePort(process.env.PORT || "3000"));
-        dotenv.config();
-        this.up();
-        logs.info("Server configured");
+    }
+
+    private usePlugins() {
+        this.app.use(errorhandler());
+        this.app.use(cors());
+        this.app.use(bodyParser.urlencoded({extended: true}));
+        this.app.use(expressValidator());
+        this.app.use(lusca.xframe("SAMEORIGIN"));
+        this.app.use(lusca.xssProtection(true));
+        this.app.use(
+            express.static(path.join(__dirname, "public"), {maxAge: "10h"}));
+        this.app.use(busboyBodyParser);
+        logs.info("App configured");
     }
 
     private routes() {
-        logs.info("Server connected routes");
+        logs.info("App connected routes");
     }
 }
 

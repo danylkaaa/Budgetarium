@@ -4,7 +4,6 @@ import * as http from "http";
 
 const logs = logger(module);
 const app: any = App.getInstance().getApp();
-
 const server = http.createServer(app);
 server.listen(app.get("port"));
 server.on("error", onError);

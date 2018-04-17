@@ -12,7 +12,8 @@
     "paths": {
       "@logger": [
         "services/logger"
-      ]
+      ],
+      "@config":["config/configuration"]
     }
   },
   "files": [
