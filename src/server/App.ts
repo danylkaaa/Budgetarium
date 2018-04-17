@@ -9,7 +9,8 @@ import * as cors from "cors";
 import * as errorhandler from "errorhandler";
 import * as express from "express";
 import Logger from "@logger";
-import { Response, Request, Application,NextFunction } from "express";
+import {Response, Request, Application, NextFunction} from "express";
+
 const busboyBodyParser = require("busboy-body-parser");
 const logs = Logger(module);
 
@@ -48,10 +49,24 @@ class App {
         this.app.use(busboyBodyParser);
     }
 
+    private normalizePort(val: string): any {
+        const port = parseInt(val, 10);
+        if (isNaN(port)) {
+            // named pipe
+            return val;
+        }
+        if (port >= 0) {
+            // port number
+            return port;
+        }
+        return false;
+    }
+
     private config() {
-        this.app.use( (req: Request, res: Response) => {
+        this.app.use((req: Request, res: Response) => {
             return res.json({status: "OK"});
         });
+        this.app.set("port", this.normalizePort(process.env.PORT || "3000"));
         dotenv.config();
         this.up();
         logs.info("Server configured");

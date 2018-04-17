@@ -12,7 +12,7 @@
     "dev": "npm run watch-ts & NODE_ENV=dev nodemon build/server/server",
     "build-ts": "tsc",
     "watch-ts": "tsc -w",
-    "tslint": "tslint"
+    "lint": "tslint src/**/*.ts"
   },
   "_moduleAliases": {
     "@logger": "build/server/services/logger"
