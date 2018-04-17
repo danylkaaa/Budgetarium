@@ -68,3 +68,6 @@ idea
 *.lcov
 .nyc_output/
 coverage/
+
+# TypeScript
+build/*

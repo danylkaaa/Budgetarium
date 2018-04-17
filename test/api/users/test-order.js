@@ -1,3 +1,0 @@
-describe("/users", () => {
-    require("./get");
-});

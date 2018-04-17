@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "outDir": "build/server",
+    "noImplicitAny": true,
+    "sourceMap": true,
+    "inlineSources": true,
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node",
+    "baseUrl": "src/server",
+    "paths": {
+      "@logger": [
+        "services/logger"
+      ]
+    }
+  },
+  "files": [
+    "./node_modules/@types/node/index.d.ts"
+  ],
+  "include": [
+    "src/server/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
