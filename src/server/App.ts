@@ -8,7 +8,6 @@ import * as cors from "cors";
 import * as errorhandler from "errorhandler";
 import * as express from "express";
 import config from "@config";
-
 import Logger from "@logger";
 import {Application} from "express";
 
@@ -74,6 +73,7 @@ class App {
 
     private routes() {
         logs.info("App connected routes");
+        logs.error(config.get("publicInfo.user"));
     }
 }
 
