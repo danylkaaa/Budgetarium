@@ -1,15 +1,15 @@
 "use strict";
 require("module-alias/register");
+import * as path from "path";
 import * as dotenv from "dotenv";
-import bodyParser from "body-parser";
-import lusca from "lusca";
-import expressValidator from "express-validator";
-import cors from "cors";
-import path from "path";
-import errorhandler from "errorhandler";
+import * as bodyParser from "body-parser";
+import * as lusca from "lusca";
+import * as expressValidator from "express-validator";
+import * as cors from "cors";
+import * as errorhandler from "errorhandler";
 import * as express from "express";
 import Logger from "@logger";
-
+import { Response, Request, Application,NextFunction } from "express";
 const busboyBodyParser = require("busboy-body-parser");
 const logs = Logger(module);
 
@@ -22,7 +22,7 @@ class App {
     }
 
     private static instance: App;
-    private app: Express.Application;
+    private app: Application;
 
     private constructor() {
         this.app = express();
@@ -32,7 +32,7 @@ class App {
         this.routes();
     }
 
-    public getApp(): Express.Application {
+    public getApp(): Application {
         return this.app;
     }
 
@@ -49,6 +49,9 @@ class App {
     }
 
     private config() {
+        this.app.use( (req: Request, res: Response) => {
+            return res.json({status: "OK"});
+        });
         dotenv.config();
         this.up();
         logs.info("Server configured");

@@ -1,31 +1,30 @@
 import App from "./App";
 import logger from "@logger";
-import http from "http";
 
 const logs = logger(module);
-const app = App.getInstance().getApp();
+const app: any = App.getInstance().getApp();
 
 /**
  * Start express server.
  */
-const port = normalizePort(process.env.PORT || "3000");
-const server = http.createServer(app);
-server.listen(port);
-server.on("error", onError);
-server.on("listening", onListening);
-
-function normalizePort(val: string) {
-    const port: number = parseInt(val, 10);
-    if (isNaN(port)) {
-        // named pipe
-        return val;
-    }
-    if (port >= 0) {
-        // port number
-        return port;
-    }
-    return false;
-}
+const port: number = parseInt(process.env.PORT, 10) || 3000;
+app.set("port", port);
+const server = app.listen(app.get("port"), () => {
+    logs.debug(`App is running at port ${app.get("port")} in ${app.get("env")} mode`);
+});
+//
+// function normalizePort(val: string): number {
+//     const port: number = parseInt(val, 10);
+//     if (isNaN(port)) {
+//         // named pipe
+//         return val;
+//     }
+//     if (port >= 0) {
+//         // port number
+//         return port;
+//     }
+//     return false;
+// }
 
 function onError(error: any) {
     if (error.syscall !== "listen") {
@@ -50,12 +49,12 @@ function onError(error: any) {
     }
 }
 
-function onListening() {
-    const addr = server.address();
-    const bind = typeof addr === "string"
-        ? "pipe " + addr
-        : "port " + addr.port;
-    logs.debug("Listening on " + bind);
-}
+// function onListening() {
+//     const addr = server.address();
+//     const bind = typeof addr === "string"
+//         ? "pipe " + addr
+//         : "port " + addr.port;
+//     logs.debug("Listening on " + bind);
+// }
 
-export default server;
+// export default server;
