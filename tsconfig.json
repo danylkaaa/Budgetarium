@@ -10,13 +10,10 @@
     "moduleResolution": "node",
     "baseUrl": "src/server",
     "paths": {
-      "@logger": [
-        "utils/logger"
-      ],
       "@config":["config/configuration"],
       "@errors/*":["services/errors/*"],
       "@controllers/*":["controllers/*"],
-      "@utils/*":["utils/*"]
+      "@utils":["utils/index"]
     }
   },
   "files": [

@@ -10,8 +10,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bluebird = require("bluebird");
 import config from "@config";
-import Logger from "@logger";
-import {Application} from "express";
+import {Logger} from "@utils";
+import { Application } from "express";
 import controllers from "@controllers/index.controller";
 
 const busboyBodyParser = require("busboy-body-parser");
@@ -46,6 +46,10 @@ class App {
         }
     }
 
+    public getApp(): Application {
+        return this.app;
+    }
+
     private connectToDB(): void {
         logs.debug(`Try to connect to ${config.get("DB_URL")}`);
         mongoose.Promise = bluebird;
@@ -53,13 +57,9 @@ class App {
             .then(() => {
                 logs.info("Connected to MongoDB");
             }).catch((err: any) => {
-            logs.error("MongoDB connection error. Please make sure MongoDB is running. " + err);
-            logs.debug("Check DB's availability");
-        });
-    }
-
-    public getApp(): Application {
-        return this.app;
+                logs.error("MongoDB connection error. Please make sure MongoDB is running. " + err);
+                logs.debug("Check DB's availability");
+            });
     }
 
     private normalizePort(val: string): any {
@@ -82,11 +82,11 @@ class App {
     private usePlugins(): void {
         this.app.use(errorhandler());
         this.app.use(cors());
-        this.app.use(bodyParser.urlencoded({extended: true}));
+        this.app.use(bodyParser.urlencoded({ extended: true }));
         this.app.use(expressValidator());
         this.app.use(lusca.xframe("SAMEORIGIN"));
         this.app.use(lusca.xssProtection(true));
-        this.app.use(express.static(path.join(__dirname, "public"), {maxAge: "10h"}));
+        this.app.use(express.static(path.join(__dirname, "public"), { maxAge: "10h" }));
         this.app.use(busboyBodyParser);
         logs.info("App configured");
     }

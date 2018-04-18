@@ -1,8 +1,8 @@
 import App from "./App";
-import logger from "@logger";
+import {Logger} from "@utils";
 import * as http from "http";
 
-const logs = logger(module);
+const logs = Logger(module);
 const app: any = App.getInstance().getApp();
 const server = http.createServer(app);
 server.listen(app.get("port"));

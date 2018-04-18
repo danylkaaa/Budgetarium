@@ -18,4 +18,4 @@ if (process.env.NODE_ENV !== "production") {
     logger(module).debug("Logging initialized at debug level");
 }
 
-export default logger;
+export { logger as Logger };

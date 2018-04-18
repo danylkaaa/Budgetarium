@@ -1,8 +1,7 @@
-import {Router, Request, Response, NextFunction} from "express";
+import { Router, Request, Response, NextFunction } from "express";
 import * as express from "express";
 import APIController from "./api/graphQL.controller";
-import Logger from "@logger";
-import errorMiddleware from "@utils/errorMiddleware";
+import { Logger, ErrorMiddleware } from "@utils";
 import config from "@config";
 import path from "path";
 
@@ -34,6 +33,6 @@ function onSPA(req: Request, res: Response): void {
 router.use("/api", APIController);
 router.use("*", onSPA);
 router.use(error404);
-router.use(errorMiddleware, onError);
+router.use(ErrorMiddleware, onError);
 
 export default router;

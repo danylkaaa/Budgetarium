@@ -71,3 +71,4 @@ coverage/
 
 # TypeScript
 build/*
+.vscode/*

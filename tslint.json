@@ -24,7 +24,9 @@
         "no-empty": true,
         "no-eval": true,
         "no-switch-case-fall-through": true,
+        "trailing-comma":false,
         "no-trailing-whitespace": true,
+        "interface-over-type-literal":false,
         "no-unused-expression": true,
         "no-var-requires": false,
         "one-line": [
