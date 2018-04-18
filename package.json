@@ -8,15 +8,19 @@
   "scripts": {
     "start": "npm run serve",
     "serve": "NODE_ENV=production node build/server/server.js",
-    "build": "npm run build-ts && npm run tslint",
+    "build": "npm run lint && npm run build-ts && npm run copy-static-assets",
     "dev": "npm run watch-ts & NODE_ENV=development nodemon build/server/server",
     "build-ts": "tsc",
     "watch-ts": "tsc -w",
-    "lint": "tslint src/**/*.ts"
+    "lint": "tslint src/**/*.ts",
+    "copy-static-assets": "ts-node copyStaticAssets.ts"
   },
   "_moduleAliases": {
     "@logger": "build/server/services/logger",
-    "@config": "build/server/config/configuration"
+    "@config": "build/server/config/configuration",
+    "@errors": "build/server/services/errors",
+    "@controllers": "build/server/controllers/",
+    "@utils": "build/server/services/utils"
   },
   "dependencies": {
     "bcrypt": "^2.0.0",
@@ -56,8 +60,11 @@
     "@types/passport": "^0.4.4",
     "@types/passport-facebook-token": "^0.4.33",
     "@types/passport-http-bearer": "^1.0.32",
+    "@types/shelljs": "^0.7.8",
     "@types/winston": "^2.3.9",
     "nodemon": "^1.17.3",
+    "shelljs": "^0.8.1",
+    "ts-node": "^6.0.0",
     "tsc": "^1.20150623.0",
     "tslint": "^5.9.1",
     "typescript": "^2.9.0-dev.20180414"

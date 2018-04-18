@@ -10,6 +10,7 @@ import * as express from "express";
 import config from "@config";
 import Logger from "@logger";
 import {Application} from "express";
+import controllers from "@controllers/index";
 
 const busboyBodyParser = require("busboy-body-parser");
 
@@ -73,7 +74,7 @@ class App {
 
     private routes() {
         logs.info("App connected routes");
-        logs.error(config.get("publicInfo.user"));
+        this.app.use(controllers);
     }
 }
 

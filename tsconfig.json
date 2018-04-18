@@ -13,7 +13,10 @@
       "@logger": [
         "services/logger"
       ],
-      "@config":["config/configuration"]
+      "@config":["config/configuration"],
+      "@errors/*":["services/errors/*"],
+      "@controllers/*":["controllers/*"],
+      "@utils/*":["services/utils/*"]
     }
   },
   "files": [
