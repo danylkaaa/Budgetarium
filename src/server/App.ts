@@ -7,9 +7,12 @@ const expressValidator = require("express-validator");
 const cors = require("cors");
 const errorhandler = require("errorhandler");
 const express = require("express");
+const mongoose = require("mongoose");
+const bluebird = require("bluebird");
+import config from "@config";
 import Logger from "@logger";
 import {Application} from "express";
-import controllers from "@controllers/index";
+import controllers from "@controllers/index.controller";
 
 const busboyBodyParser = require("busboy-body-parser");
 
@@ -28,13 +31,31 @@ class App {
     private readonly app: Application;
 
     private constructor() {
-        this.app = require("express")();
-        this.configure();
-        // configure app
-        this.usePlugins();
-        // configure routes
-        this.routes();
+        try {
+            this.app = require("express")();
+            this.configure();
+            // connect to DB
+            this.connectToDB();
+            // configure app
+            this.usePlugins();
+            // configure routes
+            this.routes();
+        } catch (e) {
+            logs.error("Catch error while construct app");
+            logs.error(e);
+        }
+    }
 
+    private connectToDB(): void {
+        logs.debug(`Try to connect to ${config.get("DB_URL")}`);
+        mongoose.Promise = bluebird;
+        mongoose.connect(config.get("DB_URL"))
+            .then(() => {
+                logs.info("Connected to MongoDB");
+            }).catch((err: any) => {
+            logs.error("MongoDB connection error. Please make sure MongoDB is running. " + err);
+            logs.debug("Check DB's availability");
+        });
     }
 
     public getApp(): Application {
@@ -54,11 +75,11 @@ class App {
         return false;
     }
 
-    private configure() {
+    private configure(): void {
         this.app.set("port", this.normalizePort(process.env.PORT || "3000"));
     }
 
-    private usePlugins() {
+    private usePlugins(): void {
         this.app.use(errorhandler());
         this.app.use(cors());
         this.app.use(bodyParser.urlencoded({extended: true}));
@@ -70,7 +91,7 @@ class App {
         logs.info("App configured");
     }
 
-    private routes() {
+    private routes(): void {
         logs.info("App connected routes");
         this.app.use(controllers);
     }

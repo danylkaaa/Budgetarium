@@ -18,14 +18,15 @@
     "copy-static-assets": "ts-node copyStaticAssets.ts"
   },
   "_moduleAliases": {
-    "@logger": "build/server/services/logger",
+    "@logger": "build/server/utils/logger",
     "@config": "build/server/config/configuration",
     "@errors": "build/server/services/errors",
     "@controllers": "build/server/controllers/",
-    "@utils": "build/server/services/utils"
+    "@utils": "build/server/utils"
   },
   "dependencies": {
     "bcrypt": "^2.0.0",
+    "bluebird": "^3.5.1",
     "body-parser": "^1.18.2",
     "busboy": "^0.2.14",
     "busboy-body-parser": "^0.3.2",

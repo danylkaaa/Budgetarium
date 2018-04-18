@@ -16,9 +16,9 @@ module.exports = {
     ],
     testEnvironment: "node",
     "moduleNameMapper": {
-        "@logger$": "<rootDir>/src/server/services/logger",
+        "@logger$": "<rootDir>/src/server/utils/logger",
         "@config":"<rootDir>/src/server/config/configuration",
-        "@utils/(.*)":"<rootDir>/src/server/services/utils/$1",
+        "@utils/(.*)":"<rootDir>/src/server/utils/$1",
         "@controllers/(.*)":"<rootDir>/src/server/controllers/$1",
     }
 };

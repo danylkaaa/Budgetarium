@@ -1,6 +1,6 @@
 import {Router, Request, Response, NextFunction} from "express";
 import * as express from "express";
-import APIController from "./api/index";
+import APIController from "./api/graphQL.controller";
 import Logger from "@logger";
 import errorMiddleware from "@utils/errorMiddleware";
 import config from "@config";

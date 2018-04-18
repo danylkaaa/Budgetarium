@@ -11,12 +11,12 @@
     "baseUrl": "src/server",
     "paths": {
       "@logger": [
-        "services/logger"
+        "utils/logger"
       ],
       "@config":["config/configuration"],
       "@errors/*":["services/errors/*"],
       "@controllers/*":["controllers/*"],
-      "@utils/*":["services/utils/*"]
+      "@utils/*":["utils/*"]
     }
   },
   "files": [
