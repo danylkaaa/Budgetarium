@@ -1,6 +1,6 @@
 import * as winston from "winston";
 
-function logger(module: NodeModule) {
+export default function logger(module: NodeModule) {
     const path = module.filename.split("/").slice(-2).join("/");
     return new winston.Logger({
         transports: [
@@ -17,5 +17,3 @@ function logger(module: NodeModule) {
 if (process.env.NODE_ENV !== "production") {
     logger(module).debug("Logging initialized at debug level");
 }
-
-export { logger as Logger };

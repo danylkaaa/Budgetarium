@@ -12,7 +12,7 @@ const bluebird = require("bluebird");
 import config from "@config";
 import {Logger} from "@utils";
 import { Application } from "express";
-import controllers from "@controllers/index.controller";
+import controllers from "@controllers/index";
 
 const busboyBodyParser = require("busboy-body-parser");
 
