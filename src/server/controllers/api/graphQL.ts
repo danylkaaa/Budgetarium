@@ -10,10 +10,10 @@ const GraphQLHTTP = require("express-graphql");
 const router: Router = express.Router();
 
 const rootValue = {
-    postTitle: () => {
+    postTitle: (): string => {
         return "Build a Simple GraphQL Server With Express and NodeJS";
     },
-    blogTitle: () => {
+    blogTitle: (): string => {
         return "scotch.io";
     }
 };

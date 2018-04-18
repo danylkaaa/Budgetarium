@@ -9,8 +9,9 @@ const errorhandler = require("errorhandler");
 const express = require("express");
 const mongoose = require("mongoose");
 const bluebird = require("bluebird");
+const morgan = require("morgan");
 import config from "@config";
-import {Logger} from "@utils";
+import { Logger } from "@utils";
 import { Application } from "express";
 import controllers from "@controllers/index";
 
@@ -80,9 +81,11 @@ class App {
     }
 
     private usePlugins(): void {
+        this.app.use(morgan(":method :url :status - :response-time ms"));
         this.app.use(errorhandler());
         this.app.use(cors());
-        this.app.use(bodyParser.urlencoded({ extended: true }));
+        this.app.use(/\/((?!graphql).)*/, bodyParser.urlencoded({ extended: true }));
+        this.app.use(/\/((?!graphql).)*/, bodyParser.json());
         this.app.use(expressValidator());
         this.app.use(lusca.xframe("SAMEORIGIN"));
         this.app.use(lusca.xssProtection(true));

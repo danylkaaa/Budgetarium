@@ -29,9 +29,9 @@ function onSPA(req: Request, res: Response): void {
     res.sendFile(path.join(__dirname, "../public/index.html"));
 }
 
-// router.use("/api", APIController);
-// router.use("*", onSPA);
-// router.use(error404);
-// router.use(onError);
+router.use("/api", APIController);
+router.use("*", onSPA);
+router.use(error404);
+router.use(onError);
 
 export default router;
