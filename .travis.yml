@@ -1,0 +1,25 @@
+language: node_js
+node_js:
+- node
+sudo: false
+services:
+  - mongodb
+notifications:
+  email:
+    on_success: never
+    on_failure: never
+script:
+- npm run build
+- npm run test
+after_success:
+- bash <(curl -s https://codecov.io/bash) -e TRAVIS_NODE_VERSION
+cache:
+  directories:
+  - node_modules
+deploy:
+  provider: heroku
+  strategy: git
+  app: budgetarium
+  on: master
+  api_key:
+    secure: ZrPNafiGvEXYNTO7b9CAs4acXckW1HgUL+LgRZ5EXdPOcIMn1JbxivpgndEXgdGQZC0BT9229ED2Vs7iQo7D1G//++CSOTbg6oSGirsIRNiWtEyP0UUu0z+QYn0tjXY8o1CFTmnnInvBNkjSWh2Wbl12lUIT/xXap54/jwvk+dXBvsIMNbd2ti0tRDy7f1bB8IUza+7UVncTFAm1MIShlzelDlIkisMMc5ikHdHlMOciSoYqBVfiNSH20ZiaG9iQaWGMzhaiXWas7l21haDOuJ5JAzg7XzGoDUdhq3LBNYOtTLH7ebheglbf9KMnAsNrHG6InCQvopQhmnVnOZR4o57XW3nJz0trjnEKTuOnnIE2W6ikOk1Mw8cQctBALQ5izsSvsnOBlWgRDLvqUBd7edCJfGLuhEztrtF1jF47Nieh3d+vTlAQNYS8mxLnbGSXMxuq09M//qjfmC0xHstxhjxByhmgyDbM6WjKfG+BX0/AfzC5hTVDF+Kv05/poL5JmgsEBFi+ZU2N/TiAAANxg5mty1Rxze1makwZjUJ5/+bdB7Gfzy+Hcue9Xk6TPdRHC+UFXG7je7ACqmr6uJCQQ+oezLtnzjfvfCJL8vnZmPkRtUzV+W07XLS/TVj0opyndgqLq55ezmWJk3lyXWyLOn9/7vizM8L2LLru58bmYpA=

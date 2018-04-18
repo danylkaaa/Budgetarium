@@ -36,12 +36,12 @@ service lifecycle. To run server in production mode, just use next command
 ## Running the tests
 **Note**, all tests require created .env file
 
-####Unit test
+#### Unit test
 Run unit tests with command
 ```bash
 npm run test
 ```    
-####Lint code
+#### Lint code
 Lint code of server using rules, defined in [.eslintrc.js](.eslintrc.js) file
 ```bash
 npm run lint
