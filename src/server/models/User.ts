@@ -1,5 +1,8 @@
 import mongoose from "mongoose";
-
+import { Logger } from "@utils";
+import bcrypt from "bcrypt";
+import config from "@config";
+import crypto from "crypto";
 /**
  * Defines User model
  */
@@ -22,14 +25,14 @@ export type UserModel = mongoose.Document & {
     gravatar: (size: number) => string,
 };
 
-type comparePasswordFunction = (plainPasswordCandidate: string, cb: (err: any, isMatch: any) => {}) => void;
+type comparePasswordFunction = (plainPasswordCandidate: string) => Promise<boolean>;
 
 export type AuthToken = {
     accessToken: string,
     king: string
 };
 
-const userSchema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema({
     email: { type: String, unique: true },
     password: String,
     passwordResetToken: String,
@@ -45,7 +48,36 @@ const userSchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
-userSchema.pre("save", (next) => {
-    const user: mongoose.Document = this;
+UserSchema.pre("save", async (next) => {
+    const user: UserModel = this;
     if (!user.isModified("password")) { return next(); }
+
+    bcrypt.genSalt(config.get("security.SALT_LENGTH"), (err: any, salt: string) => {
+        if (err) { return next(err); }
+        bcrypt.hash(user.password, salt, (err: mongoosee.Error, hash: string) => {
+            if (err) { return next(err); }
+            user.password = hash;
+            next();
+        });
+    });
 });
+
+const comparePassword: comparePasswordFunction = (plainPasswordCandidate: string): Promise<boolean> => {
+    return bcrypt.compare(plainPasswordCandidate, this.password);
+};
+
+UserSchema.methods.comparePassword = comparePassword;
+UserSchema.methods.gravatar = (size: number): string => {
+    if (!size) {
+        size = 200;
+    }
+    if (!this.email) {
+        return `https://gravatar.com/avatar/?s=${size}&d=retro`;
+    } else {
+        const md5: string = crypto.createHash("md5").update(this.email).digest("hex");
+        return `https://gravatar.com/avatar/${md5}?s=${size}&d=retro`;
+    }
+};
+
+const USER = mongoose.model("User", UserSchema);
+export default USER;

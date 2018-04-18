@@ -11,6 +11,7 @@
         "eofline": false,
         "forin": true,
         "indent": false,
+        "no-shadowed-variable":false,
         "label-position": true,
         "allowUnusedLabels":false,
         "max-line-length": [true, 150],

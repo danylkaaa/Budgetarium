@@ -4,3 +4,6 @@ export const queries: object = {
 export const publicInfo: object = {
     user: "name created id",
 };
+export const security: object = {
+    SALT_LENGTH: 10
+}
