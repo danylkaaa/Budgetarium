@@ -87,13 +87,13 @@ class App {
         this.app.use(lusca.xframe("SAMEORIGIN"));
         this.app.use(lusca.xssProtection(true));
         this.app.use(express.static(path.join(__dirname, "public"), { maxAge: "10h" }));
-        this.app.use(busboyBodyParser);
+        this.app.use(busboyBodyParser());
         logs.info("App configured");
     }
 
     private routes(): void {
-        logs.info("App connected routes");
         this.app.use(controllers);
+        logs.info("App connected routes");
     }
 }
 

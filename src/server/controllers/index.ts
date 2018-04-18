@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction } from "express";
 import * as express from "express";
-import APIController from "./api/graphQL.controller";
+import APIController from "./api/graphQL";
 import { Logger, errorMiddleware } from "@utils";
 import config from "@config";
 import path from "path";
@@ -21,7 +21,6 @@ function onError(err: any, req: Request, res: Response): void {
     res.locals.error = config.get("isDev") ? err : {};
     res.status(err.status || 500);
     res.json({
-        success: false,
         message: err.message || "Server error",
     });
 }
@@ -30,9 +29,9 @@ function onSPA(req: Request, res: Response): void {
     res.sendFile(path.join(__dirname, "../public/index.html"));
 }
 
-router.use("/api", APIController);
-router.use("*", onSPA);
-router.use(error404);
-router.use(errorMiddleware, onError);
+// router.use("/api", APIController);
+// router.use("*", onSPA);
+// router.use(error404);
+// router.use(onError);
 
 export default router;

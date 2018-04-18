@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import * as mongoose from "mongoose";
 import { Logger } from "@utils";
 import bcrypt from "bcrypt";
 import config from "@config";
@@ -54,7 +54,7 @@ UserSchema.pre("save", async (next) => {
 
     bcrypt.genSalt(config.get("security.SALT_LENGTH"), (err: any, salt: string) => {
         if (err) { return next(err); }
-        bcrypt.hash(user.password, salt, (err: mongoosee.Error, hash: string) => {
+        bcrypt.hash(user.password, salt, (err: mongoose.Error, hash: string) => {
             if (err) { return next(err); }
             user.password = hash;
             next();

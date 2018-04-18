@@ -5,16 +5,21 @@
     ],
     "jsRules": {},
     "rules": {
-        "ordered-imports": [false],
+        "ordered-imports": [
+            false
+        ],
         "class-name": true,
         "curly": true,
         "eofline": false,
         "forin": true,
         "indent": false,
-        "no-shadowed-variable":false,
+        "no-shadowed-variable": false,
         "label-position": true,
-        "allowUnusedLabels":false,
-        "max-line-length": [true, 150],
+        "allowUnusedLabels": false,
+        "max-line-length": [
+            true,
+            150
+        ],
         "no-arg": true,
         "no-bitwise": true,
         "no-console": false,
@@ -25,9 +30,9 @@
         "no-empty": true,
         "no-eval": true,
         "no-switch-case-fall-through": true,
-        "trailing-comma":false,
+        "trailing-comma": false,
         "no-trailing-whitespace": true,
-        "interface-over-type-literal":false,
+        "interface-over-type-literal": false,
         "no-unused-expression": true,
         "no-var-requires": false,
         "one-line": [
@@ -38,10 +43,17 @@
             "check-whitespace"
         ],
         "object-literal-sort-keys": false,
-        "quotemark": [true, "double"],
+        "quotemark": [
+            true,
+            "double"
+        ],
         "semicolon": true,
-        "triple-equals": [true, "allow-null-check"],
-        "typedef": [true,
+        "triple-equals": [
+            true,
+            "allow-null-check"
+        ],
+        "typedef": [
+            true,
             "callSignature",
             "indexSignature",
             "parameter",
@@ -49,9 +61,9 @@
             "variableDeclarator",
             "memberVariableDeclarator"
         ],
-        "use-strict": false,
         "variable-name": [
             true,
+            "check-format",            
             "allow-leading-underscore"
         ],
         "whitespace": [
