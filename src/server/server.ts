@@ -40,4 +40,4 @@ function onListening() {
     logs.debug("Listening on " + bind);
 }
 
-export default server;
+export default app;

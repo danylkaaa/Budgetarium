@@ -14,5 +14,11 @@ module.exports = {
     testMatch: [
         "**/test/**/*.test.(ts|js)"
     ],
-    testEnvironment: "node"
+    testEnvironment: "node",
+    "moduleNameMapper": {
+        "@logger$": "<rootDir>/src/server/services/logger",
+        "@config":"<rootDir>/src/server/config/configuration",
+        "@utils/(.*)":"<rootDir>/src/server/services/utils/$1",
+        "@controllers/(.*)":"<rootDir>/src/server/controllers/$1",
+    }
 };

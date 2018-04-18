@@ -1,13 +1,12 @@
 "use strict";
 require("module-alias/register");
-import * as path from "path";
-import * as bodyParser from "body-parser";
-import * as lusca from "lusca";
-import * as expressValidator from "express-validator";
-import * as cors from "cors";
-import * as errorhandler from "errorhandler";
-import * as express from "express";
-import config from "@config";
+const path = require("path");
+const bodyParser = require("body-parser");
+const lusca = require("lusca");
+const expressValidator = require("express-validator");
+const cors = require("cors");
+const errorhandler = require("errorhandler");
+const express = require("express");
 import Logger from "@logger";
 import {Application} from "express";
 import controllers from "@controllers/index";
@@ -29,7 +28,7 @@ class App {
     private readonly app: Application;
 
     private constructor() {
-        this.app = express();
+        this.app = require("express")();
         this.configure();
         // configure app
         this.usePlugins();
@@ -66,8 +65,7 @@ class App {
         this.app.use(expressValidator());
         this.app.use(lusca.xframe("SAMEORIGIN"));
         this.app.use(lusca.xssProtection(true));
-        this.app.use(
-            express.static(path.join(__dirname, "public"), {maxAge: "10h"}));
+        this.app.use(express.static(path.join(__dirname, "public"), {maxAge: "10h"}));
         this.app.use(busboyBodyParser);
         logs.info("App configured");
     }

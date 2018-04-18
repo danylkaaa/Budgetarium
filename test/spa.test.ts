@@ -1,7 +1,6 @@
 import request from "supertest";
-import App from "../src/server/App";
+import app from "../src/server/server";
 
-const app: Express.Application = App.getInstance().getApp();
 const chai = require("chai");
 const expect = chai.expect;
 
