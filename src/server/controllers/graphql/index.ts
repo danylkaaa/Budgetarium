@@ -1,30 +1,14 @@
-
 import app from "server";
 import config from "@config";
 import * as express from "express";
 import * as  passport from "passport";
-import { IUser} from "@DB/models/User";
-// import * as GraphQLHTTP from "express-graphql";
-// import { buildSchema } from "graphql";
-
-const { buildSchema } = require("graphql");
+import typeDefs from "./schema";
+import rootValue from "./resolvers";
+import { IUser } from "@DB/models/User";
+import { buildSchema } from "graphql";
 const GraphQLHTTP = require("express-graphql");
 
-const rootValue = {
-    postTitle: (): string => {
-        return "Build a Simple GraphQL Server With Express and NodeJS";
-    },
-    blogTitle: (): string => {
-        return "scotch.io";
-    }
-};
-
-const schema = buildSchema(`
-  type Query {
-    postTitle: String,
-    blogTitle: String
-  }
-`);
+const schema = buildSchema(typeDefs);
 
 const GQL = GraphQLHTTP(
     (req: Request, res: Response) => {

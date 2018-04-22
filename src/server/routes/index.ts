@@ -1,7 +1,7 @@
 import { Router, Request, Response, NextFunction } from "express";
 import * as express from "express";
 import * as path from "path";
-import GraphQLController from "@gql";
+import GraphQLController from "@GraphQL/index";
 import { Logger, errorMiddleware } from "@utils";
 import config from "@config";
 

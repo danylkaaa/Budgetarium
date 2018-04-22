@@ -20,7 +20,7 @@ function setupJwt(kind: string): passport.Strategy {
     return new JWTStrategy(opts, async (jwt_payload, next) => {
         logger.debug('payload received', jwt_payload);
         // usually this would be a database call:
-        const user: IUser = await UserDB.getByToken(kind);
+        const user: IUser = await UserDB.getByToken(kind, jwt_payload);
         if (user) {
             next(null, user);
         } else {

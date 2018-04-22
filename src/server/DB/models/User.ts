@@ -21,8 +21,6 @@ export interface IUser extends mongoose.Document {
     profile: {
         name: string,
         gender: string,
-        location: string,
-        website: string,
         picture: string
     },
     comparePassword: comparePasswordFunction,
@@ -31,7 +29,7 @@ export interface IUser extends mongoose.Document {
     gravatar: (size: number) => string,
 };
 
-const UserSchema: mongoose.Schema = new mongoose.Schema({
+export const UserSchema: mongoose.Schema = new mongoose.Schema({
     email: { type: String, unique: true },
     password: String,
     passwordResetToken: String,

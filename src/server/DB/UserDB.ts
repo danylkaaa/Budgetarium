@@ -6,7 +6,7 @@ import jsonwebtoken from "jsonwebtoken";
 class UserDB extends AbstractDB<IUser>{
     protected static _instance: UserDB;
 
-    static get instance(): UserDB {
+    public static  getInstance(): UserDB {
         if (!this._instance) {
             this._instance = new UserDB();
         }
@@ -25,4 +25,4 @@ class UserDB extends AbstractDB<IUser>{
     }
 }
 
-export default UserDB.instance;
+export default UserDB.getInstance();

@@ -15,7 +15,7 @@
       "@controllers/*":["controllers/*"],
       "@utils":["utils/index"],
       "@routes":["routes/index"],
-      "@gql":["controllers/graphql/index"],
+      "@GraphQL/*":["controllers/graphql/*"],
       "@DB/*":["DB/*"]
     },
     "lib": [

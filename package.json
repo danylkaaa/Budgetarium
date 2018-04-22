@@ -11,7 +11,7 @@
     "build": "npm run lint && npm run build-ts && npm run copy-static-assets",
     "test": "jest --forceExit --coverage --verbose",
     "serve-debug": "NODE_ENV=development nodemon build/server/server",
-    "dev": "concurrently -k -p \"[{name}]\" -n \"TS,Node\" -c \"yellow.bold,cyan.bold\" \"npm run watch-ts\" \"npm run serve-debug\"",
+    "dev": "npm run copy-static-assets && concurrently -k -p \"[{name}]\" -n \"TS,Node\" -c \"yellow.bold,cyan.bold\" \"npm run watch-ts\" \"npm run serve-debug\"",
     "build-ts": "tsc",
     "watch-ts": "tsc -w",
     "lint": "tslint src/**/*.ts",
@@ -23,8 +23,8 @@
     "@controllers": "build/server/controllers",
     "@utils": "build/server/utils/index",
     "@routes": "build/server/routes/index",
-    "@gql": "build/server/controllers/graphql/index",
-    "@DB": "build/server/DB"
+    "@DB": "build/server/DB",
+    "@GraphQL": "build/server/controllers/graphql"
   },
   "dependencies": {
     "bcrypt": "^2.0.0",
@@ -46,6 +46,7 @@
     "module-alias": "^2.0.6",
     "mongoose": "^5.0.15",
     "mongoose-paginate": "^5.0.3",
+    "mongoose-schema-to-graphql": "^2.7.2",
     "morgan": "^1.9.0",
     "passport": "^0.4.0",
     "passport-facebook-token": "^3.3.0",
