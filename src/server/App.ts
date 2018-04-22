@@ -1,20 +1,20 @@
 "use strict";
 require("module-alias/register");
-import path from "path";
-import bodyParser from "body-parser";
-import expressValidator from "express-validator";
-import cors from "cors";
-import errorhandler from "errorhandler";
-import express from "express";
-import mongoose from "mongoose";
-import bluebird from "bluebird";
-import morgan from "morgan";
+const path = require("path");
+const bodyParser = require("body-parser");
+const expressValidator = require("express-validator");
+const cors = require("cors");
+const errorhandler = require("errorhandler");
+const express = require("express");
+const mongoose = require("mongoose");
+const bluebird = require("bluebird");
+const morgan = require("morgan");
+const compression = require("compression");
+import * as  passport from "passport";
 import config from "@config";
 import { Logger } from "@utils";
 import { Application } from "express";
 import routes from "@routes";
-import passport from "passport";
-import compression from "compression";
 const logs = Logger(module);
 
 class App {

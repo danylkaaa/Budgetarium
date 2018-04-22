@@ -1,9 +1,9 @@
 import { Router, Request, Response, NextFunction } from "express";
 import * as express from "express";
+import * as path from "path";
 import GraphQLController from "@gql";
 import { Logger, errorMiddleware } from "@utils";
 import config from "@config";
-import path from "path";
 
 const logs = Logger(module);
 const router: Router = express.Router();

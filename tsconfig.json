@@ -16,7 +16,7 @@
       "@utils":["utils/index"],
       "@routes":["routes/index"],
       "@gql":["controllers/graphql/index"],
-      "@DB/*":["models/*"]
+      "@DB/*":["DB/*"]
     },
     "lib": [
       "es5",

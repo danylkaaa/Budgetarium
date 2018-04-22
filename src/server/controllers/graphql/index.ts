@@ -1,9 +1,9 @@
 
 import app from "server";
-import * as express from "express";
 import config from "@config";
-import passport from "passport";
-import { UserModel } from "@DB/User";
+import * as express from "express";
+import * as  passport from "passport";
+import { IUser} from "@DB/models/User";
 // import * as GraphQLHTTP from "express-graphql";
 // import { buildSchema } from "graphql";
 
@@ -29,7 +29,7 @@ const schema = buildSchema(`
 const GQL = GraphQLHTTP(
     (req: Request, res: Response) => {
         return new Promise((resolve, reject) => {
-            const next = (user: UserModel, info = {}) => {
+            const next = (user: IUser, info = {}) => {
                 /**
                  * GraphQL configuration goes here
                  */
