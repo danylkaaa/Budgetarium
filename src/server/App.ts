@@ -1,22 +1,20 @@
 "use strict";
 require("module-alias/register");
-const path = require("path");
-const bodyParser = require("body-parser");
-const lusca = require("lusca");
-const expressValidator = require("express-validator");
-const cors = require("cors");
-const errorhandler = require("errorhandler");
-const express = require("express");
-const mongoose = require("mongoose");
-const bluebird = require("bluebird");
-const morgan = require("morgan");
+import path from "path";
+import bodyParser from "body-parser";
+import expressValidator from "express-validator";
+import cors from "cors";
+import errorhandler from "errorhandler";
+import express from "express";
+import mongoose from "mongoose";
+import bluebird from "bluebird";
+import morgan from "morgan";
 import config from "@config";
 import { Logger } from "@utils";
 import { Application } from "express";
-import controllers from "@controllers/index";
-
-const busboyBodyParser = require("busboy-body-parser");
-
+import routes from "@routes";
+import passport from "passport";
+import compression from "compression";
 const logs = Logger(module);
 
 class App {
@@ -59,7 +57,6 @@ class App {
                 logs.info("Connected to MongoDB");
             }).catch((err: any) => {
                 logs.error("MongoDB connection error. Please make sure MongoDB is running. " + err);
-                logs.debug("Check DB's availability");
             });
     }
 
@@ -82,20 +79,23 @@ class App {
 
     private usePlugins(): void {
         this.app.use(morgan(":method :url :status - :response-time ms"));
-        this.app.use(errorhandler());
+        if (config.get("isDev")) {
+            this.app.use(errorhandler());
+        }
         this.app.use(cors());
-        this.app.use(/\/((?!graphql).)*/, bodyParser.urlencoded({ extended: true }));
-        this.app.use(/\/((?!graphql).)*/, bodyParser.json());
+        // this.app.use(/\/((?!graphql).)*/, bodyParser.urlencoded({ extended: true }));
+        // this.app.use(/\/((?!graphql).)*/, bodyParser.json());
+        this.app.use(bodyParser.urlencoded({ extended: true }));
+        this.app.use(bodyParser.json());
         this.app.use(expressValidator());
-        this.app.use(lusca.xframe("SAMEORIGIN"));
-        this.app.use(lusca.xssProtection(true));
+        this.app.use(compression());
         this.app.use(express.static(path.join(__dirname, "public"), { maxAge: "10h" }));
-        this.app.use(busboyBodyParser());
+        this.app.use(passport.initialize());
         logs.info("App configured");
     }
 
     private routes(): void {
-        this.app.use(controllers);
+        this.app.use(routes);
         logs.info("App connected routes");
     }
 }

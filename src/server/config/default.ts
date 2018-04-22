@@ -5,5 +5,6 @@ export const publicInfo: object = {
     user: "name created id",
 };
 export const security: object = {
-    SALT_LENGTH: 10
+    SALT_LENGTH: 10,
+    TOKEN_GENERATOR_ALGORITHM:"HS256"
 }

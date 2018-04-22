@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction } from "express";
 import * as express from "express";
-import APIController from "./api/graphQL";
+import GraphQLController from "@gql";
 import { Logger, errorMiddleware } from "@utils";
 import config from "@config";
 import path from "path";
@@ -29,7 +29,8 @@ function onSPA(req: Request, res: Response): void {
     res.sendFile(path.join(__dirname, "../public/index.html"));
 }
 
-router.use("/api", APIController);
+
+router.use("/api/graphql", GraphQLController);
 router.use("*", onSPA);
 router.use(error404);
 router.use(onError);

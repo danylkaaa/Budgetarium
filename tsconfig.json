@@ -13,7 +13,10 @@
       "@config":["config/configuration"],
       "@errors/*":["services/errors/*"],
       "@controllers/*":["controllers/*"],
-      "@utils":["utils/index"]
+      "@utils":["utils/index"],
+      "@routes":["routes/index"],
+      "@gql":["controllers/graphql/index"],
+      "@DB/*":["models/*"]
     },
     "lib": [
       "es5",
