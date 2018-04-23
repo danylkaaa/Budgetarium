@@ -6,8 +6,7 @@ import mongoose from "mongoose";
 export { TokenGenerator as TokenGenerator };
 export { Logger as Logger };
 export { errorMiddleware as errorMiddleware };
-export { Projection as Projection }
-
+export { Projection as Projection };
 
 export interface IModel<T extends mongoose.Document> extends mongoose.PaginateModel<T> { };
 

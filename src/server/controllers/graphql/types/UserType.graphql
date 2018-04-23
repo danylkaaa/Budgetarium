@@ -7,3 +7,7 @@ type Query{
     users:[User]
     user(id:ID!):User
 }
+
+type Mutation{
+    signup(email:String!):String
+}

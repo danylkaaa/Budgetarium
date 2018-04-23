@@ -1,9 +1,9 @@
 import { Application } from "express";
 import passport from "passport";
-import passportLocal from "passport-local";
-import passportJWT from "passport-jwt";
+const passportLocal = require("passport-local");
+const passportJWT = require("passport-jwt");
 import UserDB from "@DB/UserDB";
-import { IUser } from "@DB/models/User";
+import { IUser, Payload } from "@DB/models/User";
 import config from "@config";
 import { Logger } from "@utils";
 import _ from "lodash";
@@ -13,12 +13,13 @@ const logger = Logger(module);
 function setupJwt(kind: string): passport.Strategy {
     const JWTStrategy = passportJWT.Strategy;
     const ExtractJwt = require('passport-jwt').ExtractJwt;
-    var opts: passportJWT.StrategyOptions = {
+    var opts = {
         jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
         secretOrKey: config.get(`security.secrets.${kind.toUpperCase()}`),
     };
-    return new JWTStrategy(opts, async (jwt_payload, next) => {
+    return new JWTStrategy(opts, async (req: any, jwt_payload: Payload, next: any) => {
         logger.debug('payload received', jwt_payload);
+        req.usedStrategy = kind;
         // usually this would be a database call:
         const user: IUser = await UserDB.getByToken(kind, jwt_payload);
         if (user) {
@@ -31,8 +32,9 @@ function setupJwt(kind: string): passport.Strategy {
 
 function setupLocal(): passport.Strategy {
     const LocalStrategy = passportLocal.Strategy;
-    return new LocalStrategy({ usernameField: "email" }, async (email, password, done) => {
-        const user: IUser = await UserDB.getByCredentials(email, password);
+    return new LocalStrategy({ usernameField: "email" }, async (req: any, username: string, password: string, done: any) => {
+        const user: IUser = await UserDB.getByCredentials(username, password);
+        req.usedStrategy = "local";
         if (user) {
             return done(null, user);
         } else {

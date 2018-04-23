@@ -2,16 +2,20 @@ import app from "server";
 import config from "@config";
 import * as express from "express";
 import * as  passport from "passport";
-import typeDefs from "./schema";
-import rootValue from "./resolvers";
+import typeDefs from "./types";
+import resolvers from "./resolvers";
 import { IUser } from "@DB/models/User";
-import { buildSchema } from "graphql";
-const GraphQLHTTP = require("express-graphql");
+import { makeExecutableSchema } from 'graphql-tools';
+import * as GraphQLHTTP from 'express-graphql';
+import { Router, Request, Response, NextFunction } from "express";
 
-const schema = buildSchema(typeDefs);
 
-const GQL = GraphQLHTTP(
-    (req: Request, res: Response) => {
+const schema = makeExecutableSchema({ typeDefs, resolvers });
+const router = Router();
+
+
+router.use(GraphQLHTTP(
+    (req: Request, res: Response): Promise<any> => {
         return new Promise((resolve, reject) => {
             const next = (user: IUser, info = {}) => {
                 /**
@@ -19,9 +23,8 @@ const GQL = GraphQLHTTP(
                  */
                 resolve({
                     schema,
-                    rootValue,
-                    graphiql: process.env.NODE_ENV !== 'production', // <- only enable GraphiQL in production
-                    pretty: true,
+                    graphiql: config.get("isDev"), // <- only enable GraphiQL in production
+                    pretty: config.get("isDev"),
                     context: {
                         user: user || null,
                     },
@@ -31,11 +34,11 @@ const GQL = GraphQLHTTP(
              * Try to authenticate using passport,
              * but never block the call from here.
              */
-            passport.authenticate(['access', "refresh", "local"], { session: false }, (err, user) => {
-                next(user);
+            passport.authenticate(['access'], { session: false }, (err, loginOptions) => {
+                next(loginOptions);
             })(req, res, next);
-        });
-    }
-);
+        })
+    }));
 
-export default GQL;
+
+export const GraphQLRouter = router;
