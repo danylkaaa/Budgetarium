@@ -34,6 +34,7 @@
     "body-parser": "^1.18.2",
     "busboy": "^0.2.14",
     "busboy-body-parser": "^0.3.2",
+    "class-validator": "^0.8.5",
     "compression": "^1.7.2",
     "config": "^1.30.0",
     "cookie-parser": "^1.4.3",
@@ -56,6 +57,7 @@
     "passport-facebook-token": "^3.3.0",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
+    "validator": "^9.4.1",
     "winston": "^2.4.1"
   },
   "devDependencies": {
@@ -85,6 +87,7 @@
     "@types/passport-local": "^1.0.33",
     "@types/shelljs": "^0.7.8",
     "@types/supertest": "^2.0.4",
+    "@types/validator": "^9.4.0",
     "@types/winston": "^2.3.9",
     "chai": "^4.1.2",
     "concurrently": "^3.5.1",

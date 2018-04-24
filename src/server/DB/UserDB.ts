@@ -1,12 +1,12 @@
 import AbstractDB from "./AbstractDB";
-import { IUser, Payload } from "./models/User";
+import { IUser, Payload, UserModel } from "./models/User";
 import mongoose from "mongoose";
 import jsonwebtoken from "jsonwebtoken";
 
 class UserDB extends AbstractDB<IUser>{
     protected static _instance: UserDB;
 
-    public static  getInstance(): UserDB {
+    public static getInstance(): UserDB {
         if (!this._instance) {
             this._instance = new UserDB();
         }
@@ -22,6 +22,10 @@ class UserDB extends AbstractDB<IUser>{
     }
     public getByToken(kind: string, token: Payload): Promise<IUser> {
         return this.findOne({ id: token.id, jwtSalts: { [kind]: token.salt } });
+    }
+
+    public create({ email, password }: { email: string, password: string }): Promise<IUser> {
+        return super.create({ email, password });
     }
 }
 

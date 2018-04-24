@@ -1,12 +1,14 @@
 import Logger from "./logger";
-import errorMiddleware from "./errorMiddleware";
-import * as TokenGenerator from "./tokenGenerator";
-import * as Projection from "./projection";
 import mongoose from "mongoose";
-export { TokenGenerator as TokenGenerator };
-export { Logger as Logger };
-export { errorMiddleware as errorMiddleware };
-export { Projection as Projection };
+
+export { default as GraphQLValidator } from "./GraphQLValidator";
+export { default as TokenGenerator } from "./tokenGenerator";
+export { default as errorMiddleware } from "./errorMiddleware";
+
+
+export { default as Projection } from "./projection";
+export { default as ValidationErorr } from "./ValidationError";
+export { ValidationErrorDescription } from "./ValidationError";
 
 export interface IModel<T extends mongoose.Document> extends mongoose.PaginateModel<T> { };
 

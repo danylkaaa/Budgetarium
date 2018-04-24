@@ -42,7 +42,7 @@ export const UserSchema: mongoose.Schema = new mongoose.Schema({
     tokens: Array,
     profile: {
         name: String,
-        gender: { type: String, enum: ["male", "female", "none"] },
+        gender: { type: String, enum: ["male", "female", "any"] },
         location: String,
         website: String,
         picture: String
@@ -113,5 +113,4 @@ UserSchema.methods.gravatar = (size: number): string => {
         return `https://gravatar.com/avatar/${md5}?s=${size}&d=retro`;
     }
 };
-const UserModel: IModel<IUser> = mongoose.model<IUser>("User", UserSchema);
-export default UserModel;
+export const UserModel: IModel<IUser> = mongoose.model<IUser>("User", UserSchema);

@@ -19,6 +19,13 @@ abstract class AbstractDB<T extends Document>{
     public async size(): Promise<number> {
         return this._model.count({}).exec();
     }
+    public create(args: any): Promise<T> {
+        const instance = new this._model(args);
+        return instance.save();
+    }
+    public async isUnused(args: any): Promise<boolean> {
+        return (await this.findPaginated(args, { limit: 0 })).total == 0;
+    }
 }
 
 export default AbstractDB;
