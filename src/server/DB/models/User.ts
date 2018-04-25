@@ -75,7 +75,7 @@ UserSchema.pre("save", async function (next) {
             bcrypt.genSalt(config.get("security.SALT_LENGTH")),
             bcrypt.genSalt(config.get("security.SALT_LENGTH"))
         ]);
-        user.jwtSalts = {
+        user.jwtSecrets = {
             access: salts[0],
             refresh: salts[1]
         }
@@ -87,22 +87,22 @@ UserSchema.pre("save", async function (next) {
 });
 
 UserSchema.methods.generateAccessToken = function (): string {
-    const user: IUser = this;
+    console.log(this,2);
     const payload: Payload = {
-        id: user._id,
-        salt: user.jwtSalts.access
+        id: this._id,
+        salt: this.jwtSecrets.access
     };
     return TokenGenerator.generate("access", payload);
 };
 UserSchema.methods.generateRefreshToken = function (): string {
     const user: IUser = this;
     const payload: Payload = {
-        id: user._id,
-        salt: user.jwtSalts.refresh
+        id: this._id,
+        salt: this.jwtSecrets.refresh
     };
     return TokenGenerator.generate("refresh", payload);
 }
-UserSchema.methods.comparePassword = (plainPasswordCandidate: string): Promise<boolean> => {
+UserSchema.methods.comparePassword = function (plainPasswordCandidate: string): Promise<boolean> {
     return bcrypt.compare(plainPasswordCandidate, this.password);
 };
 

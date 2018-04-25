@@ -1,5 +1,4 @@
-import { Application } from "express";
-import passport from "passport";
+import * as passport from "passport";
 const passportLocal = require("passport-local");
 const passportJWT = require("passport-jwt");
 import UserDB from "@DB/UserDB";
@@ -7,6 +6,7 @@ import { IUser, Payload } from "@DB/models/User";
 import config from "@config";
 import { Logger } from "@utils";
 import * as _ from "lodash";
+import { Router } from "express-serve-static-core";
 
 const logger = Logger(module);
 
@@ -32,7 +32,8 @@ function setupJwt(kind: string): passport.Strategy {
 
 function setupLocal(): passport.Strategy {
     const LocalStrategy = passportLocal.Strategy;
-    return new LocalStrategy({ usernameField: "email" }, async (req: any, username: string, password: string, done: any) => {
+    return new LocalStrategy(async (req: any, username: string, password: string, done: any) => {
+        logger.debug(username, password);
         const user: IUser = await UserDB.getByCredentials(username, password);
         req.usedStrategy = "local";
         if (user) {
@@ -45,11 +46,9 @@ function setupLocal(): passport.Strategy {
 
 
 
-function setup(app: Application): void {
+export default function setup(): any {
     passport.use("access", setupJwt("access"));
     passport.use("refresh", setupJwt("refresh"));
     passport.use("local", setupLocal());
+    return passport.initialize();
 }
-
-
-export default setup;

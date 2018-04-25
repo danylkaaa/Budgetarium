@@ -15,6 +15,7 @@ import config from "@config";
 import { Logger } from "@utils";
 import { Application } from "express";
 import routes from "@routes";
+import auth from "./services/authentification";
 const logs = Logger(module);
 
 class App {
@@ -90,7 +91,7 @@ class App {
         this.app.use(expressValidator());
         this.app.use(compression());
         this.app.use(express.static(path.join(__dirname, "public"), { maxAge: "10h" }));
-        this.app.use(passport.initialize());
+        this.app.use(auth());
         logs.info("App configured");
     }
 

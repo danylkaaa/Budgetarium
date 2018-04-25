@@ -6,6 +6,5 @@ type Payload{
 type Mutation{
     signup(email:String!,password:String!):Payload
     signout:Boolean
-    accessToken:String
-    refreshToken:String
+    signin(email:String!,password:String!):Payload
 }
