@@ -6,7 +6,7 @@ import UserDB from "@DB/UserDB";
 import { IUser, Payload } from "@DB/models/User";
 import config from "@config";
 import { Logger } from "@utils";
-import _ from "lodash";
+import * as _ from "lodash";
 
 const logger = Logger(module);
 

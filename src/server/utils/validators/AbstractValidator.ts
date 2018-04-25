@@ -2,7 +2,7 @@
  * CHAIN OF RESPONSIBILITY
  */
 import { ValidationErrorDescription } from "./ValidationError";
-import _ from "lodash";
+import * as _ from "lodash";
 
 export interface IValidator {
     setHandler(path: string, handler: IValidator): void;

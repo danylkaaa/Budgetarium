@@ -5,6 +5,8 @@ type User{
     gravatar:String
 }
 type Query{
-    users():[User]
-    user(id:ID!):User
+    me:User
+    users:[User]    
+    user(id:ID!):User    
 }
+

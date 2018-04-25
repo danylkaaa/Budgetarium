@@ -4,6 +4,11 @@ import mongoose from "mongoose";
 import jsonwebtoken from "jsonwebtoken";
 
 class UserDB extends AbstractDB<IUser>{
+
+    constructor() {
+        super();
+        this._model = UserModel;
+    }
     protected static _instance: UserDB;
 
     public static getInstance(): UserDB {

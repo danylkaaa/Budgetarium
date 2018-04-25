@@ -1,9 +1,8 @@
 import * as mongoose from "mongoose";
 import { Logger, TokenGenerator, IModel } from "@utils";
-import bcrypt from "bcrypt";
+import * as  bcrypt from "bcrypt";
 import config from "@config";
-import crypto from "crypto";
-import validator from "validator";
+import * as crypto from "crypto";
 const logger = Logger(module);
 /**
  * Defines User model
@@ -25,8 +24,8 @@ export interface IUser extends mongoose.Document {
         picture: string
     },
     comparePassword: comparePasswordFunction,
-    accessToken: tokenGeneratorFunction,
-    refreshToken: tokenGeneratorFunction,
+    generateAccessToken: tokenGeneratorFunction,
+    generateRefreshToken: tokenGeneratorFunction,
     gravatar: (size: number) => string,
 };
 
@@ -66,9 +65,9 @@ export type AuthToken = {
     king: string
 };
 UserSchema.plugin(require("mongoose-paginate"));
-UserSchema.pre("save", async (next) => {
-    const user: IUser = this;
-    if (!user.isModified("password")) { return next(); }
+UserSchema.pre("save", async function (next) {
+    const user: any = this;
+    if (!this.isModified("password") && !this.isNew) { return next(); }
     try {
 
         const salts: Array<string> = await Promise.all([
@@ -76,8 +75,10 @@ UserSchema.pre("save", async (next) => {
             bcrypt.genSalt(config.get("security.SALT_LENGTH")),
             bcrypt.genSalt(config.get("security.SALT_LENGTH"))
         ]);
-        user.jwtSalts.access = salts[0];
-        user.jwtSalts.refresh = salts[1];
+        user.jwtSalts = {
+            access: salts[0],
+            refresh: salts[1]
+        }
         user.password = await bcrypt.hash(user.password, salts[2]);
     } catch (err) {
         logger.error(err);
@@ -85,7 +86,7 @@ UserSchema.pre("save", async (next) => {
     }
 });
 
-UserSchema.methods.generateAccessToken = (): string => {
+UserSchema.methods.generateAccessToken = function (): string {
     const user: IUser = this;
     const payload: Payload = {
         id: user._id,
@@ -93,7 +94,7 @@ UserSchema.methods.generateAccessToken = (): string => {
     };
     return TokenGenerator.generate("access", payload);
 };
-UserSchema.methods.generateRefreshToken = (): string => {
+UserSchema.methods.generateRefreshToken = function (): string {
     const user: IUser = this;
     const payload: Payload = {
         id: user._id,

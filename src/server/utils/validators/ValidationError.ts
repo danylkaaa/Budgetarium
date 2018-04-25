@@ -1,5 +1,6 @@
 import { GraphQLError } from 'graphql';
 
+
 export default class ValidationError extends GraphQLError {
     public readonly state: { [key: string]: Array<string> };
     constructor(errors: Array<ValidationErrorDescription>) {
@@ -19,4 +20,5 @@ export default class ValidationError extends GraphQLError {
 export interface ValidationErrorDescription {
     key: string,
     message: string,
+    [field: string]: string
 }

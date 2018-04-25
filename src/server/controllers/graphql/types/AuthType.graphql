@@ -1,13 +1,11 @@
 type Payload{
-    accesstoken:String!
+    accessToken:String!
     refreshToken:String!
 }
 
-
-
 type Mutation{
     signup(email:String!,password:String!):Payload
-    signout():Boolean
-    accessToken():String
-    refreshToken():String
+    signout:Boolean
+    accessToken:String
+    refreshToken:String
 }
