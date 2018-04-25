@@ -9,7 +9,6 @@
     "start": "npm run serve",
     "serve": "NODE_ENV=production node build/server/server.js",
     "build": "npm run lint && npm run build-ts && npm run copy-static-assets",
-    "test": "jest --forceExit --coverage --verbose",
     "serve-debug": "NODE_ENV=development nodemon build/server/server",
     "dev": "npm run copy-static-assets && concurrently -k -p \"[{name}]\" -n \"TS,Node\" -c \"yellow.bold,cyan.bold\" \"npm run watch-ts\" \"npm run serve-debug\"",
     "build-ts": "tsc",
@@ -27,7 +26,6 @@
     "@GraphQL": "build/server/controllers/graphql"
   },
   "dependencies": {
-    "apollo-server": "^0.3.3",
     "apollo-server-express": "^1.3.5",
     "bcrypt": "^2.0.0",
     "bluebird": "^3.5.1",
@@ -91,7 +89,6 @@
     "@types/winston": "^2.3.9",
     "chai": "^4.1.2",
     "concurrently": "^3.5.1",
-    "jest": "^22.4.3",
     "nodemon": "^1.17.3",
     "shelljs": "^0.8.1",
     "supertest": "^3.0.0",

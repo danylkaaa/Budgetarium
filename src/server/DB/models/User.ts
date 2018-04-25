@@ -4,10 +4,11 @@ import * as  bcrypt from "bcrypt";
 import config from "@config";
 import * as crypto from "crypto";
 const logger = Logger(module);
+
 /**
  * Defines User model
  */
-export interface IUser extends mongoose.Document {
+export type IUser  =mongoose.Document& {
     email: string,
     password: string,
     passwordResetToken: string,
@@ -28,7 +29,6 @@ export interface IUser extends mongoose.Document {
     generateRefreshToken: tokenGeneratorFunction,
     gravatar: (size: number) => string,
 };
-
 export const UserSchema: mongoose.Schema = new mongoose.Schema({
     email: {
         type: String,

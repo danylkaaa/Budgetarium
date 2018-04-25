@@ -4,6 +4,7 @@ import { ValidationError } from "class-validator";
 import { ValidationErrorDescription } from "@utils";
 import * as _ from "lodash";
 import UserDB from "@DB/UserDB";
+import RootValidator from "./RootValidator";
 
 class EmailValidation extends AbstractValidator {
     private static _instance: EmailValidation = new EmailValidation();
@@ -62,6 +63,7 @@ class UserValidator extends AbstractValidator {
 
     private constructor() {
         super();
+        RootValidator.setHandler("user",this);
         this.setHandler("email", EmailValidation.getInstance());
     }
 

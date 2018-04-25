@@ -18,6 +18,10 @@ module.exports = {
     "moduleNameMapper": {
         "@config":"<rootDir>/src/server/config/configuration",
         "@utils":"<rootDir>/src/server/utils/index",
+        "@errors/(.*)":"<rootDir>/src/server/services/errors/$1",
+        "@routes":"<rootDir>/src/server/routes/index",
+        "@GraphQL/(.*)":"<rootDir>/src/server/controllers/graphql/$1",
+        "@DB/(.*)":"<rootDir>/src/server/DB/$1",
         "@controllers/(.*)":"<rootDir>/src/server/controllers/$1",
     }
 };

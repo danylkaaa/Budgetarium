@@ -1,6 +1,7 @@
-"use strict";
 require("module-alias/register");
 const path = require("path");
+import { Logger } from "@utils";
+const logs = Logger(module);
 const bodyParser = require("body-parser");
 const expressValidator = require("express-validator");
 const cors = require("cors");
@@ -12,11 +13,9 @@ const morgan = require("morgan");
 const compression = require("compression");
 import * as  passport from "passport";
 import config from "@config";
-import { Logger } from "@utils";
 import { Application } from "express";
 import routes from "@routes";
-import auth from "./services/authentification";
-const logs = Logger(module);
+import auth from "./services/auth";
 
 class App {
     public static getInstance(): App {
@@ -43,6 +42,7 @@ class App {
         } catch (e) {
             logs.error("Catch error while construct app");
             logs.error(e);
+            process.exit(-1);
         }
     }
 

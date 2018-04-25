@@ -10,7 +10,6 @@ notifications:
     on_failure: never
 script:
 - npm run build
-- npm run test
 after_success:
 - bash <(curl -s https://codecov.io/bash) -e TRAVIS_NODE_VERSION
 cache:
