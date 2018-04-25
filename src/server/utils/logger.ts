@@ -16,5 +16,4 @@ export default function logger(module: NodeModule) {
 
 if (process.env.NODE_ENV !== "production") {
     logger(module).debug("Logging initialized at debug level");
-    console.trace("123");
 }

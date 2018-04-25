@@ -1,4 +1,5 @@
 import AbstractValidator from "./AbstractValidator";
+import UserValidator from "./UserValidator";
 
 
 class RootValidator extends AbstractValidator {
@@ -10,6 +11,7 @@ class RootValidator extends AbstractValidator {
 
     private constructor() {
         super();
+        this.setHandler("user",UserValidator);                
     }
 }
 

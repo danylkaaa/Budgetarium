@@ -1,12 +1,21 @@
-type User{
+"""
+ A type that describes user.
+"""
+type User implements Paginable{
+    " The user's unique id."
     id:ID!
+    " The user's real name."
     name:String
-    gender:String
+    " The user's avatar."
     gravatar:String
 }
+
 type Query{
+    " Get info about current account."
     me:User
-    users:[User]    
+    " Get info about users by query."
+    users:Pagination    
+    " Get info about user by id."
     user(id:ID!):User    
 }
 

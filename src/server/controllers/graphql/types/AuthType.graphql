@@ -1,10 +1,23 @@
+"""
+A type that describes object with JWT tokens 
+"""
 type Payload{
     accessToken:String!
     refreshToken:String!
 }
 
+input Credentials{
+    email:String!
+    password:String!
+}
+
 type Mutation{
-    signup(email:String!,password:String!):Payload
-    signout:Boolean
-    signin(email:String!,password:String!):Payload
+    " Get new access JWT token"
+    access:String
+    " Signup in this service"
+    signup(credentials:Credentials):Payload
+    " Exit from all openned sessions"
+    logout:Boolean
+    " Enter to existed account using email and password"
+    login(credentials:Credentials):Payload
 }

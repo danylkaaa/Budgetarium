@@ -8,7 +8,7 @@ const logger = Logger(module);
 /**
  * Defines User model
  */
-export type IUser  =mongoose.Document& {
+export type IUser = mongoose.Document & {
     email: string,
     password: string,
     passwordResetToken: string,
@@ -21,21 +21,25 @@ export type IUser  =mongoose.Document& {
     tokens: AuthToken[],
     profile: {
         name: string,
-        gender: string,
         picture: string
     },
     comparePassword: comparePasswordFunction,
     generateAccessToken: tokenGeneratorFunction,
     generateRefreshToken: tokenGeneratorFunction,
+    regenerateJWTSalts: tokenSaltGenerator,
     gravatar: (size: number) => string,
 };
 export const UserSchema: mongoose.Schema = new mongoose.Schema({
     email: {
         type: String,
         unique: true,
+        required:true,
         trim: true
     },
-    password: String,
+    password:{
+        type:String,
+        required:true
+    } ,
     passwordResetToken: String,
     passwordResetExpires: Date,
     jwtSecrets: {
@@ -46,7 +50,6 @@ export const UserSchema: mongoose.Schema = new mongoose.Schema({
     tokens: Array,
     profile: {
         name: String,
-        gender: { type: String, enum: ["male", "female", "any"] },
         picture: String
     }
 }, { timestamps: true });
@@ -54,7 +57,7 @@ export const UserSchema: mongoose.Schema = new mongoose.Schema({
 
 type comparePasswordFunction = (plainPasswordCandidate: string) => Promise<boolean>;
 type tokenGeneratorFunction = () => string;
-
+type tokenSaltGenerator = () => Promise<any>;
 
 export type Payload = {
     id: string;
@@ -85,9 +88,18 @@ UserSchema.pre("save", async function (next) {
         next(err);
     }
 });
-
+UserSchema.methods.regenerateJWTSalts = async function (): Promise<any> {
+    const salts: Array<string> = await Promise.all([
+        bcrypt.genSalt(config.get("security.SALT_LENGTH")),
+        bcrypt.genSalt(config.get("security.SALT_LENGTH"))
+    ]);
+    this.jwtSecrets = {
+        access: salts[0],
+        refresh: salts[1]
+    }
+    return this.save();
+}
 UserSchema.methods.generateAccessToken = function (): string {
-    console.log(this,2);
     const payload: Payload = {
         id: this._id,
         salt: this.jwtSecrets.access

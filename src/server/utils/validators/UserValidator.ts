@@ -1,11 +1,11 @@
 import AbstractValidator from "./AbstractValidator";
 import * as validator from "validator";
 import { ValidationError } from "class-validator";
-import { ValidationErrorDescription } from "@utils";
+import { ValidationErrorDescription, Logger } from "@utils";
 import * as _ from "lodash";
 import UserDB from "@DB/UserDB";
 import RootValidator from "./RootValidator";
-
+const logger=Logger(module);
 class EmailValidation extends AbstractValidator {
     private static _instance: EmailValidation = new EmailValidation();
 
@@ -14,6 +14,7 @@ class EmailValidation extends AbstractValidator {
     }
 
     public async validateByPath(path: string[], value: any): Promise<ValidationErrorDescription> {
+        logger.debug(value);
         const key = "email";
         if (validator.isEmpty(value)) {
             return { key, message: "Is empty" };
@@ -63,10 +64,12 @@ class UserValidator extends AbstractValidator {
 
     private constructor() {
         super();
-        RootValidator.setHandler("user",this);
-        this.setHandler("email", EmailValidation.getInstance());
+        this.setHandler("password",PasswordlValidation.getInstance());
+        this.setHandler("email",EmailValidation.getInstance());
     }
 
 }
+
+
 
 export default UserValidator.getInstance();

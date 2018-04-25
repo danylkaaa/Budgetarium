@@ -32,6 +32,7 @@ router.use(GraphQLHTTP(
                         message: error.message,
                         state: error.originalError && error.originalError.state,
                         path: error.path,
+                        status:error.status||500
                     })
                 });
             };

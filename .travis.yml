@@ -3,7 +3,9 @@ node_js:
 - node
 sudo: false
 services:
-  - mongodb
+- mongodb
+install:
+-npm i typescript
 notifications:
   email:
     on_success: never
