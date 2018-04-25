@@ -3,6 +3,7 @@ import { Logger, TokenGenerator, IModel } from "@utils";
 import bcrypt from "bcrypt";
 import config from "@config";
 import crypto from "crypto";
+import validator from "validator";
 const logger = Logger(module);
 /**
  * Defines User model
@@ -30,7 +31,11 @@ export interface IUser extends mongoose.Document {
 };
 
 export const UserSchema: mongoose.Schema = new mongoose.Schema({
-    email: { type: String, unique: true },
+    email: {
+        type: String,
+        unique: true,
+        trim: true
+    },
     password: String,
     passwordResetToken: String,
     passwordResetExpires: Date,
@@ -43,8 +48,6 @@ export const UserSchema: mongoose.Schema = new mongoose.Schema({
     profile: {
         name: String,
         gender: { type: String, enum: ["male", "female", "any"] },
-        location: String,
-        website: String,
         picture: String
     }
 }, { timestamps: true });

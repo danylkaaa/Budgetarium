@@ -3,9 +3,8 @@ type User{
     name:String
     gender:String
     gravatar:String
-    
 }
 type Query{
-    users:[User]
+    users():[User]
     user(id:ID!):User
 }

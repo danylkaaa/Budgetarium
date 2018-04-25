@@ -8,6 +8,7 @@
     "inlineSources": true,
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
+    "experimentalDecorators": true,
     "baseUrl": "src/server",
     "paths": {
       "@config":["config/configuration"],

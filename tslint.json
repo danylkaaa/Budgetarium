@@ -24,6 +24,7 @@
         "no-bitwise": true,
         "no-console": false,
         "no-construct": true,
+
         "no-constructor-vars": false,
         "no-debugger": true,
         "no-duplicate-variable": true,

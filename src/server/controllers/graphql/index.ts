@@ -8,7 +8,7 @@ import { IUser } from "@DB/models/User";
 import { makeExecutableSchema } from 'graphql-tools';
 import * as GraphQLHTTP from 'express-graphql';
 import { Router, Request, Response, NextFunction } from "express";
-
+import { ValidationError } from "@utils";
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 const router = Router();
@@ -28,6 +28,12 @@ router.use(GraphQLHTTP(
                     context: {
                         user: user || null,
                     },
+                    formatError: (error: any): any => ({
+                        message: error.message,
+                        state: error.originalError && error.originalError.state,
+                        locations: error.locations,
+                        path: error.path,
+                    })
                 });
             };
             /**

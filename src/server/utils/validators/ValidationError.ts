@@ -1,6 +1,6 @@
 import { GraphQLError } from 'graphql';
 
-class ValidationError extends GraphQLError {
+export default class ValidationError extends GraphQLError {
     public readonly state: { [key: string]: Array<string> };
     constructor(errors: Array<ValidationErrorDescription>) {
         super('The request is invalid.');
@@ -20,4 +20,3 @@ export interface ValidationErrorDescription {
     key: string,
     message: string,
 }
-export default ValidationError;

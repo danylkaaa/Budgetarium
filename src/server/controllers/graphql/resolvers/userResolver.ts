@@ -1,19 +1,16 @@
-import * as validator from "validator";
-import { ValidationError, Logger } from "@utils";
+import { ValidationErrorDescription, Logger, Validator, ValidationError } from "@utils";
 import UserDB from "@DB/UserDB";
 const logger = Logger(module);
 
 export default {
     Mutation: {
-        signup: (_: any, data: any, context: any) => {
-            let errors: Array<ValidationError> = [];
-            logger.debug(data);
-            if (!validator.isEmail(data.email)) {
-                errors.push(new ValidationError("email", "Email is not valid"));
-            }
-            if (!UserDB.isUnused({ email: data.email })){
-                errors.push(new ValidationError("email", "Email is already taken"));                    
-            }
+        signup: async (_: any, { email, password }: { email: string, password: string }, context: any) => {
+            logger.debug(JSON.stringify({ email, password }));
+            const errors: Array<ValidationErrorDescription> = await Promise.all([Validator.validate("user.email.signup", email), Validator.validate("user.password", password)]);
+            if (errors.length) throw new ValidationError(errors);
+            let user = await UserDB.create({ email, password });
+            return { ...user.profile };
+
         }
     },
     Query: {
