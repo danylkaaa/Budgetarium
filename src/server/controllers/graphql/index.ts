@@ -1,4 +1,3 @@
-import app from "server";
 import config from "@config";
 import * as express from "express";
 import * as  passport from "passport";

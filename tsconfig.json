@@ -2,8 +2,9 @@
   "compilerOptions": {
     "target": "es6",
     "module": "commonjs",
-    "outDir": "build/server",
+    "outDir": "build/",
     "noImplicitAny": true,
+    "jsx":"react",
     "sourceMap": true,
     "inlineSources": true,
     "allowSyntheticDefaultImports": true,
@@ -39,7 +40,8 @@
     "./node_modules/@types/node/index.d.ts"
   ],
   "include": [
-    "src/server/**/*.ts"
+    "src/server/**/*",
+    "src/client/**/*"
   ],
   "exclude": [
     "node_modules"
