@@ -3,6 +3,7 @@
     "target": "es6",
     "module": "commonjs",
     "outDir": "build/",
+    "rootDir": "./src/server",
     "noImplicitAny": true,
     "jsx":"react",
     "sourceMap": true,
@@ -44,6 +45,7 @@
     "src/client/**/*"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "src/client/**/*"
   ]
 }
