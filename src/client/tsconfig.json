@@ -17,7 +17,12 @@
     "suppressImplicitAnyIndexErrors": true,
     "noUnusedLocals": true,
     "skipLibCheck": true,
-    
+    "baseUrl": "./src",
+    "paths": {
+      "@comp":["components"],
+      "@cont":["containers"],
+      "@store":["store"]
+    }
   },
   "exclude": [
     "node_modules",
