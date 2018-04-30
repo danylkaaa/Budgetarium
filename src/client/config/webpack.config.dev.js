@@ -1,5 +1,4 @@
 'use strict';
-
 const autoprefixer = require('autoprefixer');
 const path = require('path');
 const webpack = require('webpack');
@@ -96,10 +95,11 @@ module.exports = {
       '.jsx',
     ],
     alias: {
-      '@comp':path.resolve(__dirname,'src/components/'),
-      '@cont':path.resolve(__dirname,'src/containers/'),
-      '@store':path.resolve(__dirname,'src/store/'),
-      '@err/*':path.resolve(__dirname,'src/components/errors/'),
+      '@comp': path.resolve(__dirname, 'src/components/'),
+      '@cont': path.resolve(__dirname, 'src/containers/'),
+      '@store': path.resolve(__dirname, 'src/store/'),
+      '@err': path.resolve(__dirname, 'src/components/errors/'),
+      "@hoc": path.resolve(__dirname, 'src/hoc/'),
       // Support React Native Web
       // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
       'react-native': 'react-native-web',
@@ -114,6 +114,7 @@ module.exports = {
       new TsconfigPathsPlugin({
         configFile: paths.appTsConfig
       }),
+
     ],
   },
   module: {
@@ -154,7 +155,6 @@ module.exports = {
               compact: true,
             },
           },
-
           // Compile .tsx?
           {
             test: /\.(ts|tsx)$/,

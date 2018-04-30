@@ -3,7 +3,10 @@
     "outDir": "build/dist",
     "module": "esnext",
     "target": "es5",
-    "lib": ["es6", "dom"],
+    "lib": [
+      "es6",
+      "dom"
+    ],
     "sourceMap": true,
     "allowJs": true,
     "jsx": "react",
@@ -15,14 +18,25 @@
     "noImplicitAny": true,
     "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
-    "noUnusedLocals": true,
     "skipLibCheck": true,
+    "experimentalDecorators": true,
     "baseUrl": "./src/",
     "paths": {
-      "@comp/*":["components/*"],
-      "@cont/*":["containers/*"],
-      "@store/*":["store/*"],
-      "@err/*":["components/errors/*"]
+      "@comp/*": [
+        "components/*"
+      ],
+      "@cont/*": [
+        "containers/*"
+      ],
+      "@store/*": [
+        "store/*"
+      ],
+      "@err/*": [
+        "components/errors/*"
+      ],
+      "@hoc/*":[
+        "hoc/*"
+      ]
     }
   },
   "exclude": [
