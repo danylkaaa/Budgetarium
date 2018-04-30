@@ -2,12 +2,14 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import "./index.css";
 import registerServiceWorker from "./registerServiceWorker";
-import { HashRouter } from "react-router-dom";
+import { store } from "@store/index";
+import { Provider } from "react-redux";
+
 import Routes from "./Routes";
 ReactDOM.render(
-    <HashRouter>
-        <Routes/>
-    </HashRouter>,
+    <Provider store={store}>
+        <Routes />
+    </Provider>,
     document.getElementById("root") as HTMLElement
 );
 registerServiceWorker();

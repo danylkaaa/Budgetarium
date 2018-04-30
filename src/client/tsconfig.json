@@ -21,7 +21,8 @@
     "paths": {
       "@comp/*":["components/*"],
       "@cont/*":["containers/*"],
-      "@store/*":["store/*"]
+      "@store/*":["store/*"],
+      "@err/*":["components/errors/*"]
     }
   },
   "exclude": [

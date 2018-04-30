@@ -1,15 +1,17 @@
-import { Switch, Route } from "react-router-dom";
-import App from "@cont/App";
+import { Route, Router, Switch } from "react-router-dom";
+import Auth from "@cont/auth/Auth";
 import Home from "@cont/Home/Home";
 import * as React from "react";
-
+import { history } from "@store/index";
 
 
 export default function () {
     return (
-        <Switch>
-            <Route path="/" exact={true} component={App} />
-            <Route path="/home" component={Home} />}>
-        </Switch>
+        <Router history={history}>
+            <Switch>
+                <Route exact={true} path="/auth" component={Auth} />
+                <Route path="/" component={Home} />
+            </Switch>
+        </Router>
     );
 }
