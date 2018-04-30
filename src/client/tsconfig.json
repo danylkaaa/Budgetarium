@@ -17,11 +17,11 @@
     "suppressImplicitAnyIndexErrors": true,
     "noUnusedLocals": true,
     "skipLibCheck": true,
-    "baseUrl": "./src",
+    "baseUrl": "./src/",
     "paths": {
-      "@comp":["components"],
-      "@cont":["containers"],
-      "@store":["store"]
+      "@comp/*":["components/*"],
+      "@cont/*":["containers/*"],
+      "@store/*":["store/*"]
     }
   },
   "exclude": [

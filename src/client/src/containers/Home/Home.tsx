@@ -1,14 +1,11 @@
 import * as React from "react";
-import "./App.css";
 
-class App extends React.Component {
+export default class Home extends React.Component {
     public render() {
         return (
             <div>
-                <h1>AAA</h1>
+                <h1>Hello, it's home page</h1>
             </div>
         );
     }
 }
-
-export default App;

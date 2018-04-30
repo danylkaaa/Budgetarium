@@ -1,14 +1,12 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import App from "./containers/App";
-import {HashRouter} from "react-router-dom";
 import "./index.css";
 import registerServiceWorker from "./registerServiceWorker";
-
-
+import { HashRouter } from "react-router-dom";
+import Routes from "./Routes";
 ReactDOM.render(
     <HashRouter>
-        <App/>
+        <Routes/>
     </HashRouter>,
     document.getElementById("root") as HTMLElement
 );
