@@ -99,8 +99,8 @@ module.exports = {
       '@store': path.resolve(__dirname, '../src/store/'),
       '@err': path.resolve(__dirname, '../src/components/errors/'),
       "@hoc": path.resolve(__dirname, '../src/hoc/'),
-      "@route":path.resolve(__dirname,"../src/route/index"),
-      "@":path.resolve(__dirname,"../src/"),
+      "@route": path.resolve(__dirname, "../src/route/index"),
+      "@": path.resolve(__dirname, "../src/"),
       // Support React Native Web
       // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
       'react-native': 'react-native-web',
@@ -120,7 +120,14 @@ module.exports = {
   },
   module: {
     strictExportPresence: true,
-    rules: [
+    rules: [{
+        test: /\.scss$/,
+        loader: [
+          require.resolve('style-loader'),
+          require.resolve('css-loader'),
+          require.resolve('sass-loader'),
+        ]
+      },
       // TODO: Disable require.ensure as it's not a standard language feature.
       // We are waiting for https://github.com/facebookincubator/create-react-app/issues/2176.
       // { parser: { requireEnsure: false } },
@@ -217,7 +224,7 @@ module.exports = {
             // its runtime that would otherwise processed through "file" loader.
             // Also exclude `html` and `json` extensions so they get processed
             // by webpacks internal loaders.
-            exclude: [/\.(js|jsx|mjs)$/, /\.html$/, /\.json$/],
+            exclude: [/\.(js|jsx|mjs)$/, /\.html$/, /\.json$/,/\.scss$/,],
             loader: require.resolve('file-loader'),
             options: {
               name: 'static/media/[name].[hash:8].[ext]',

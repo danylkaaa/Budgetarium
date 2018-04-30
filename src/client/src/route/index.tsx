@@ -5,7 +5,7 @@ import Layout from "@/views/Layout";
 import Login from "@/views/Login";
 import Register from "@/views/Register";
 
-export const childRoutes = [
+export const childRoutes:IChildRoute[] = [
     {
         "path": "/home",
         "component": Home,
@@ -21,4 +21,9 @@ const routes = (
     </Switch>
 );
 
+export interface IChildRoute{
+    path:string;
+    component: any;
+    exactly:boolean;
+}
 export default routes;
