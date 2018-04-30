@@ -11,7 +11,6 @@ const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const getClientEnvironment = require('./env');
 const paths = require('./paths');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
-
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
 const publicPath = '/';
@@ -95,11 +94,13 @@ module.exports = {
       '.jsx',
     ],
     alias: {
-      '@comp': path.resolve(__dirname, 'src/components/'),
-      '@cont': path.resolve(__dirname, 'src/containers/'),
-      '@store': path.resolve(__dirname, 'src/store/'),
-      '@err': path.resolve(__dirname, 'src/components/errors/'),
-      "@hoc": path.resolve(__dirname, 'src/hoc/'),
+      '@comp': path.resolve(__dirname, '../src/components/'),
+      '@cont': path.resolve(__dirname, '../src/containers/'),
+      '@store': path.resolve(__dirname, '../src/store/'),
+      '@err': path.resolve(__dirname, '../src/components/errors/'),
+      "@hoc": path.resolve(__dirname, '../src/hoc/'),
+      "@route":path.resolve(__dirname,"../src/route/index"),
+      "@":path.resolve(__dirname,"../src/"),
       // Support React Native Web
       // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
       'react-native': 'react-native-web',

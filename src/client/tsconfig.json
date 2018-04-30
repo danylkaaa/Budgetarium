@@ -20,22 +20,28 @@
     "suppressImplicitAnyIndexErrors": true,
     "skipLibCheck": true,
     "experimentalDecorators": true,
-    "baseUrl": "./src/",
+    "baseUrl": "./",
     "paths": {
       "@comp/*": [
-        "components/*"
+        "src/components/*"
       ],
       "@cont/*": [
-        "containers/*"
+        "src/containers/*"
       ],
       "@store/*": [
-        "store/*"
+        "src/store/*"
       ],
       "@err/*": [
-        "components/errors/*"
+        "src/components/errors/*"
       ],
       "@hoc/*":[
-        "hoc/*"
+        "src/hoc/*"
+      ],
+      "@route":[
+        "src/route/index"
+      ],
+      "@/*":[
+        "src/*"
       ]
     }
   },
