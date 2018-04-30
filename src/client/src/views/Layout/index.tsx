@@ -77,6 +77,7 @@ interface IAppProps extends IThemableProp<App> {
 
 interface IAppState {
     isSidebarOpen: boolean;
+    onlyIconsInSidebar: boolean;
 }
 
 const styles = (theme: Theme) => ({
@@ -102,6 +103,7 @@ class App extends React.Component<IAppProps, IAppState> {
         super(props);
         this.state = {
             isSidebarOpen: false,
+            onlyIconsInSidebar: false,
         };
     }
 
@@ -110,18 +112,31 @@ class App extends React.Component<IAppProps, IAppState> {
         theme: PropTypes.object.isRequired,
     };
     private handleDrawerToggle = () => {
-        this.setState({isSidebarOpen: !this.state.isSidebarOpen});
+        this.setState({...this.state, isSidebarOpen: !this.state.isSidebarOpen});
+    }
+
+    private handleDrawerIconsToggle = () => {
+        this.setState({
+            ...this.state,
+            onlyIconsInSidebar: !this.state.onlyIconsInSidebar
+        });
     }
 
     public render() {
-        const {classes, theme}: any = this.props;
+        const {classes}: any = this.props;
         return (
             <MuiThemeProvider theme={ThemeDefault}>
                 <div className={classes.root}>
-                    <Header handleChangeRequestNavDrawer={this.handleDrawerToggle}
-                            isSidebarOpen={this.state.isSidebarOpen}/>
-                    <Sidebar handleChangeRequestNavDrawer={this.handleDrawerToggle}
-                             isSidebarOpen={this.state.isSidebarOpen}/>
+                    <Header
+                        openToggleHandler={this.handleDrawerToggle}
+                        iconsToggleHandler={this.handleDrawerIconsToggle}
+                        isSidebarOpen={this.state.isSidebarOpen}
+                        onlyIcons={this.state.onlyIconsInSidebar}/>
+                    <Sidebar
+                        openToggleHandler={this.handleDrawerToggle}
+                        iconsToggleHandler={this.handleDrawerIconsToggle}
+                        isSidebarOpen={this.state.isSidebarOpen}
+                        onlyIcons={this.state.onlyIconsInSidebar}/>
                     <div className={classes.content}>
                         <div className={classes.toolbar}/>
                         {this.props.children}

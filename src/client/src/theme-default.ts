@@ -7,7 +7,7 @@ const palette = createPalette({
     primary: {light:Colors.amber[300],main:Colors.amber[500], dark:Colors.amber[900]},
     secondary:  {light:Colors.grey[300],main:Colors.grey[500], dark:Colors.grey[700]},
     error: Colors.red,
-    type: "dark"
+    type: "light"
 } as any);
 
 const typography = createTypography(palette, {   

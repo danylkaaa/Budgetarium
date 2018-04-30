@@ -1,80 +1,40 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import {withStyles} from "material-ui/styles";
-import {Drawer, Divider, List, Hidden, Theme} from "material-ui";
+import {Divider, List, Hidden, Theme} from "material-ui";
 import {IThemableProp, themablePropTypes} from "@/types/PropInterfaces";
 import {DRAWER_WIDTH} from "@/constants";
 import {mailFolderListItems, otherMailFolderListItems} from "@comp/Sidebar/SidebarList";
-
-interface ISidebarProps extends IThemableProp<Sidebar> {
-    handleChangeRequestNavDrawer: () => any;
-    isSidebarOpen: boolean;
-}
+import {default as AbstractSidebar, IAbstractSidebarProps, styles} from "./AbstractSidebar";
+import MobileSidebar from "./MobileSidebar";
+import DesktopSidebar from "./DesktopSidebar";
 
 
-const styles = (theme: Theme) => ({
-    toolbar: theme.mixins.toolbar,
-    drawerPaper: {
-        width: DRAWER_WIDTH,
-        [theme.breakpoints.up("md")]: {
-            position: "relative",
-        },
-    }
-});
+class Sidebar extends AbstractSidebar {
 
-class Sidebar extends React.Component<ISidebarProps, {}> {
-    public static propTypes = {
-        ...themablePropTypes,
-    };
-
-    public constructor(props: ISidebarProps) {
+    public constructor(props: IAbstractSidebarProps) {
         super(props);
     }
 
-
-    private drawer = (classes: any) => {
-        return (
-            <div>
-                <div className={classes.toolbar}/>
-                <Divider/>
-                <List>{mailFolderListItems}</List>
-                <Divider/>
-                <List>{otherMailFolderListItems}</List>
-            </div>
-        );
-    }
-
     public render() {
-        const {classes}: any = this.props;
-        const {isSidebarOpen} = this.props;
-        const drawer = this.drawer(classes);
+        const {isSidebarOpen, onlyIcons, iconsToggleHandler, openToggleHandler}: any = this.props;
         return (
             <div>
                 <Hidden mdUp={true}>
-                    <Drawer
-                        onClose={this.props.handleChangeRequestNavDrawer}
-                        open={isSidebarOpen}
-                        variant="temporary"
-                        ModalProps={{
-                            keepMounted: true, // Better open performance on mobile.
-                        }}
-                        classes={{
-                            paper: classes.drawerPaper,
-                        }}
-                    >
-                        {drawer}
-                    </Drawer>
+                    <MobileSidebar
+                        onlyIcons={onlyIcons}
+                        iconsToggleHandler={iconsToggleHandler}
+                        openToggleHandler={openToggleHandler}
+                        isSidebarOpen={isSidebarOpen}/>
                 </Hidden>
-                <Hidden smDown={true} implementation="css">
-                    <Drawer
-                        variant="permanent"
-                        onClose={this.props.handleChangeRequestNavDrawer}
-                        open={isSidebarOpen}
-                        classes={{
-                            paper: classes.drawerPaper,
-                        }}>
-                        {drawer}
-                    </Drawer>
+                < Hidden
+                    smDown={true}
+                    implementation="css">
+                    <DesktopSidebar
+                        onlyIcons={onlyIcons}
+                        iconsToggleHandler={iconsToggleHandler}
+                        openToggleHandler={openToggleHandler}
+                        isSidebarOpen={isSidebarOpen}/>
                 </Hidden>
             </div>
         );
