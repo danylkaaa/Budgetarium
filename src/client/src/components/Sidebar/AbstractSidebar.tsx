@@ -1,10 +1,11 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import {withStyles} from "material-ui/styles";
-import {Divider, List, Hidden, Theme} from "material-ui";
+import {Divider, List, Hidden, Theme, ListItem, ListItemIcon, ListItemText, ListItemSecondaryAction} from "material-ui";
 import {IThemableProp, themablePropTypes} from "@/types/PropInterfaces";
 import {DRAWER_WIDTH} from "@/constants";
-import {mailFolderListItems, otherMailFolderListItems} from "@comp/Sidebar/SidebarList";
+import {default as sidebarList, ISidebarItem} from "@comp/Sidebar/SidebarList";
+import {Link} from "react-router-dom";
+
 
 export const styles = (theme: Theme) => ({
     toolbar: theme.mixins.toolbar,
@@ -33,10 +34,24 @@ export default class AbstractSidebar extends React.Component<IAbstractSidebarPro
     };
     protected drawer = (classes: any) => (
         <div>
-            <Divider/>
-            <List>{mailFolderListItems}</List>
-            <Divider/>
-            <List>{otherMailFolderListItems}</List>
+            {
+                sidebarList.map((item: ISidebarItem, i: number) => {
+                    if (!item.condition || item.condition(this.props.theme)) {
+                        const link = (props: any) => <Link to={item.path} {...props}/>;
+                        return (
+                            <Hidden {...item.hiddenOn} key={i}>
+                                <ListItem button={true}
+                                          component={link}>
+                                    {item.icon}
+                                    <ListItemText primary={item.title}/>
+                                </ListItem>
+                            </Hidden>
+                        );
+                    } else {
+                        return null;
+                    }
+                })
+            }
         </div>
     )
 

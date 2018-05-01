@@ -78,9 +78,8 @@ class CommonHeader extends React.Component<IHeaderProps, {}> {
     private isDesktop = () => {
         return isWidthUp("md", this.props.width);
     }
- // (this.isDesktop() && onlyIcons) || classes.appBarShift)
     public render() {
-        const {classes, isSidebarOpen, onlyIcons}: any = this.props;
+        const {classes, onlyIcons}: any = this.props;
         return (
             <AppBar className={classNames(classes.appBar, !(!this.isDesktop()||onlyIcons) && classes.appBarShift)}>
                 <Toolbar>
@@ -91,7 +90,7 @@ class CommonHeader extends React.Component<IHeaderProps, {}> {
                         <MenuIcon/>
                     </IconButton>
                     <Typography variant="title" color="inherit" noWrap={true}>
-                        Mini variant drawer
+                        Budgetarium
                     </Typography>
                     <Button color="inherit">Login</Button>
                 </Toolbar>

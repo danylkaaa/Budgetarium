@@ -1,6 +1,8 @@
 import * as React from "react";
 import * as Icons from "@material-ui/icons";
-import {ListItem,ListItemIcon,ListItemText} from "material-ui";
+import {ListItem, ListItemIcon, ListItemText, Theme} from "material-ui";
+import InboxIcon from "@material-ui/icons/Inbox";
+
 export const mailFolderListItems = (
     <div>
         <ListItem button={true}>
@@ -52,3 +54,32 @@ export const otherMailFolderListItems = (
         </ListItem>
     </div>
 );
+
+export interface ISidebarItem {
+    title: string;
+    icon: React.ReactElement<any>;
+    path: string | object;
+    condition?: (theme: Theme) => boolean;
+    hiddenOn?:object;
+}
+
+
+const sidebarItems: ISidebarItem[] = [
+    {
+        path: "/",
+        title: "Home",
+        icon: (
+            <ListItemIcon>
+                <Icons.Home/>
+            </ListItemIcon>),
+    },
+    {
+        path: "/login",
+        title: "Login",
+        icon: (<ListItemIcon><Icons.Face/></ListItemIcon>),
+        hiddenOn:{mdDown:true}
+    }
+];
+
+
+export default sidebarItems;

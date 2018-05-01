@@ -1,8 +1,9 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
+import {Theme} from "material-ui";
 
 export interface IThemableProp<T> extends React.Props<T> {
-    theme: object;
+    theme: Theme;
     classes: object;
 }
 
