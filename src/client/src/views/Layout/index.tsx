@@ -60,13 +60,9 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import {withStyles} from "material-ui/styles";
-import {List, MuiThemeProvider, Theme} from "material-ui";
-import Typography from "material-ui/Typography";
-import Divider from "material-ui/Divider";
-import MenuIcon from "@material-ui/icons/Menu";
+import {MuiThemeProvider, Theme} from "material-ui";
 import ThemeDefault from "@/theme-default";
-import {mailFolderListItems, otherMailFolderListItems} from "@comp/Sidebar/SidebarList";
-import {DRAWER_WIDTH} from "@/constants";
+import {ISidebarLink,default as sidebarLinks} from "@/sidebar-links";
 import Header from "@comp/Header";
 import Sidebar from "@comp/Sidebar";
 import {IThemableProp} from "@/types/PropInterfaces";
@@ -133,6 +129,7 @@ class App extends React.Component<IAppProps, IAppState> {
                         isSidebarOpen={this.state.isSidebarOpen}
                         onlyIcons={this.state.onlyIconsInSidebar}/>
                     <Sidebar
+                        links={sidebarLinks}
                         openToggleHandler={this.handleDrawerToggle}
                         iconsToggleHandler={this.handleDrawerIconsToggle}
                         isSidebarOpen={this.state.isSidebarOpen}

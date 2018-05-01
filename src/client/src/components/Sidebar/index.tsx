@@ -1,10 +1,6 @@
 import * as React from "react";
-import * as PropTypes from "prop-types";
 import {withStyles} from "material-ui/styles";
-import {Divider, List, Hidden, Theme} from "material-ui";
-import {IThemableProp, themablePropTypes} from "@/types/PropInterfaces";
-import {DRAWER_WIDTH} from "@/constants";
-import {mailFolderListItems, otherMailFolderListItems} from "@comp/Sidebar/SidebarList";
+import {Hidden} from "material-ui";
 import {default as AbstractSidebar, IAbstractSidebarProps, styles} from "./AbstractSidebar";
 import MobileSidebar from "./MobileSidebar";
 import DesktopSidebar from "./DesktopSidebar";
@@ -22,6 +18,7 @@ class Sidebar extends AbstractSidebar {
             <div>
                 <Hidden mdUp={true}>
                     <MobileSidebar
+                        links={this.props.links}
                         onlyIcons={onlyIcons}
                         iconsToggleHandler={iconsToggleHandler}
                         openToggleHandler={openToggleHandler}
@@ -31,6 +28,7 @@ class Sidebar extends AbstractSidebar {
                     smDown={true}
                     implementation="css">
                     <DesktopSidebar
+                        links={this.props.links}
                         onlyIcons={onlyIcons}
                         iconsToggleHandler={iconsToggleHandler}
                         openToggleHandler={openToggleHandler}

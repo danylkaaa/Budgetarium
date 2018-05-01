@@ -1,10 +1,10 @@
 import * as React from "react";
-import {ISidebarLink} from "./SidebarList";
+import {ISidebarLink} from "../../sidebar-links";
 import * as PropTypes from "prop-types";
 import {IThemableProp, themablePropTypes} from "@/types/PropInterfaces";
 import withStyles from "material-ui/styles/withStyles";
 import {Link} from "react-router-dom";
-import {Collapse, Hidden, ListItem, List, ListItemText, Theme} from "material-ui";
+import {Collapse, Hidden, ListItem, List, ListItemText, Theme, Divider} from "material-ui";
 import {ExpandLess, ExpandMore} from "@material-ui/icons";
 import * as classNames from "classnames";
 
@@ -83,26 +83,30 @@ class SidebarItem extends React.Component<ISidebarItemProps, ISidebarItemState> 
 
     public render() {
         if (!this.isVisible()) {
-            return true;
+            return null;
         }
-        const {link, classes, subListLevel}: any = this.props;
-        const expandIcon = link.children ? this.state.isOpen ? <ExpandLess/> : <ExpandMore/> : null;
-        return (
-            <Hidden {...link.hiddenOn}>
-                <div>
-                    <ListItem
-                        button={true}
-                        component={this.container}
-                        onClick={this.collapse}
-                        className={classNames(subListLevel && classes.nested)}>
-                        {link.icon}
-                        <ListItemText inset={true} primary={link.title}/>
-                        {expandIcon}
-                    </ListItem>
-                    {this.sublist()}
-                </div>
-            </Hidden>
-        );
+        else if (this.props.link.divider) {
+            return <Divider/>;
+        } else {
+            const {link, classes, subListLevel}: any = this.props;
+            const expandIcon = link.children ? this.state.isOpen ? <ExpandLess/> : <ExpandMore/> : null;
+            return (
+                <Hidden {...link.hiddenOn}>
+                    <div>
+                        <ListItem
+                            button={true}
+                            component={this.container}
+                            onClick={this.collapse}
+                            className={classNames(subListLevel && classes.nested)}>
+                            {link.icon}
+                            <ListItemText inset={true} primary={link.title}/>
+                            {expandIcon}
+                        </ListItem>
+                        {this.sublist()}
+                    </div>
+                </Hidden>
+            );
+        }
     }
 }
 

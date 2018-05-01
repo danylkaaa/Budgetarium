@@ -2,14 +2,14 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import * as classNames from "classnames";
 import withWidth, {isWidthUp} from "material-ui/utils/withWidth";
-import {Link, withRouter, HashRouterProps} from "react-router-dom";
-import {Toolbar, AppBar, IconButton, Typography, Button, Theme} from "material-ui";
+import {AppBar, Button, IconButton, Theme, Toolbar, Typography} from "material-ui";
 import MenuIcon from "@material-ui/icons/Menu";
 import "./index.scss";
 import {DRAWER_WIDTH} from "@/constants";
 import {withStyles} from "material-ui/styles";
 import {IThemableProp, themablePropTypes} from "@/types/PropInterfaces";
 import {Breakpoint} from "material-ui/styles/createBreakpoints";
+import {ChevronRight} from "@material-ui/icons";
 
 interface IHeaderProps extends IThemableProp<CommonHeader> {
     openToggleHandler: () => any;
@@ -78,16 +78,17 @@ class CommonHeader extends React.Component<IHeaderProps, {}> {
     private isDesktop = () => {
         return isWidthUp("md", this.props.width);
     }
+
     public render() {
         const {classes, onlyIcons}: any = this.props;
         return (
-            <AppBar className={classNames(classes.appBar, !(!this.isDesktop()||onlyIcons) && classes.appBarShift)}>
+            <AppBar className={classNames(classes.appBar, !(!this.isDesktop() || onlyIcons) && classes.appBarShift)}>
                 <Toolbar>
                     <IconButton
                         onClick={this.handleBurgerButtonClick}
                         color="inherit"
                         className={classNames(classes.menuButton, this.isDesktop() && !onlyIcons && classes.hide)}>
-                        <MenuIcon/>
+                        {this.isDesktop() ? <ChevronRight/> : <MenuIcon/>}
                     </IconButton>
                     <Typography variant="title" color="inherit" noWrap={true}>
                         Budgetarium

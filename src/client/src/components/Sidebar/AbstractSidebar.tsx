@@ -1,22 +1,10 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import {
-    Divider,
-    List,
-    Hidden,
-    Theme,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
-    ListItemSecondaryAction,
-    Collapse
-} from "material-ui";
+import {List, Theme,} from "material-ui";
 import SidebarItem from "./SidebarItem";
 import {IThemableProp, themablePropTypes} from "@/types/PropInterfaces";
 import {DRAWER_WIDTH} from "@/constants";
-import {default as sidebarList, ISidebarLink} from "@comp/Sidebar/SidebarList";
-import {Link} from "react-router-dom";
-import withStyles from "material-ui/styles/withStyles";
+import {ISidebarLink} from "@/sidebar-links";
 
 
 export const styles = (theme: Theme) => ({
@@ -39,6 +27,7 @@ export interface IAbstractSidebarProps extends IThemableProp<AbstractSidebar> {
     isSidebarOpen: boolean;
     iconsToggleHandler: () => any;
     onlyIcons: boolean;
+    links: ISidebarLink[];
 }
 
 export default class AbstractSidebar extends React.Component<IAbstractSidebarProps, {}> {
@@ -47,19 +36,23 @@ export default class AbstractSidebar extends React.Component<IAbstractSidebarPro
         isSidebarOpen: PropTypes.bool.isRequired,
         openToggleHandler: PropTypes.func.isRequired,
         iconsToggleHandler: PropTypes.func.isRequired,
-        onlyIcons: PropTypes.bool.isRequired
+        onlyIcons: PropTypes.bool.isRequired,
+        links: PropTypes.array.isRequired
     };
-    protected buildDrawerList = (classes: any) => (
-        <div className={classes.root}>
-            <List component="nav">
-                {
-                    sidebarList.map((item: ISidebarLink, i: number) => {
-                        return (<SidebarItem link={item} key={i}/>);
-                    })
-                }
-            </List>
-        </div>
-    )
+    protected buildDrawerList = (classes: any) => {
+        const links = this.props.links;
+        return (
+            <div className={classes.root}>
+                <List component="nav">
+                    {
+                        links.map((item: ISidebarLink, i: number) => {
+                            return (<SidebarItem link={item} key={i}/>);
+                        })
+                    }
+                </List>
+            </div>
+        );
+    }
 
     public constructor(props: IAbstractSidebarProps) {
         super(props);
