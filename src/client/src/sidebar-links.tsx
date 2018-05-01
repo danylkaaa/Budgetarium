@@ -21,14 +21,20 @@ const sidebarItems: ISidebarLink[] = [
         icon: <ListItemIcon><Icons.Home/></ListItemIcon>,
     },
     {
+        divider: true
+    },
+     {
         path: "/login",
         title: "Login",
-        icon: <ListItemIcon><Icons.Face/></ListItemIcon>,
-        hiddenOn: {mdDown: true}
+        icon: <ListItemIcon><Icons.Person/></ListItemIcon>,
+        hiddenOn: {xsDown: true}
     },
     {
-        divider: true
-    }
+        path: "/register",
+        title: "Register",
+        icon: <ListItemIcon><Icons.PersonAdd/></ListItemIcon>,
+        hiddenOn: {xsDown: true}
+    },
 ];
 
 
