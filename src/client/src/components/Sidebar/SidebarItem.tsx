@@ -1,7 +1,7 @@
 import * as React from "react";
-import {ISidebarLink} from "../../sidebar-links";
+import {ISidebarLink} from "@/sidebar-links";
 import * as PropTypes from "prop-types";
-import {IThemableProp, themablePropTypes} from "@/types/PropInterfaces";
+import {IThemableProp, themablePropTypes} from "@/models/PropInterfaces";
 import withStyles from "material-ui/styles/withStyles";
 import {Link} from "react-router-dom";
 import {Collapse, Hidden, ListItem, List, ListItemText, Theme, Divider} from "material-ui";

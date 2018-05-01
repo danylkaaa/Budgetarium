@@ -7,7 +7,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import "./index.scss";
 import {DRAWER_WIDTH} from "@/constants";
 import {withStyles} from "material-ui/styles";
-import {IThemableProp, themablePropTypes} from "@/types/PropInterfaces";
+import {IThemableProp, themablePropTypes} from "@/models/PropInterfaces";
 import {Breakpoint} from "material-ui/styles/createBreakpoints";
 import {ChevronRight} from "@material-ui/icons";
 

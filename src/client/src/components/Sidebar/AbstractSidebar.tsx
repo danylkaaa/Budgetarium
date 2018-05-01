@@ -2,10 +2,9 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import {List, Theme,} from "material-ui";
 import SidebarItem from "./SidebarItem";
-import {IThemableProp, themablePropTypes} from "@/types/PropInterfaces";
+import {IThemableProp, themablePropTypes} from "@/models/PropInterfaces";
 import {DRAWER_WIDTH} from "@/constants";
 import {ISidebarLink} from "@/sidebar-links";
-
 
 export const styles = (theme: Theme) => ({
     toolbar: theme.mixins.toolbar,

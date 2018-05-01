@@ -62,10 +62,10 @@ import * as PropTypes from "prop-types";
 import {withStyles} from "material-ui/styles";
 import {MuiThemeProvider, Theme} from "material-ui";
 import ThemeDefault from "@/theme-default";
-import {ISidebarLink,default as sidebarLinks} from "@/sidebar-links";
+import {default as sidebarLinks} from "@/sidebar-links";
 import Header from "@comp/Header";
 import Sidebar from "@comp/Sidebar";
-import {IThemableProp} from "@/types/PropInterfaces";
+import {IThemableProp} from "@/models/PropInterfaces";
 
 
 interface IAppProps extends IThemableProp<App> {
