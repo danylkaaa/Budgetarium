@@ -1,0 +1,10 @@
+interface Paginable{
+    id:ID!
+}
+
+type  Pagination{
+    total:Int
+    limit:Int!
+    offset:Int!
+    results:[Paginable]!
+}

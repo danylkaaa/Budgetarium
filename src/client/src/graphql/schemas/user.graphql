@@ -1,0 +1,28 @@
+type User implements Paginable{
+    id:ID!
+    name:String
+    gravatar:String
+}
+
+type Query{
+    me:User
+    users:Pagination
+    user(id:ID!):User
+}
+
+type Payload{
+    accessToken:String!
+    refreshToken:String!
+}
+
+input Credentials{
+    email:String!
+    password:String!
+}
+
+type Mutation{
+    access:String
+    signup(credentials:Credentials):Payload
+    logout:Boolean
+    login(credentials:Credentials):Payload
+}

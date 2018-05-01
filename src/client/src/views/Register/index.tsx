@@ -138,11 +138,11 @@ class Register extends React.Component<IRegisterProp, IRegisterState> {
                                 color="primary"
                                 variant="raised"
                                 className={classNames(classes.btn, classes.btnFacebook)}>
-                                <FontAwesome
+                                Sign up with Facebook
+                                 <FontAwesome
                                     name="facebook"
                                     size="lg"
-                                    className={classes.leftIcon}/>
-                                Sign up with Facebook
+                                    className={classes.rightIcon}/>
                             </Button>
                         </div>
                     </div>
