@@ -12,7 +12,7 @@ class MobileSidebar extends AbstractSidebar {
 
     public render() {
         const {classes, openToggleHandler, isSidebarOpen}: any = this.props;
-        const drawer = this.drawer(classes);
+        const drawer = this.buildDrawerList(classes);
         return (
             <div>
                 <Drawer

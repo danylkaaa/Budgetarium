@@ -44,7 +44,7 @@ class DesktopSidebar extends AbstractSidebar {
 
     public render() {
         const {classes, iconsToggleHandler, onlyIcons}: any = this.props;
-        const drawer = this.drawer(classes);
+        const drawer = this.buildDrawerList(classes);
         return (
             <div>
                 <Drawer

@@ -1,10 +1,22 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import {Divider, List, Hidden, Theme, ListItem, ListItemIcon, ListItemText, ListItemSecondaryAction} from "material-ui";
+import {
+    Divider,
+    List,
+    Hidden,
+    Theme,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    ListItemSecondaryAction,
+    Collapse
+} from "material-ui";
+import SidebarItem from "./SidebarItem";
 import {IThemableProp, themablePropTypes} from "@/types/PropInterfaces";
 import {DRAWER_WIDTH} from "@/constants";
-import {default as sidebarList, ISidebarItem} from "@comp/Sidebar/SidebarList";
+import {default as sidebarList, ISidebarLink} from "@comp/Sidebar/SidebarList";
 import {Link} from "react-router-dom";
+import withStyles from "material-ui/styles/withStyles";
 
 
 export const styles = (theme: Theme) => ({
@@ -14,6 +26,11 @@ export const styles = (theme: Theme) => ({
         [theme.breakpoints.up("md")]: {
             position: "relative",
         },
+    },
+    root: {
+        width: "100%",
+        maxWidth: 360,
+        backgroundColor: theme.palette.background.paper,
     }
 });
 
@@ -32,26 +49,15 @@ export default class AbstractSidebar extends React.Component<IAbstractSidebarPro
         iconsToggleHandler: PropTypes.func.isRequired,
         onlyIcons: PropTypes.bool.isRequired
     };
-    protected drawer = (classes: any) => (
-        <div>
-            {
-                sidebarList.map((item: ISidebarItem, i: number) => {
-                    if (!item.condition || item.condition(this.props.theme)) {
-                        const link = (props: any) => <Link to={item.path} {...props}/>;
-                        return (
-                            <Hidden {...item.hiddenOn} key={i}>
-                                <ListItem button={true}
-                                          component={link}>
-                                    {item.icon}
-                                    <ListItemText primary={item.title}/>
-                                </ListItem>
-                            </Hidden>
-                        );
-                    } else {
-                        return null;
-                    }
-                })
-            }
+    protected buildDrawerList = (classes: any) => (
+        <div className={classes.root}>
+            <List component="nav">
+                {
+                    sidebarList.map((item: ISidebarLink, i: number) => {
+                        return (<SidebarItem link={item} key={i}/>);
+                    })
+                }
+            </List>
         </div>
     )
 
