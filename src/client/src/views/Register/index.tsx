@@ -2,19 +2,42 @@ import * as React from "react";
 import {Button, MuiThemeProvider, Paper, TextField, Theme, Typography, withStyles} from "material-ui";
 import ThemeDefault from "@/theme-default";
 import {IThemableProp, themablePropTypes} from "@/models/PropInterfaces";
-import {grey,green} from "material-ui/colors";
+import {green, grey} from "material-ui/colors";
 import {Person} from "@material-ui/icons";
 import * as classNames from "classnames";
 import * as FontAwesome from "react-fontawesome";
+import {connect} from "react-redux";
+import {IState} from "@/models/State";
+import * as Redux from "redux";
+import * as actions from "@/actions";
+import * as _ from "lodash";
 
+import {Redirect} from "react-router";
+
+// own state
 interface IRegisterState {
     email: string;
     password: string;
 }
 
-interface IRegisterProp extends IThemableProp<Register> {
+// own props
+interface IOwnProps extends IThemableProp<Register> {
 
 }
+
+// props from dispatch
+interface IDispatchProps {
+    onConfirm: (email: string, password: string) => any;
+}
+
+// props from state
+interface IStateProps {
+    loading: boolean;
+    isAuthenticated: boolean;
+}
+
+// final props
+type IRegisterProps = IOwnProps & IDispatchProps & IStateProps;
 
 const styles = (theme: Theme) => ({
     container: {
@@ -22,11 +45,11 @@ const styles = (theme: Theme) => ({
         flexWrap: "wrap",
     },
     confirmBtn: {
-        color:"white",
+        color: "white",
         float: "right",
-        background:green[500],
-        "&:hover":{
-        background:green[600],
+        background: green[500],
+        "&:hover": {
+            background: green[600],
         }
     },
     loginContainer: {
@@ -68,8 +91,8 @@ const styles = (theme: Theme) => ({
     },
     btnFacebook: {
         background: "#4f81e9",
-        "&:hover":{
-            background:"#486fd0"
+        "&:hover": {
+            background: "#486fd0"
         }
     },
     btnGoogle: {
@@ -80,7 +103,7 @@ const styles = (theme: Theme) => ({
     },
 });
 
-class Register extends React.Component<IRegisterProp, IRegisterState> {
+class Register extends React.Component<IRegisterProps, IRegisterState> {
     public static propTypes = {
         ...themablePropTypes
     };
@@ -93,8 +116,15 @@ class Register extends React.Component<IRegisterProp, IRegisterState> {
         };
     }
 
+    private handleConfirm = () => {
+        this.props.onConfirm(this.state.email, this.state.password);
+    }
+
     public render() {
         const {classes}: any = this.props;
+        if (this.props.isAuthenticated) {
+            return (<Redirect to="/"/>);
+        }
         return (
             <MuiThemeProvider theme={ThemeDefault}>
                 <div>
@@ -116,6 +146,7 @@ class Register extends React.Component<IRegisterProp, IRegisterState> {
                                     <Button
                                         variant="raised"
                                         color="primary"
+                                        onClick={this.handleConfirm}
                                         className={classes.confirmBtn}>
                                         Confirm
                                     </Button>
@@ -139,7 +170,7 @@ class Register extends React.Component<IRegisterProp, IRegisterState> {
                                 variant="raised"
                                 className={classNames(classes.btn, classes.btnFacebook)}>
                                 Sign up with Facebook
-                                 <FontAwesome
+                                <FontAwesome
                                     name="facebook"
                                     size="lg"
                                     className={classes.rightIcon}/>
@@ -152,4 +183,16 @@ class Register extends React.Component<IRegisterProp, IRegisterState> {
     }
 }
 
-export default withStyles(styles as any, {withTheme: true})(Register);
+const mapStateToProps = (state: IState) :IStateProps=> {
+    return {
+        loading: _.indexOf(state.loading.scopes, "auth") > -1,
+        isAuthenticated: state.auth.user !== null
+    };
+};
+
+const mapDispatchToProps = (dispatch: Redux.Dispatch<any, IState>) :IDispatchProps=> {
+    return {
+        onConfirm: (email: string, password: string) => dispatch(actions.register({email, password})),
+    };
+};
+export default connect<IStateProps, IDispatchProps, IRegisterProps>(mapStateToProps, mapDispatchToProps)(withStyles(styles as any, {withTheme: true})(Register));

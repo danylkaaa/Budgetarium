@@ -1,22 +1,23 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import * as classNames from "classnames";
-import withWidth, {isWidthUp} from "material-ui/utils/withWidth";
-import {AppBar, Button, IconButton, Theme, Toolbar, Typography} from "material-ui";
+import {AppBar, IconButton, Theme, Toolbar, Typography} from "material-ui";
 import MenuIcon from "@material-ui/icons/Menu";
 import "./index.scss";
 import {DRAWER_WIDTH} from "@/constants";
 import {withStyles} from "material-ui/styles";
 import {IThemableProp, themablePropTypes} from "@/models/PropInterfaces";
-import {Breakpoint} from "material-ui/styles/createBreakpoints";
 import {ChevronRight} from "@material-ui/icons";
+import {default as HeaderButton, IHeaderButtonProps} from "@comp/Header/HeaderButton";
 
-interface IHeaderProps extends IThemableProp<CommonHeader> {
+export interface IHeaderProps extends IThemableProp<CommonHeader> {
     openToggleHandler: () => any;
     iconsToggleHandler: () => any;
     isSidebarOpen: boolean;
     onlyIcons: boolean;
-    width: Breakpoint;
+    isDesktop: boolean;
+    title?: string;
+    buttons?: IHeaderButtonProps[];
 }
 
 const styles = (theme: Theme) => ({
@@ -62,6 +63,9 @@ class CommonHeader extends React.Component<IHeaderProps, {}> {
         onlyIcons: PropTypes.bool.isRequired,
         iconsToggleHandler: PropTypes.func.isRequired,
         openToggleHandler: PropTypes.func.isRequired,
+        title: PropTypes.string,
+        buttons: PropTypes.array,
+        isDesktop: PropTypes.bool.isRequired,
     };
 
     constructor(props: IHeaderProps) {
@@ -69,35 +73,42 @@ class CommonHeader extends React.Component<IHeaderProps, {}> {
     }
 
     private handleBurgerButtonClick = () => {
-        if (isWidthUp("md", this.props.width)) {
+        if (this.props.isDesktop) {
             this.props.iconsToggleHandler();
         } else {
             this.props.openToggleHandler();
         }
     }
-    private isDesktop = () => {
-        return isWidthUp("md", this.props.width);
+    private headerButtons = () => {
+        if (this.props.buttons) {
+            return this.props.buttons.map((button, i: number) => (
+                <HeaderButton {...button}/>));
+        } else {
+            return null;
+        }
     }
 
     public render() {
-        const {classes, onlyIcons}: any = this.props;
+        const {classes, onlyIcons, title, isDesktop}: any = this.props;
         return (
-            <AppBar className={classNames(classes.appBar, !(!this.isDesktop() || onlyIcons) && classes.appBarShift)}>
+            <AppBar className={classNames(classes.appBar, !(!isDesktop || onlyIcons) && classes.appBarShift)}>
                 <Toolbar>
                     <IconButton
                         onClick={this.handleBurgerButtonClick}
                         color="inherit"
-                        className={classNames(classes.menuButton, this.isDesktop() && !onlyIcons && classes.hide)}>
-                        {this.isDesktop() ? <ChevronRight/> : <MenuIcon/>}
+                        className={classNames(classes.menuButton, isDesktop && !onlyIcons && classes.hide)}>
+                        {isDesktop ? <ChevronRight/> : <MenuIcon/>}
                     </IconButton>
                     <Typography variant="title" color="inherit" noWrap={true}>
-                        Budgetarium
+                        {title}
                     </Typography>
-                    <Button color="inherit">Login</Button>
+                    {this.headerButtons()}
                 </Toolbar>
             </AppBar>
         );
     }
 }
 
-export default withWidth()(withStyles(styles as any, {withTheme: true})(CommonHeader));
+
+export default withStyles(styles as any, {withTheme: true})(CommonHeader);
+

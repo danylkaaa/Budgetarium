@@ -1,35 +1,20 @@
-import {IToken, IUserPayload} from "@/models/User";
+import {IToken, IUser, IUserPayload} from "@/models/User";
 import ActionTypes, {IAction} from "./actionTypes";
 import {IState} from "@/models/State";
 import * as Redux from "redux";
-
-export interface IAuthRedirectPathAction extends IAction {
-    type: ActionTypes.SET_AUTH_REDIRECT_PATH;
-    path: string;
-}
-
-export const setAuthRedirectPath = (path: string): IAuthRedirectPathAction => {
-    return {
-        type: ActionTypes.SET_AUTH_REDIRECT_PATH,
-        path
-    };
-};
+import {endLoading, startLoading} from "@/actions/loading";
 
 
 export interface IAuthSuccessAction extends IAction {
     type: ActionTypes.AUTH_SUCCESS;
     accessToken: IToken;
     refreshToken: IToken;
-    userId: string;
+    user: IUser;
 }
 
 export interface IAuthFailAction extends IAction {
     type: ActionTypes.AUTH_FAIL;
     error: any;
-}
-
-export interface IAuthStartAction extends IAction {
-    type: ActionTypes.AUTH_START;
 }
 
 export interface IAuthLogoutAction extends IAction {
@@ -41,25 +26,12 @@ export interface IAuthUpdateAccessTokenAction extends IAction {
     accessToken: IToken;
 }
 
-export const authStart = (): IAuthStartAction => {
-    return {
-        type: ActionTypes.AUTH_START
-    };
-};
-
-export const authSuccess = (accessToken: IToken, refreshToken: IToken, userId: string): IAuthSuccessAction => {
+export const authSuccess = (accessToken: IToken, refreshToken: IToken, user: IUser): IAuthSuccessAction => {
     return {
         type: ActionTypes.AUTH_SUCCESS,
         accessToken,
         refreshToken,
-        userId
-    };
-};
-
-export const AuthFail = (error: any): IAuthFailAction => {
-    return {
-        type: ActionTypes.AUTH_FAIL,
-        error
+        user
     };
 };
 
@@ -84,10 +56,15 @@ export const checkAuthTimeout = (expirationTime: number) => {
     };
 };
 
-export const auth = (payload: IUserPayload) => {
+const USER: IUser = {
+    name: "USERNAME",
+    id: "USER_ID"
+};
+
+export const register = (payload: IUserPayload) => {
     return (dispatch: Redux.Dispatch<any, IState>) => {
-        dispatch(authStart());
-        dispatch(authSuccess({token: "access", expiredIn: 1000}, {token: "refresh", expiredIn: 1000}, "id123"));
+        dispatch(startLoading("auth"));
+        dispatch(authSuccess({token: "access", expiredIn: 1000}, {token: "refresh", expiredIn: 1000}, USER));
         dispatch(checkAuthTimeout(1000));
     };
 };
@@ -131,5 +108,12 @@ export const authCheckState = () => {
 export const authReloadAccessToken = () => {
     return (dispatch: Redux.Dispatch<any, IState>) => {
         dispatch(updateAccessToken({token: "newAccessToken", expiredIn: 1000}));
+    };
+};
+
+
+export const authFail = (error: any) => {
+    return (dispatch: Redux.Dispatch<any, IState>) => {
+        dispatch(endLoading("auth"));
     };
 };

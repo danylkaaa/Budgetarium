@@ -1,4 +1,5 @@
 import * as React from "react";
+import MainLayout from "@/hoc/MainLayout";
 
 class Home extends React.Component<{}, {}> {
     public static propTypes = {};
@@ -10,7 +11,9 @@ class Home extends React.Component<{}, {}> {
 
     public render() {
         return (
-            <h1>Home</h1>
+            <MainLayout>
+                <h2>Home</h2>
+            </MainLayout>
         );
     }
 }

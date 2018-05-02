@@ -3,8 +3,8 @@ import * as PropTypes from "prop-types";
 import {Theme} from "material-ui";
 
 export interface IThemableProp<T> extends React.Props<T> {
-    theme: Theme;
-    classes: object;
+    theme?: Theme;
+    classes?: object;
 }
 
 export const themablePropTypes = {

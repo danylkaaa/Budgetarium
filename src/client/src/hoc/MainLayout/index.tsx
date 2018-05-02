@@ -1,77 +1,24 @@
-// import * as React from "react";
-// import * as PropTypes from "prop-types";
-// import {bindActionCreators} from "redux";
-// import {connect} from "react-redux";
-// import {Route, Redirect} from "react-router-dom";
-// import {childRoutes, IChildRoute} from "@route";
-// import {MuiThemeProvider, Theme} from "material-ui";
-// import Header from "@comp/Header";
-// import Footer from "@comp/Footer";
-// import Sidebar from "@comp/Sidebar";
-//
-// interface IAppProps extends React.Props<App> {
-//     width: number;
-// }
-//
-// interface IAppState {
-//     navDrawerOpen: boolean;
-// }
-//
-// class App extends React.Component<IAppProps, IAppState> {
-//     public static propTypes = {
-//         children: PropTypes.element,
-//         width: PropTypes.number,
-//     };
-//
-//     public constructor(props: IAppProps) {
-//         super(props);
-//         this.state = {
-//             navDrawerOpen: false
-//         };
-//     }
-//
-//     private handleChangeRequestNavDrawer = () => {
-//         this.setState({
-//             navDrawerOpen: !this.state.navDrawerOpen
-//         });
-//     }
-//
-//     public render() {
-//         const {navDrawerOpen} = this.state;
-//         return (
-//             <MuiThemeProvider theme={ThemeDefault}>
-//                 <Header
-//                     handleChangeRequestNavDrawer={this.handleChangeRequestNavDrawer}/>
-//                 <Sidebar
-//                     navDrawerOpen={navDrawerOpen}/>
-//                 <div>
-//                     {this.props.children}
-//                 </div>
-//                 <Footer/>
-//             </MuiThemeProvider>
-//         );
-//     }
-// }
-//
-//
-// export default App;
-
-
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import {withStyles} from "material-ui/styles";
-import {MuiThemeProvider, Theme} from "material-ui";
+import {ListItemIcon, MuiThemeProvider, Theme} from "material-ui";
 import ThemeDefault from "@/theme-default";
-import {default as sidebarLinks} from "@/sidebar-links";
+import {ISidebarLink} from "@/sidebar-links";
 import Header from "@comp/Header";
 import Sidebar from "@comp/Sidebar";
 import {IThemableProp} from "@/models/PropInterfaces";
+import "./index.scss";
+import {IHeaderButtonProps} from "@comp/Header/HeaderButton";
+import * as Icons from "@material-ui/icons";
+import {isWidthUp} from "material-ui/es/utils/withWidth";
+import {Breakpoint} from "material-ui/styles/createBreakpoints";
+import withWidth from "material-ui/utils/withWidth";
 
-
-interface IAppProps extends IThemableProp<App> {
+interface IMainLayoutProps extends IThemableProp<MainLayout> {
+    width?: Breakpoint;
 }
 
-interface IAppState {
+interface IMainLayoutState {
     isSidebarOpen: boolean;
     onlyIconsInSidebar: boolean;
 }
@@ -93,9 +40,9 @@ const styles = (theme: Theme) => ({
     toolbar: theme.mixins.toolbar,
 });
 
-class App extends React.Component<IAppProps, IAppState> {
+class MainLayout extends React.Component<IMainLayoutProps, IMainLayoutState> {
 
-    constructor(props: IAppProps) {
+    constructor(props: IMainLayoutProps) {
         super(props);
         this.state = {
             isSidebarOpen: false,
@@ -103,6 +50,37 @@ class App extends React.Component<IAppProps, IAppState> {
         };
     }
 
+    private headerButtons = (): IHeaderButtonProps[] => {
+        return [];
+    }
+    private sidebarButtons = (): ISidebarLink[] => {
+        return [
+            {
+                path: "/",
+                title: "Home",
+                icon: <ListItemIcon><Icons.Home/></ListItemIcon>,
+            },
+            {
+                divider: true,
+                hiddenOn: {xsDown: true}
+            },
+            {
+                path: "/login",
+                title: "Login",
+                icon: <ListItemIcon><Icons.Person/></ListItemIcon>,
+                hiddenOn: {xsDown: true}
+            },
+            {
+                path: "/register",
+                title: "Register",
+                icon: <ListItemIcon><Icons.PersonAdd/></ListItemIcon>,
+                hiddenOn: {xsDown: true}
+            }
+        ];
+    }
+    public sizeUp = (size: string) => {
+        return isWidthUp(size as any, this.props.width as any);
+    }
     public static propTypes = {
         classes: PropTypes.object.isRequired,
         theme: PropTypes.object.isRequired,
@@ -120,16 +98,19 @@ class App extends React.Component<IAppProps, IAppState> {
 
     public render() {
         const {classes}: any = this.props;
+        const isDesktop = this.sizeUp("md");
         return (
             <MuiThemeProvider theme={ThemeDefault}>
                 <div className={classes.root}>
                     <Header
+                        isDesktop={isDesktop}
+                        buttons={this.headerButtons()}
                         openToggleHandler={this.handleDrawerToggle}
                         iconsToggleHandler={this.handleDrawerIconsToggle}
                         isSidebarOpen={this.state.isSidebarOpen}
                         onlyIcons={this.state.onlyIconsInSidebar}/>
                     <Sidebar
-                        links={sidebarLinks}
+                        links={this.sidebarButtons()}
                         openToggleHandler={this.handleDrawerToggle}
                         iconsToggleHandler={this.handleDrawerIconsToggle}
                         isSidebarOpen={this.state.isSidebarOpen}
@@ -145,4 +126,4 @@ class App extends React.Component<IAppProps, IAppState> {
 }
 
 
-export default withStyles(styles as any, {withTheme: true})(App);
+export default withWidth()(withStyles(styles as any, {withTheme: true})(MainLayout));

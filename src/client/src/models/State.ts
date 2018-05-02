@@ -1,15 +1,16 @@
-import {IToken} from "@/models/User";
-import {IUser} from "@/graphql/types/User";
+import {IToken, IUser} from "@/models/User";
 
 export interface IState {
     auth: IAuthState;
+    loading:ILoadingState;
 }
 
 export interface IAuthState {
     readonly accessToken: IToken | null;
     readonly refreshToken: IToken | null;
-    loading: boolean;
-    authRedirectPath: string;
-    user:IUser|null;
-    error:any;
+    user: IUser | null;
+}
+
+export interface ILoadingState {
+    scopes: string[];
 }

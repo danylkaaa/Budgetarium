@@ -8,7 +8,7 @@ export interface ISidebarLink {
     icon?: React.ReactElement<any>;
     path?: string | object;
     divider?: boolean;
-    condition?: (theme: Theme) => boolean;
+    shown?: boolean;
     hiddenOn?: object;
     children?: ISidebarLink[];
 }

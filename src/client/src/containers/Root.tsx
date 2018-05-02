@@ -1,19 +1,55 @@
 import * as React from "react";
-import {Router} from "react-router-dom";
+import {Route, Router, Switch} from "react-router-dom";
 import createHistory from "history/createHashHistory";
-import routes from "@/route";
 import {Store} from "react-redux";
+import Login from "@/views/Login";
+import Home from "@/views/Home";
+import Register from "@/views/Register";
 
-export const history = createHistory();
+const history = createHistory();
+
+interface IChildRoute {
+    path: string;
+    component: any;
+    exactly?: boolean;
+}
+
+const childRoutes: IChildRoute[] = [
+    {
+        path: "/login",
+        component: Login,
+        exactly: true
+    },
+    {
+        path: "/register",
+        component: Register,
+        exactly: true
+    },
+    {
+        path: "/",
+        component: Home,
+        exactly: true
+    },
+];
 
 class Root extends React.Component<{}, {}> {
-    // public constructor(props: any) {
-    //     super(props);
-    //     this.state = {};
-    // }
+    protected routes = () => {
+        return childRoutes.map((route: IChildRoute, i: number) => (
+            <Route
+                path={route.path}
+                exactly={route.exactly}
+                key={i}
+                component={route.component}/>
+        ));
+    }
+
     public render(): any {
         return (
-            <Router history={history} children={routes}/>
+            <Router history={history}>
+                <Switch>
+                    {this.routes()}
+                </Switch>
+            </Router>
         );
     }
 }

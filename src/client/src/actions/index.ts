@@ -1,12 +1,9 @@
 export {
     authLogout,
-    auth,
+    register,
     authCheckState,
-    setAuthRedirectPath,
     IAuthLogoutAction,
-    IAuthStartAction,
     IAuthFailAction,
-    IAuthRedirectPathAction,
     IAuthSuccessAction,
     IAuthUpdateAccessTokenAction
 } from "./auth";
@@ -14,3 +11,9 @@ export {
 export {
     default as ActionTypes
 } from "./actionTypes";
+
+
+export {
+    startLoading,
+    endLoading
+} from "./loading";
