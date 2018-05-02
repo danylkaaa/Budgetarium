@@ -80,17 +80,20 @@ class MainLayout extends React.Component<IMainLayoutProps, IMainLayoutState> {
             {
                 path: "/login",
                 title: "Login",
+                shown:!this.props.isAuthenticated,
                 icon: <ListItemIcon><Icons.Person/></ListItemIcon>,
                 hiddenOn: {xsDown: true}
             },
             {
                 path: "/register",
                 title: "Register",
+                shown:!this.props.isAuthenticated,
                 icon: <ListItemIcon><Icons.PersonAdd/></ListItemIcon>,
                 hiddenOn: {xsDown: true},
             },
             {
                 title: "Logout",
+                shown:this.props.isAuthenticated,
                 icon: <ListItemIcon><Icons.ExitToApp/></ListItemIcon>,
                 hiddenOn: {xsDown: true},
                 action: this.props.onLogout,
@@ -148,7 +151,7 @@ class MainLayout extends React.Component<IMainLayoutProps, IMainLayoutState> {
 
 const mapStateToProps = (state: IState): IStateProps => {
     return {
-        isAuthenticated: state.auth.user !== null,
+        isAuthenticated: Boolean(state.auth.user),
     };
 };
 

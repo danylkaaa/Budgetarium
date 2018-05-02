@@ -6,6 +6,7 @@
     "@types/axios": "^0.14.0",
     "@types/react-fontawesome": "^1.6.2",
     "apollo-client-preset": "^1.0.8",
+    "apollo-link-context": "^1.0.8",
     "autoprefixer": "7.1.6",
     "axios": "^0.18.0",
     "babel-jest": "^22.1.0",

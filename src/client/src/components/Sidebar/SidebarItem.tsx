@@ -95,7 +95,7 @@ class SidebarItem extends React.Component<ISidebarItemProps, ISidebarItemState> 
     }
     private listPresentation = () => {
         const {link, classes, subListLevel}: any = this.props;
-        const handler = link.action|| this.collapse;
+        const handler = link.action || this.collapse;
         const expandIcon = link.children ? this.state.isOpen ? <ExpandLess/> : <ExpandMore/> : null;
         return (
             <div>
@@ -116,7 +116,6 @@ class SidebarItem extends React.Component<ISidebarItemProps, ISidebarItemState> 
         if (!this.isVisible()) {
             return null;
         } else {
-
             return (
                 <Hidden {...this.props.link.hiddenOn}>
                     {

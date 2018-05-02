@@ -7,13 +7,13 @@
   "main": "./src/server/bin/www",
   "scripts": {
     "start": "npm run serve",
-    "serve": "NODE_ENV=production node build/server/www.js",
+    "serve": "NODE_ENV=production node build/www.js",
     "build": "npm run lint && npm run build-ts && npm run copy-static-assets",
-    "serve-debug": "NODE_ENV=development nodemon build/server/www",
+    "serve-debug": "NODE_ENV=development nodemon build/www",
     "dev": "npm run copy-static-assets && concurrently -k -p \"[{name}]\" -n \"TS,Node\" -c \"yellow.bold,cyan.bold\" \"npm run watch-ts\" \"npm run serve-debug\"",
     "build-ts": "tsc",
     "watch-ts": "tsc -w",
-    "lint": "tslint src/**/*.ts",
+    "lint": "tslint -p ./tslint.json",
     "copy-static-assets": "ts-node copyStaticAssets.ts"
   },
   "_moduleAliases": {

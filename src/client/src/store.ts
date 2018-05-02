@@ -4,7 +4,6 @@ import {persistedReducer} from "./reducers";
 import {IState} from "@/models/State";
 import {persistStore} from "redux-persist";
 
-
 function getCompose() {
     if (process.env.NODE_ENV !== "production" && (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) {
         return (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
