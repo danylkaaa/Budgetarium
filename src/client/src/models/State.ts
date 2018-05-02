@@ -4,6 +4,7 @@ export interface IState {
     auth: IAuthState;
     loading:ILoadingState;
     apollo?:any;
+    form:any;
 }
 export interface IAuthState {
     readonly accessToken: IToken | null;
