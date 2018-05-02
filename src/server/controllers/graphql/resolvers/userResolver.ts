@@ -4,40 +4,55 @@ import * as _ from "lodash";
 import {GraphQLError} from "graphql";
 import {IUser} from "@DB/models/User";
 
-interface ISignupMutation{
-    email:string;
-    password:string;
-}
-interface ILoginMutation{
-    email:string;
-    password:string;
+interface ISignupMutation {
+    email: string;
+    password: string;
 }
 
-interface IContext{
-    user:IUser;
+interface ILoginMutation {
+    email: string;
+    password: string;
 }
-interface IUserQuery{
-    id:string;
+
+interface IContext {
+    user: IUser;
+}
+
+interface IUserQuery {
+    id: string;
 }
 
 const logger = Logger(module);
+
+
 export default {
     Mutation: {
         async signup(__: any, data: ISignupMutation) {
             logger.debug(JSON.stringify(data));
-            const {email,password}=data;
+            const {email, password} = data;
             let errors: Array<ValidationErrorDescription> = await Promise.all([Validator.validate("user.email.signup", email), Validator.validate("user.password", password)]);
             errors = _.compact(errors);
             if (errors.length) throw new ValidationError(errors);
             let user = await UserDB.create({email, password});
-            logger.debug(JSON.stringify(user.jwt()));
-            return user.jwt();
+            return {
+                ...user.jwt(),
+                me: {
+                    id: user._id,
+                    name: user.profile.name
+                }
+            };
         },
-        async login(__: any, data: ILoginMutation, context: IContext) {
-            const {email,password}=data;
+        async login(__: any, data: ILoginMutation) {
+            const {email, password} = data;
             const user: any = await UserDB.getByCredentials(email, password);
             if (user) {
-                return user.jwt();
+                return {
+                    ...user.jwt(),
+                    me: {
+                        id: user._id,
+                        name: user.profile.name
+                    }
+                };
             } else {
                 throw new GraphQLError("Invalid email or password");
             }
@@ -57,7 +72,7 @@ export default {
             return (context.user as IUser).profile;
         }),
 
-        async user(__: any, {id}: IUserQuery, context: IContext) {
+        async user(__: any, {id}: IUserQuery) {
             const target: IUser = await UserDB.findById(id);
             if (target) {
                 return target.profile;
@@ -67,6 +82,21 @@ export default {
         },
         users: (__: any, {id, name, gender}: { id: string, name: string, gender: string }, context: any) => {
 
+        }
+    },
+    User: {
+        async avatar(data:IUser) {
+            try {
+                const user = await UserDB.findById(data.id);
+                if(user) {
+                    return user.avatar(250);
+                }else{
+                    return null;
+                }
+            } catch (err) {
+                logger.error(err);
+                throw new GraphQLError(err);
+            }
         }
     }
 };

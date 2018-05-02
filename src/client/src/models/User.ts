@@ -1,6 +1,7 @@
 export interface IUserPayload {
     email: string;
     password: string;
+    name:string;
 }
 
 export interface IToken {

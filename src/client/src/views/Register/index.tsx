@@ -18,6 +18,7 @@ import {Redirect} from "react-router";
 interface IRegisterState {
     email: string;
     password: string;
+    name: string;
 }
 
 // own props
@@ -27,7 +28,7 @@ interface IOwnProps extends IThemableProp<Register> {
 
 // props from dispatch
 interface IDispatchProps {
-    onConfirm: (email: string, password: string) => any;
+    onConfirm: (email: string, password: string, name:string) => any;
 }
 
 // props from state
@@ -112,12 +113,13 @@ class Register extends React.Component<IRegisterProps, IRegisterState> {
         super(props);
         this.state = {
             email: "",
-            password: ""
+            password: "",
+            name: "",
         };
     }
 
     private handleConfirm = () => {
-        this.props.onConfirm(this.state.email, this.state.password);
+        this.props.onConfirm(this.state.email, this.state.password, this.state.name);
     }
 
     public render() {
@@ -183,16 +185,20 @@ class Register extends React.Component<IRegisterProps, IRegisterState> {
     }
 }
 
-const mapStateToProps = (state: IState) :IStateProps=> {
+const mapStateToProps = (state: IState): IStateProps => {
     return {
         loading: _.indexOf(state.loading.scopes, "auth") > -1,
         isAuthenticated: state.auth.user !== null
     };
 };
 
-const mapDispatchToProps = (dispatch: Redux.Dispatch<any, IState>) :IDispatchProps=> {
+const mapDispatchToProps = (dispatch: Redux.Dispatch<any, IState>): IDispatchProps => {
     return {
-        onConfirm: (email: string, password: string) => dispatch(actions.register({email, password})),
+        onConfirm: (email: string, password: string, name: string) => dispatch(actions.register({
+            email,
+            password,
+            name
+        })),
     };
 };
 export default connect<IStateProps, IDispatchProps, IRegisterProps>(mapStateToProps, mapDispatchToProps)(withStyles(styles as any, {withTheme: true})(Register));

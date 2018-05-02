@@ -1,3 +1,4 @@
+export default  `
 """
  A type that describes user.
 """
@@ -7,7 +8,7 @@ type User implements Paginable{
     " The user's real name."
     name:String
     " The user's avatar."
-    gravatar:String
+    avatar:String
 }
 
 type Query{
@@ -18,4 +19,4 @@ type Query{
     " Get info about user by id."
     user(id:ID!):User    
 }
-
+`;

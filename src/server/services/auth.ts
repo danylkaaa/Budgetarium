@@ -2,7 +2,7 @@ import * as passport from "passport";
 const passportLocal = require("passport-local");
 const passportJWT = require("passport-jwt");
 import UserDB from "@DB/UserDB";
-import { IUser, Payload } from "@DB/models/User";
+import { IUser, IPayload } from "@DB/models/User";
 import config from "@config";
 import { Logger } from "@utils";
 import * as _ from "lodash";
@@ -12,13 +12,13 @@ const logger = Logger(module);
 
 function setupJwt(kind: string): passport.Strategy {
     const JWTStrategy = passportJWT.Strategy;
-    const ExtractJwt = require('passport-jwt').ExtractJwt;
+    const ExtractJwt = require("passport-jwt").ExtractJwt;
     var opts = {
         jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
         secretOrKey: config.get(`security.secrets.${kind.toUpperCase()}`),
     };
-    return new JWTStrategy(opts, async (req: any, jwt_payload: Payload, next: any) => {
-        logger.debug('payload received', jwt_payload);
+    return new JWTStrategy(opts, async (req: any, jwt_payload: IPayload, next: any) => {
+        logger.debug("payload received", jwt_payload);
         req.usedStrategy = kind;
         // usually this would be a database call:
         const user: IUser = await UserDB.getByToken(kind, jwt_payload);

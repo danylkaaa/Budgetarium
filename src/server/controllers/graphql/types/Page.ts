@@ -1,3 +1,4 @@
+export default `
 interface Paginable{
     id:ID!
 }
@@ -15,3 +16,4 @@ type  Pagination{
     " List of documnets"
     results:[Paginable!]!
 }
+`;

@@ -1,11 +1,12 @@
-import {IToken, IUser, IUserPayload} from "@/models/User";
+import {IToken, IUser} from "@/models/User";
 import ActionTypes, {IAction} from "./actionTypes";
 import {IState} from "@/models/State";
 import * as Redux from "redux";
 import {endLoading, startLoading} from "@/actions/loading";
 import apolloClient from "@/graphql";
-import {REGISTER_MUTATION} from "@/graphql/mutations/auth";
+import {IRegisterMutationVars, REGISTER_MUTATION} from "@/graphql/mutations/auth";
 import {FetchResult} from "react-apollo";
+import {IRegisterMutationResponse} from "@/graphql/mutations";
 
 export interface IAuthSuccessAction extends IAction {
     type: ActionTypes.AUTH_SUCCESS;
@@ -54,7 +55,7 @@ export const checkAuthTimeout = (expirationTime: number) => {
     return (dispatch: Redux.Dispatch<any, IState>) => {
         setTimeout(() => {
             dispatch(authLogout());
-        }, expirationTime * 1000);
+        }, expirationTime);
     };
 };
 
@@ -63,22 +64,23 @@ const USER: IUser = {
     id: "USER_ID"
 };
 
-export const register = (payload: IUserPayload) => {
-    return (dispatch: Redux.Dispatch<any, IState>) => {
+export const register = (payload: IRegisterMutationVars) => {
+    return async (dispatch: Redux.Dispatch<any, IState>) => {
         dispatch(startLoading("auth"));
-        apolloClient.mutate({
-            mutation: REGISTER_MUTATION,
-            variables: {email: payload.email, password: payload.password}
-        })
-            .then((result: FetchResult) => {
-
-                dispatch(authSuccess({token: "access", expiredIn: 1000}, {token: "refresh", expiredIn: 1000}, USER));
-                dispatch(checkAuthTimeout(1000));
-            })
-            .catch((err: any) => {
-                console.log(err);
-                dispatch(authFail(err));
-            });
+        const variables: IRegisterMutationVars = {...payload};
+        const mutation = REGISTER_MUTATION;
+        try {
+            const response: FetchResult<IRegisterMutationResponse> = await apolloClient.mutate({mutation, variables});
+            if (!response.data) {
+                throw Error("Server returns empty response");
+            } else {
+                const {accessToken, refreshToken, me} = response.data;
+                dispatch(authSuccess(accessToken, refreshToken, me));
+                dispatch(checkAuthTimeout(response.data.accessToken.expiredIn - new Date().getTime()));
+            }
+        } catch (err) {
+            dispatch(authFail(err));
+        }
     };
 };
 

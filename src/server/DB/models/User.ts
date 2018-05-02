@@ -7,6 +7,39 @@ import config from "@config";
 const logger = Logger(module);
 
 /**
+ * TYPES
+ */
+type comparePasswordFunction = (plainPasswordCandidate: string) => Promise<boolean>;
+type tokenGeneratorFunction = () => string;
+type tokenSaltGenerator = () => Promise<any>;
+type jwtGenerator = () => { accessToken: IToken, refreshToken: IToken };
+type avatarGenerator = (avatarSize: number) => string;
+
+/**
+ * INTERFACES
+ */
+export interface IToken {
+    token: string;
+    expiredIn: number;
+}
+
+export interface IPayload {
+    id: string;
+    salt: string;
+}
+
+export interface IAuthToken {
+    accessToken: string;
+    king: string;
+}
+
+export interface IJWTPayload {
+    accessToken: IToken;
+    refreshToken: IToken;
+}
+
+
+/**
  * Defines User model
  */
 export type IUser = mongoose.Document & {
@@ -19,7 +52,7 @@ export type IUser = mongoose.Document & {
         refresh: string
     }
     facebook: string,
-    tokens: AuthToken[],
+    tokens: IAuthToken[],
     profile: {
         name: string,
         picture: string
@@ -29,7 +62,8 @@ export type IUser = mongoose.Document & {
     generateRefreshToken: tokenGeneratorFunction,
     regenerateJWTSalts: tokenSaltGenerator,
     jwt: jwtGenerator,
-    gravatar: (size: number) => string,
+    avatar: avatarGenerator,
+    gravatar: avatarGenerator,
 };
 export const UserSchema: mongoose.Schema = new mongoose.Schema({
     email: {
@@ -55,24 +89,8 @@ export const UserSchema: mongoose.Schema = new mongoose.Schema({
         picture: String
     }
 }, {timestamps: true});
-type comparePasswordFunction = (plainPasswordCandidate: string) => Promise<boolean>;
-type tokenGeneratorFunction = () => string;
-type tokenSaltGenerator = () => Promise<any>;
-type jwtGenerator = () => { accessToken: IToken, refreshToken: IToken };
 
-interface IToken {
-    token: string;
-    expiredIn: number;
-}
 
-export type Payload = {
-    id: string;
-    salt: string;
-};
-export type AuthToken = {
-    accessToken: string,
-    king: string
-};
 UserSchema.plugin(require("mongoose-paginate"));
 UserSchema.pre("save", async function (next) {
     const user: any = this;
@@ -96,6 +114,11 @@ UserSchema.pre("save", async function (next) {
         next(err);
     }
 });
+
+/**
+ * METHODS
+ */
+
 UserSchema.methods.regenerateJWTSalts = async function (): Promise<any> {
     const salts: Array<string> = await Promise.all([
         bcrypt.genSalt(config.get("security.SALT_LENGTH")),
@@ -108,7 +131,7 @@ UserSchema.methods.regenerateJWTSalts = async function (): Promise<any> {
     return this.save();
 };
 UserSchema.methods.generateAccessToken = function (): string {
-    const payload: Payload = {
+    const payload: IPayload = {
         id: this._id,
         salt: this.jwtSecrets.access
     };
@@ -116,7 +139,7 @@ UserSchema.methods.generateAccessToken = function (): string {
 };
 UserSchema.methods.generateRefreshToken = function (): string {
     const user: IUser = this;
-    const payload: Payload = {
+    const payload: IPayload = {
         id: this._id,
         salt: this.jwtSecrets.refresh
     };
@@ -125,7 +148,7 @@ UserSchema.methods.generateRefreshToken = function (): string {
 UserSchema.methods.comparePassword = function (plainPasswordCandidate: string): Promise<boolean> {
     return bcrypt.compare(plainPasswordCandidate, this.password);
 };
-UserSchema.methods.jwt = function (): { accessToken: IToken, refreshToken: IToken } {
+UserSchema.methods.jwt = function (): IJWTPayload {
     const currTime = new Date().getTime();
     return {
         accessToken: {
@@ -138,15 +161,19 @@ UserSchema.methods.jwt = function (): { accessToken: IToken, refreshToken: IToke
         }
     };
 };
-UserSchema.methods.gravatar = (size: number): string => {
-    if (!size) {
-        size = 200;
+UserSchema.methods.avatar = function (): string {
+    if (this.profile.avatar) {
+        return this.profile.avatar;
+    } else {
+        return this.gravatar(250);
     }
+}
+UserSchema.methods.gravatar = function(avatarSize: number = 250): string {
     if (!this.email) {
-        return `https://gravatar.com/avatar/?s=${size}&d=retro`;
+        return `https://gravatar.com/avatar/?s=${avatarSize}&d=retro`;
     } else {
         const md5: string = crypto.createHash("md5").update(this.email).digest("hex");
-        return `https://gravatar.com/avatar/${md5}?s=${size}&d=retro`;
+        return `https://gravatar.com/avatar/${md5}?s=${avatarSize}&d=retro`;
     }
 };
 export const UserModel: IModel<IUser> = mongoose.model<IUser>("User", UserSchema);

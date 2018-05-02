@@ -1,5 +1,5 @@
 import AbstractDB from "./AbstractDB";
-import { IUser, Payload, UserModel } from "./models/User";
+import { IUser, IPayload, UserModel } from "./models/User";
 import mongoose from "mongoose";
 import jsonwebtoken from "jsonwebtoken";
 
@@ -25,7 +25,7 @@ class UserDB extends AbstractDB<IUser>{
         }
         return null;
     }
-    public getByToken(kind: string, token: Payload): Promise<IUser> {
+    public getByToken(kind: string, token: IPayload): Promise<IUser> {
         return this.findOne({ id: token.id, jwtSalts: { [kind]: token.salt } });
     }
 
