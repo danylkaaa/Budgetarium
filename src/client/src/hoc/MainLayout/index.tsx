@@ -3,7 +3,7 @@ import * as PropTypes from "prop-types";
 import {withStyles} from "material-ui/styles";
 import {ListItemIcon, MuiThemeProvider, Theme} from "material-ui";
 import ThemeDefault from "@/theme-default";
-import {ISidebarLink} from "@/sidebar-links";
+import {ISidebarLink} from "@comp/Sidebar/SidebarItem";
 import Header from "@comp/Header";
 import Sidebar from "@comp/Sidebar";
 import {IThemableProp} from "@/models/PropInterfaces";
@@ -13,9 +13,21 @@ import * as Icons from "@material-ui/icons";
 import {isWidthUp} from "material-ui/es/utils/withWidth";
 import {Breakpoint} from "material-ui/styles/createBreakpoints";
 import withWidth from "material-ui/utils/withWidth";
+import {connect} from "react-redux";
+import {IState} from "@/models/State";
+import * as Redux from "redux";
+import * as actions from "@/actions";
 
-interface IMainLayoutProps extends IThemableProp<MainLayout> {
+interface IOwnProps extends IThemableProp<MainLayout> {
     width?: Breakpoint;
+}
+
+interface IDispatchProps {
+    onLogout: () => any;
+}
+
+interface IStateProps {
+    isAuthenticated: boolean;
 }
 
 interface IMainLayoutState {
@@ -39,6 +51,7 @@ const styles = (theme: Theme) => ({
     },
     toolbar: theme.mixins.toolbar,
 });
+type IMainLayoutProps = IOwnProps & IDispatchProps & IStateProps;
 
 class MainLayout extends React.Component<IMainLayoutProps, IMainLayoutState> {
 
@@ -74,7 +87,13 @@ class MainLayout extends React.Component<IMainLayoutProps, IMainLayoutState> {
                 path: "/register",
                 title: "Register",
                 icon: <ListItemIcon><Icons.PersonAdd/></ListItemIcon>,
-                hiddenOn: {xsDown: true}
+                hiddenOn: {xsDown: true},
+            },
+            {
+                title: "Logout",
+                icon: <ListItemIcon><Icons.ExitToApp/></ListItemIcon>,
+                hiddenOn: {xsDown: true},
+                action: this.props.onLogout,
             }
         ];
     }
@@ -104,6 +123,7 @@ class MainLayout extends React.Component<IMainLayoutProps, IMainLayoutState> {
                 <div className={classes.root}>
                     <Header
                         isDesktop={isDesktop}
+                        title="Budgetarium"
                         buttons={this.headerButtons()}
                         openToggleHandler={this.handleDrawerToggle}
                         iconsToggleHandler={this.handleDrawerIconsToggle}
@@ -126,4 +146,18 @@ class MainLayout extends React.Component<IMainLayoutProps, IMainLayoutState> {
 }
 
 
-export default withWidth()(withStyles(styles as any, {withTheme: true})(MainLayout));
+const mapStateToProps = (state: IState): IStateProps => {
+    return {
+        isAuthenticated: state.auth.user !== null,
+    };
+};
+
+const mapDispatchToProps = (dispatch: Redux.Dispatch<any, IState>): IDispatchProps => {
+        return {
+            onLogout: () => dispatch(actions.authLogout())
+        };
+    }
+;
+
+export default connect<IStateProps, IDispatchProps, IOwnProps>(mapStateToProps, mapDispatchToProps)(
+    withWidth()(withStyles(styles as any, {withTheme: true})(MainLayout)));

@@ -1,5 +1,4 @@
 import * as React from "react";
-import {ISidebarLink} from "@/sidebar-links";
 import * as PropTypes from "prop-types";
 import {IThemableProp, themablePropTypes} from "@/models/PropInterfaces";
 import withStyles from "material-ui/styles/withStyles";
@@ -7,6 +6,18 @@ import {Link} from "react-router-dom";
 import {Collapse, Divider, Hidden, List, ListItem, ListItemText, Theme} from "material-ui";
 import {ExpandLess, ExpandMore} from "@material-ui/icons";
 import * as classNames from "classnames";
+
+
+export interface ISidebarLink {
+    title?: string;
+    icon?: React.ReactElement<any>;
+    path?: string | object;
+    divider?: boolean;
+    shown?: boolean;
+    hiddenOn?: object;
+    children?: ISidebarLink[];
+    action?: () => any;
+}
 
 interface ISidebarItemProps extends IThemableProp <SidebarItem> {
     link: ISidebarLink;
@@ -84,13 +95,14 @@ class SidebarItem extends React.Component<ISidebarItemProps, ISidebarItemState> 
     }
     private listPresentation = () => {
         const {link, classes, subListLevel}: any = this.props;
+        const handler = link.action|| this.collapse;
         const expandIcon = link.children ? this.state.isOpen ? <ExpandLess/> : <ExpandMore/> : null;
         return (
             <div>
                 <ListItem
                     button={true}
                     component={this.container}
-                    onClick={this.collapse}
+                    onClick={handler}
                     className={classNames(subListLevel && classes.nested)}>
                     {link.icon}
                     <ListItemText inset={true} primary={link.title}/>
@@ -108,7 +120,7 @@ class SidebarItem extends React.Component<ISidebarItemProps, ISidebarItemState> 
             return (
                 <Hidden {...this.props.link.hiddenOn}>
                     {
-                        this.props.link.divider ?  <Divider/>:this.listPresentation()
+                        this.props.link.divider ? <Divider/> : this.listPresentation()
                     }
                 </Hidden>
             );
