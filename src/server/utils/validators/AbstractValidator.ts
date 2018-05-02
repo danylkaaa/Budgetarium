@@ -22,8 +22,6 @@ export default abstract class AbstractValidator implements IValidator {
         return this.validateByPath(_.split(path, "."), value);
     }
     public validateByPath(path: string[], value: any): Promise<ValidationErrorDescription> {
-        logger.debug(path.join(","));  
-        logger.debug(JSON.stringify(this._handlers,null,3));                
         if (path[0] in this._handlers) {
             return this._handlers[path[0]].validateByPath(_.slice(path, 1), value);
         } else {

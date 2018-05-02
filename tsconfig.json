@@ -3,7 +3,6 @@
     "target": "es6",
     "module": "commonjs",
     "outDir": "build/",
-    "rootDir": "./src/server",
     "noImplicitAny": true,
     "jsx":"react",
     "sourceMap": true,
@@ -35,13 +34,16 @@
       "es2015.symbol",
       "es2015.symbol.wellknown",
       "esnext.asynciterable"
-    ],
+    ]
   },
   "files": [
     "./node_modules/@types/node/index.d.ts"
   ],
+  "include": [
+    "src/server/**/*"
+  ],
   "exclude": [
     "node_modules",
-    "src/client/**/*"
+    "src/client"
   ]
 }

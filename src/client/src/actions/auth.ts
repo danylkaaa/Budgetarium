@@ -3,7 +3,9 @@ import ActionTypes, {IAction} from "./actionTypes";
 import {IState} from "@/models/State";
 import * as Redux from "redux";
 import {endLoading, startLoading} from "@/actions/loading";
-
+import apolloClient from "@/graphql";
+import {REGISTER_MUTATION} from "@/graphql/mutations/auth";
+import {FetchResult} from "react-apollo";
 
 export interface IAuthSuccessAction extends IAction {
     type: ActionTypes.AUTH_SUCCESS;
@@ -64,8 +66,19 @@ const USER: IUser = {
 export const register = (payload: IUserPayload) => {
     return (dispatch: Redux.Dispatch<any, IState>) => {
         dispatch(startLoading("auth"));
-        dispatch(authSuccess({token: "access", expiredIn: 1000}, {token: "refresh", expiredIn: 1000}, USER));
-        dispatch(checkAuthTimeout(1000));
+        apolloClient.mutate({
+            mutation: REGISTER_MUTATION,
+            variables: {email: payload.email, password: payload.password}
+        })
+            .then((result: FetchResult) => {
+
+                dispatch(authSuccess({token: "access", expiredIn: 1000}, {token: "refresh", expiredIn: 1000}, USER));
+                dispatch(checkAuthTimeout(1000));
+            })
+            .catch((err: any) => {
+                console.log(err);
+                dispatch(authFail(err));
+            });
     };
 };
 

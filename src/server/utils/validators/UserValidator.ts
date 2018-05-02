@@ -14,7 +14,6 @@ class EmailValidation extends AbstractValidator {
     }
 
     public async validateByPath(path: string[], value: any): Promise<ValidationErrorDescription> {
-        logger.debug(value);
         const key = "email";
         if (validator.isEmpty(value)) {
             return { key, message: "Is empty" };

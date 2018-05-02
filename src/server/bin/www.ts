@@ -1,4 +1,4 @@
-import App from "./App";
+import App from "../App";
 import {Logger} from "@utils";
 import * as http from "http";
 

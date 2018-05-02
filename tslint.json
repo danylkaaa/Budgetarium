@@ -1,9 +1,19 @@
 {
     "defaultSeverity": "error",
     "jsRules": {},
+    "rules":{
+        "ordered-imports": false,
+        "semicolon": true,
+        "object-literal-sort-keys": false,    
+        "member-ordering": [false],
+        "quotemark": [
+        true,
+        "double"
+        ]
+    },
     "linterOptions": {
         "exclude": [
-            "src/client/**/*"
+            "src/client"
         ]
     },
     "rulesDirectory": []

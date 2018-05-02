@@ -9,6 +9,7 @@
     "semicolon": true,
     "object-literal-sort-keys": false,    
     "member-ordering": [false],
+    "no-console": false,
     "quotemark": [
       true,
       "double"

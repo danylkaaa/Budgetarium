@@ -1,8 +1,9 @@
 import * as mongoose from "mongoose";
-import { Logger, TokenGenerator, IModel } from "@utils";
+import {IModel, Logger, TokenGenerator} from "@utils";
 import * as  bcrypt from "bcrypt";
-import config from "@config";
 import * as crypto from "crypto";
+import config from "@config";
+
 const logger = Logger(module);
 
 /**
@@ -27,19 +28,20 @@ export type IUser = mongoose.Document & {
     generateAccessToken: tokenGeneratorFunction,
     generateRefreshToken: tokenGeneratorFunction,
     regenerateJWTSalts: tokenSaltGenerator,
+    jwt: jwtGenerator,
     gravatar: (size: number) => string,
 };
 export const UserSchema: mongoose.Schema = new mongoose.Schema({
     email: {
         type: String,
         unique: true,
-        required:true,
+        required: true,
         trim: true
     },
-    password:{
-        type:String,
-        required:true
-    } ,
+    password: {
+        type: String,
+        required: true
+    },
     passwordResetToken: String,
     passwordResetExpires: Date,
     jwtSecrets: {
@@ -52,17 +54,21 @@ export const UserSchema: mongoose.Schema = new mongoose.Schema({
         name: String,
         picture: String
     }
-}, { timestamps: true });
-
-
+}, {timestamps: true});
 type comparePasswordFunction = (plainPasswordCandidate: string) => Promise<boolean>;
 type tokenGeneratorFunction = () => string;
 type tokenSaltGenerator = () => Promise<any>;
+type jwtGenerator = () => { accessToken: IToken, refreshToken: IToken };
+
+interface IToken {
+    token: string;
+    expiredIn: number;
+}
 
 export type Payload = {
     id: string;
     salt: string;
-}
+};
 export type AuthToken = {
     accessToken: string,
     king: string
@@ -70,7 +76,9 @@ export type AuthToken = {
 UserSchema.plugin(require("mongoose-paginate"));
 UserSchema.pre("save", async function (next) {
     const user: any = this;
-    if (!this.isModified("password") && !this.isNew) { return next(); }
+    if (!this.isModified("password") && !this.isNew) {
+        return next();
+    }
     try {
 
         const salts: Array<string> = await Promise.all([
@@ -81,7 +89,7 @@ UserSchema.pre("save", async function (next) {
         user.jwtSecrets = {
             access: salts[0],
             refresh: salts[1]
-        }
+        };
         user.password = await bcrypt.hash(user.password, salts[2]);
     } catch (err) {
         logger.error(err);
@@ -96,9 +104,9 @@ UserSchema.methods.regenerateJWTSalts = async function (): Promise<any> {
     this.jwtSecrets = {
         access: salts[0],
         refresh: salts[1]
-    }
+    };
     return this.save();
-}
+};
 UserSchema.methods.generateAccessToken = function (): string {
     const payload: Payload = {
         id: this._id,
@@ -113,11 +121,23 @@ UserSchema.methods.generateRefreshToken = function (): string {
         salt: this.jwtSecrets.refresh
     };
     return TokenGenerator.generate("refresh", payload);
-}
+};
 UserSchema.methods.comparePassword = function (plainPasswordCandidate: string): Promise<boolean> {
     return bcrypt.compare(plainPasswordCandidate, this.password);
 };
-
+UserSchema.methods.jwt = function (): { accessToken: IToken, refreshToken: IToken } {
+    const currTime = new Date().getTime();
+    return {
+        accessToken: {
+            token: this.generateAccessToken(),
+            expiredIn: currTime + Number(config.get("security.tokenLife.ACCESS")) * 1000
+        },
+        refreshToken: {
+            token: this.generateRefreshToken(),
+            expiredIn: currTime + Number(config.get("security.tokenLife.REFRESH")) * 1000
+        }
+    };
+};
 UserSchema.methods.gravatar = (size: number): string => {
     if (!size) {
         size = 200;

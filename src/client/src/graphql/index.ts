@@ -6,7 +6,7 @@ import {store} from "@/store";
 
 
 const httpLink = createHttpLink({
-    uri: "/api/",
+    uri: "http://127.0.0.1:4000/api/graphql",
 });
 
 const authLink = setContext((_: any, {headers}) => {
