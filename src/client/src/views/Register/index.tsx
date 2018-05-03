@@ -15,7 +15,7 @@ import {Redirect} from "react-router";
 import {reduxForm} from "redux-form";
 import RegisterForm from "@/views/Register/Form";
 import Loader from "@comp/Loader";
-import ErrorMessage from "@comp/ErrorMessage";
+import ErrorMessanger from "@comp/ErrorMessanger";
 
 // own props
 interface IOwnProps extends IThemableProp<Register> {
@@ -127,7 +127,7 @@ class Register extends React.Component<IRegisterProps, {}> {
         }
         return (
             <MuiThemeProvider theme={ThemeDefault}>
-                <ErrorMessage trigger={/auth/} stackLength={3}/>
+                <ErrorMessanger trigger={/auth/} stackLength={3}/>
                 <Loader
                     isLoading={Boolean(this.props.isLoading)}
                     color="primary"
@@ -185,12 +185,12 @@ const mapStateToProps = (state: IState): IStateProps => {
 const mapDispatchToProps = (dispatch: Redux.Dispatch<any, IState>): IDispatchProps => {
     return {
         onConfirm: (email: string, password: string, name: string) => {
-            dispatch(actions.addError("auth", "NEW ERROR"));
-            // dispatch(actions.register({
-            //     email,
-            //     password,
-            //     name
-            // }))
+            // dispatch(actions.addError("auth", "NEW ERROR"));
+            dispatch(actions.register({
+                email,
+                password,
+                name
+            }));
         },
     };
 };

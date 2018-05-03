@@ -2,7 +2,7 @@ import {IToken, IUser} from "@/models/User";
 import ActionTypes, {IAction} from "./actionTypes";
 import {IState} from "@/models/State";
 import * as Redux from "redux";
-import {endLoading, startLoading} from "@/actions/app";
+import {addError, endLoading, startLoading} from "@/actions/app";
 import apolloClient from "@/graphql";
 import {ILoginMutationVars, IRegisterMutationVars, LOGIN_MUTATION, REGISTER_MUTATION} from "@/graphql/mutations";
 
@@ -52,24 +52,33 @@ export const checkAuthTimeout = (expirationTime: number) => {
     };
 };
 
-export const login = (payload: ILoginMutationVars) => {
-    return async (dispatch: Redux.Dispatch<any, IState>) => {
-        dispatch(startLoading("auth"));
-        const variables: ILoginMutationVars = {...payload};
-        console.log(variables);
-        const mutation = LOGIN_MUTATION;
-        try {
-            const response: any = await apolloClient.mutate({mutation, variables});
+
+const makeAuthRequerst = (options: any, dispatch: Redux.Dispatch<any, IState>,name:string) => {
+    apolloClient.mutate(options)
+        .then((response: any) => {
             if (!response.data) {
                 throw Error("Server returns empty response");
             } else {
-                const {accessToken, refreshToken, me} = response.data.signup;
+                const {accessToken, refreshToken, me} = response.data[name];
                 dispatch(authSuccess(accessToken, refreshToken, me));
                 dispatch(checkAuthTimeout(response.data.accessToken.expiredIn - new Date().getTime()));
             }
-        } catch (err) {
-            dispatch(authFail(err));
+        }).catch((err: any) => {
+        console.log(JSON.stringify(err, null));
+        if (err.graphQLErrors) {
+            err.graphQLErrors.forEach((e: any) => dispatch(authFail(e.message)));
+        } else {
+            dispatch(authFail(err.message));
         }
+    });
+};
+
+export const login = (payload: ILoginMutationVars) => {
+    return (dispatch: Redux.Dispatch<any, IState>) => {
+        dispatch(startLoading("auth"));
+        const variables: ILoginMutationVars = {...payload};
+        const mutation = LOGIN_MUTATION;
+        makeAuthRequerst({mutation, variables}, dispatch,"login");
     };
 };
 
@@ -77,20 +86,8 @@ export const register = (payload: IRegisterMutationVars) => {
     return async (dispatch: Redux.Dispatch<any, IState>) => {
         dispatch(startLoading("auth"));
         const variables: IRegisterMutationVars = {...payload};
-        console.log(variables);
         const mutation = REGISTER_MUTATION;
-        try {
-            const response: any = await apolloClient.mutate({mutation, variables});
-            if (!response.data) {
-                throw Error("Server returns empty response");
-            } else {
-                const {accessToken, refreshToken, me} = response.data.signup;
-                dispatch(authSuccess(accessToken, refreshToken, me));
-                dispatch(checkAuthTimeout(response.data.accessToken.expiredIn - new Date().getTime()));
-            }
-        } catch (err) {
-            dispatch(authFail(err));
-        }
+        makeAuthRequerst({mutation, variables}, dispatch,"signup");
     };
 };
 
@@ -137,9 +134,13 @@ export const authReloadAccessToken = () => {
 };
 
 
-export const authFail = (error: any) => {
+export const authFail = (errorMessage: string) => {
     return (dispatch: Redux.Dispatch<any, IState>) => {
-        console.log(JSON.stringify(error, null));
         dispatch(endLoading("auth"));
+        if (errorMessage) {
+            dispatch(addError("auth", errorMessage));
+        } else {
+            dispatch(addError("auth", "Some error"));
+        }
     };
 };

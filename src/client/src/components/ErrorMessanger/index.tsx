@@ -6,15 +6,13 @@ import {removeError} from "@/actions";
 import * as _ from "lodash";
 import Alert from "react-s-alert";
 
-export interface IOwnProps extends React.Props<WithMessages> {
+export interface IOwnProps extends React.Props<ErrorMessanger> {
     trigger: RegExp;
     stackLength: number;
 }
-
 interface IDispatchProps {
     removeError: (scope: IError) => any;
 }
-
 interface IStateProps {
     errors: IError[];
 }
@@ -22,7 +20,7 @@ interface IStateProps {
 type IProps = IDispatchProps & IOwnProps & IStateProps;
 
 
-class WithMessages extends React.Component<IProps, {}> {
+class ErrorMessanger extends React.Component<IProps, {}> {
     constructor(props: IProps) {
         super(props);
     }
@@ -67,4 +65,4 @@ const mapDispatchToProps = (dispatch: Redux.Dispatch<any, IState>): IDispatchPro
 };
 
 
-export default connect<IStateProps, IDispatchProps, IOwnProps>(mapStateToProps, mapDispatchToProps)(WithMessages);
+export default connect<IStateProps, IDispatchProps, IOwnProps>(mapStateToProps, mapDispatchToProps)(ErrorMessanger);

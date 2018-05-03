@@ -13,19 +13,19 @@ export interface IRegisterMutationResponse {
     refreshToken: IToken;
 }
 
-export interface ILoginMutationResponse  {
+export interface ILoginMutationResponse {
     me: IUserShema;
     accessToken: IToken;
     refreshToken: IToken;
 }
 
 export interface IRegisterMutationVars {
-    name:string;
+    name: string;
     email: string;
     password: string;
 }
 
-export interface ILoginMutationVars{
+export interface ILoginMutationVars {
     email: string;
     password: string;
 }
@@ -52,9 +52,9 @@ export const REGISTER_MUTATION = gql`
 
 
 export const LOGIN_MUTATION = gql`
-    mutation signin($email:String!,$password:String!){
-        signin(email:$email,password:$password){
-             me{
+    mutation login($email:String!,$password:String!){
+        login(email:$email,password:$password){
+            me{
                 id
                 name
                 avatar

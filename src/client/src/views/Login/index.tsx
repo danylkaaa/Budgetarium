@@ -15,7 +15,7 @@ import {Redirect} from "react-router";
 import {reduxForm} from "redux-form";
 import LoginForm from "@/views/Login/Form";
 import Loader from "@comp/Loader";
-
+import ErrorMessanger from "@comp/ErrorMessanger";
 
 // own props
 interface IOwnProps extends IThemableProp<Login> {
@@ -127,6 +127,7 @@ class Login extends React.Component<IRegisterProps, {}> {
         }
         return (
             <MuiThemeProvider theme={ThemeDefault}>
+                <ErrorMessanger trigger={/auth/} stackLength={3}/>
                 <Loader
                     isLoading={Boolean(this.props.isLoading)}
                     color="primary"
