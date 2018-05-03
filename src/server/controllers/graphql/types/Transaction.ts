@@ -8,13 +8,13 @@ type Transaction implements Paginable{
     " The transaction's name."
     name:String!
     " The transaction's wallet's id."
-    walletId:ID!
+    wallet:Wallet!
     " The transaction's value."
     value:Float!
     " The transaction's category name."
     category:Float!
     " The transaction's creator."
-    creator:ID!
+    creator:User!
 }
 
 type Query{
@@ -26,10 +26,8 @@ type Query{
 
 type Mutation{
     " Create new transaction."
-    createTransaction(name:String!, currency:String, value: Float, category:String,wallet:ID!):Transaction
+    createTransaction(name:String!, currency:String, value: Float!, category:String,wallet:ID!):Transaction
     " Delete transaction by it's ID."
     deleteTransaction(id:ID!):Boolean
-    " Update transaction by id."
-    updateTransaction(id:ID!,name:String!, currency:String, value: Float, category:String,wallet:ID!):Transaction
 }
 `;

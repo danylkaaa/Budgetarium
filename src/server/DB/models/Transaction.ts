@@ -15,19 +15,20 @@ const logger = Logger(module);
  * Defines Transaction model
  */
 export interface ITransactionProps {
-     walletId: string;
+    walletId: string;
     creator: string;
     value: number;
     name: string;
     category: string;
 }
-export interface ITransaction extends mongoose.Document,ITransactionProps {
+
+export interface ITransaction extends mongoose.Document, ITransactionProps {
 
 }
 
 export const TransactionSchema: mongoose.Schema = new mongoose.Schema({
     // stored in
-    walletId: {type:String,required:true},
+    walletId: {type: String, required: true},
     // who create it
     creator: {type: String, required: true},
     // value of transaction

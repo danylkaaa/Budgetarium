@@ -1,6 +1,7 @@
 import AbstractValidator from "./AbstractValidator";
 import UserValidator from "./UserValidator";
 import WalletValidator from "./WalletValidator";
+import TransactionValidator from "./TransactionValidator";
 
 
 class RootValidator extends AbstractValidator {
@@ -14,6 +15,7 @@ class RootValidator extends AbstractValidator {
         super();
         this.setHandler("user",UserValidator);
         this.setHandler("wallet",WalletValidator);
+        this.setHandler("transaction",TransactionValidator);
     }
 }
 

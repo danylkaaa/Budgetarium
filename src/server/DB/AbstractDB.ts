@@ -1,9 +1,16 @@
 import {Document, PaginateOptions, PaginateResult, Query} from "mongoose";
 import {IModel} from "@utils";
 import * as _ from "lodash";
+import Logger from "../utils/logger";
+
+const logger = Logger(module);
 
 abstract class AbstractDB<T extends Document> {
     protected _model: IModel<T>;
+
+    public async contains(query: any): Promise<boolean> {
+        return (await this._model.paginate(query, {limit: 0})).total > 0;
+    }
 
     public buildSearchQuery(data: any) {
         return Object
@@ -14,7 +21,7 @@ abstract class AbstractDB<T extends Document> {
                     result[key] = {$in: value};
                 } else if (_.isString(value)) {
                     result[key] = new RegExp(value);
-                } else if (_.isObject(value)){
+                } else if (_.isObject(value)) {
                     result[key] = this.buildSearchQuery(value);
                 } else {
                     result[key] = value;

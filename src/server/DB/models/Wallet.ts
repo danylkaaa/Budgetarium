@@ -1,6 +1,7 @@
 import * as mongoose from "mongoose";
 import {IModel, Logger} from "@utils";
 import config from "@config";
+import {ITransaction} from "@DB/models/Transaction";
 
 const logger = Logger(module);
 /**
@@ -10,6 +11,7 @@ const logger = Logger(module);
 /**
  * INTERFACES
  */
+type ITrasactionAffect = (t: ITransaction) => IWallet;
 
 
 /**
@@ -23,16 +25,18 @@ export interface IWalletProps {
 }
 
 export interface IWallet extends mongoose.Document, IWalletProps {
-    sharedWith:string[];
+    sharedWith: string[];
     spending: number;
     gain: number;
+    addTransaction: ITrasactionAffect;
 }
+
 
 export const WalletSchema: mongoose.Schema = new mongoose.Schema({
     // who create it
-    owner: {type:String, required: true},
+    owner: {type: String, required: true},
     // value of transaction
-    sharedWith: {type:[String], default: []},
+    sharedWith: {type: [String], default: []},
     // name of transaction
     name: String,
     // eq (movie, food etc.)
@@ -52,6 +56,17 @@ export const WalletSchema: mongoose.Schema = new mongoose.Schema({
     }
 }, {timestamps: true});
 
+/**
+ * METHODS
+ */
+WalletSchema.methods.addTransaction = function (t: ITransaction) {
+    if (t.value >= 0) {
+        this.gain += t.value;
+    } else {
+        this.spending += t.value;
+    }
+    return this.save();
+};
 
 WalletSchema.plugin(require("mongoose-paginate"));
 WalletSchema.index({owner: 1});

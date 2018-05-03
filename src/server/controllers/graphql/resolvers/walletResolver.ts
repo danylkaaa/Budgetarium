@@ -65,7 +65,7 @@ export default {
                 if (!wallet) {
                     throw new GraphQLError("No such wallet found");
                 }
-                if (!wallet.owner==context.user.id) {
+                if (!wallet.owner == context.user.id) {
                     throw new GraphQLError("You are not owner of wallet");
                 }
                 await Promise.all([TransactionDB.remove({walletId: wallet.id}), WalletDB.removeById(id)]);
@@ -100,6 +100,15 @@ export default {
         }),
     },
     Wallet: {
+        async spending(data: IWallet) {
+            return (await WalletDB.getFieldsById(data.id, {spending: 1})).spending;
+        },
+        async gain(data: IWallet) {
+            return (await WalletDB.getFieldsById(data.id, {gain: 1})).gain;
+        },
+        async name(data: IWallet) {
+            return (await WalletDB.getFieldsById(data.id, {name: 1})).name;
+        },
         async total(data: IWallet) {
             logger.info("total wallet" + data);
             if (data.gain && data.spending) {
