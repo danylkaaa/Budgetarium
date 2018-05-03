@@ -1,9 +1,27 @@
 import {Document, PaginateOptions, PaginateResult, Query} from "mongoose";
 import {IModel} from "@utils";
+import * as _ from "lodash";
 
 abstract class AbstractDB<T extends Document> {
     protected _model: IModel<T>;
 
+    public buildSearchQuery(data: any) {
+        return Object
+            .keys(data)
+            .reduce((result: any, key: string) => {
+                const value = data[key];
+                if (_.isArray(value)) {
+                    result[key] = {$in: value};
+                } else if (_.isString(value)) {
+                    result[key] = new RegExp(value);
+                } else if (_.isObject(value)){
+                    result[key] = this.buildSearchQuery(value);
+                } else {
+                    result[key] = value;
+                }
+                return result;
+            }, {});
+    }
 
     public abstract plainFields(): { [key: string]: any };
 

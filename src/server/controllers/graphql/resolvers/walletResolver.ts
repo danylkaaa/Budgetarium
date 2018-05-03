@@ -6,6 +6,7 @@ import TransactionDB from "@DB/TransactionDB";
 import {IWallet} from "@DB/models/Wallet";
 import config from "@config";
 import * as lodash from "lodash";
+
 const logger = Logger(module);
 
 interface ICreateMutation {
@@ -28,7 +29,7 @@ interface IUpdateMutation {
 }
 
 interface IWalletsQuery {
-    id?: string;
+    id?: string[];
     name?: string;
     currency?: string;
 }
@@ -64,7 +65,7 @@ export default {
                 if (!wallet) {
                     throw new GraphQLError("No such wallet found");
                 }
-                if (!wallet.owner.equals(context.user.id)) {
+                if (!wallet.owner==context.user.id) {
                     throw new GraphQLError("You are not owner of wallet");
                 }
                 await Promise.all([TransactionDB.remove({walletId: wallet.id}), WalletDB.removeById(id)]);
@@ -79,12 +80,10 @@ export default {
         wallets: AuthMiddleware(["access"], async (_: any, data: IWalletsQuery, context: IContext): Promise<IWallet[]> => {
             try {
                 let {id, name, currency} = data;
-                return await WalletDB.getFields({
-                    id,
-                    name: new RegExp(name),
-                    currency,
-                    owner: context.user.id
-                }, WalletDB.plainFields());
+                const query: any = WalletDB.buildSearchQuery(data);
+                query.owner = context.user.id;
+                logger.info(query);
+                return await WalletDB.getFields(query, WalletDB.plainFields());
             } catch (e) {
                 logger.error(e);
                 throw new GraphQLError(e);
@@ -93,15 +92,7 @@ export default {
         wallet: AuthMiddleware(["access"], async (_: any, data: IWalletQuery, context: IContext): Promise<IWallet> => {
             try {
                 let {id} = data;
-                return await WalletDB.getFiegenerateAccessTokenldsById(id, WalletDB.plainFields());
-            } catch (e) {
-                logger.error(e);
-                throw new GraphQLError(e);
-            }
-        }),
-        myWallets: AuthMiddleware(["access"], async (_: any, __: any, context: IContext): Promise<IWallet[]> => {
-            try {
-                return await WalletDB.getFields({owner: context.user.id}, WalletDB.plainFields());
+                return await WalletDB.getFields(id, WalletDB.plainFields());
             } catch (e) {
                 logger.error(e);
                 throw new GraphQLError(e);

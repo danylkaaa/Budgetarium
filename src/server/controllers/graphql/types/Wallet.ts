@@ -27,9 +27,7 @@ type Query{
     " Get info about wallet by it's id."
     wallet(id:ID!):Wallet
     " Get info about wallets by it's properties."
-    wallets(id:ID, name:String,currency:String):[Wallet]!
-    " Get info about wallet by it's id."
-    myWallets(id:ID!):[Wallet]!    
+    wallets(id:[ID], name:String,currency:String):[Wallet]!    
 }
 
 type Mutation{
