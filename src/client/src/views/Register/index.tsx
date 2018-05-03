@@ -127,7 +127,7 @@ class Register extends React.Component<IRegisterProps, {}> {
         }
         return (
             <MuiThemeProvider theme={ThemeDefault}>
-                <ErrorMessage trigger={/auth/}/>
+                <ErrorMessage trigger={/auth/} stackLength={3}/>
                 <Loader
                     isLoading={Boolean(this.props.isLoading)}
                     color="primary"

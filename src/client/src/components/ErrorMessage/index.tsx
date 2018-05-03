@@ -4,47 +4,52 @@ import {connect} from "react-redux";
 import * as Redux from "redux";
 import {removeError} from "@/actions";
 import * as _ from "lodash";
-import AlertTemplate from "react-alert-template-basic";
-import AlertContainer, { AlertContainerProps, AlertShowOptions,withAlert } from "react-alert";
+import Alert from "react-s-alert";
 
-interface IOwnProps {
+export interface IOwnProps extends React.Props<WithMessages> {
     trigger: RegExp;
+    stackLength: number;
 }
 
 interface IDispatchProps {
-    removeError: (scope: string) => any;
+    removeError: (scope: IError) => any;
 }
 
 interface IStateProps {
     errors: IError[];
 }
 
-type IWithMessagesProps = IDispatchProps & IOwnProps & IStateProps;
-
-const options = {
-    position: "bottom left",
-    timeout: 5000,
-    offset: "30px",
-    transition: "scale"
-}
+type IProps = IDispatchProps & IOwnProps & IStateProps;
 
 
-class WithMessages extends React.Component<IWithMessagesProps, {}> {
-    constructor(props: IWithMessagesProps) {
+class WithMessages extends React.Component<IProps, {}> {
+    constructor(props: IProps) {
         super(props);
     }
 
-    public handleClose = (scope: string) => {
+    public handleClose = (err: IError) => {
         return () => {
-            this.props.removeError(scope);
+            this.props.removeError(err);
         };
     }
 
-    render(): JSX.Element {
+    public componentWillUpdate(nextProps: IProps) {
+        const newErrors = _.difference(nextProps.errors,this.props.errors,);
+        newErrors.forEach(error =>
+            Alert.error(error.message, {
+                position: "bottom-right",
+                onClose: this.handleClose(error),
+                effect: "slide",
+                timeout: 6000
+            }));
+    }
+
+    public render() {
         return (
-            <AlertProvider.Provider template={AlertTemplate}  {...options}>
-                <Component {...this.props} {...this.state} />
-            </AlertProvider.Provider>
+            <div>
+                <Alert stack={{limit: this.props.stackLength}}/>
+                {this.props.children}
+            </div>
         );
     }
 }
@@ -57,10 +62,9 @@ const mapStateToProps = (state: IState, props: IOwnProps): IStateProps => {
 
 const mapDispatchToProps = (dispatch: Redux.Dispatch<any, IState>): IDispatchProps => {
     return {
-        removeError: (scope: string) => dispatch(removeError(scope))
+        removeError: (err: IError) => dispatch(removeError(err))
     };
 };
 
-let Component = connect<IStateProps, IDispatchProps, IOwnProps>(mapStateToProps, mapDispatchToProps)(WithMessages);
-Component = AlertProvider.withAlert(Component);
-export default Component;
+
+export default connect<IStateProps, IDispatchProps, IOwnProps>(mapStateToProps, mapDispatchToProps)(WithMessages);

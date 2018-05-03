@@ -8,6 +8,7 @@ import {
     ILoadingStartAction,
     IRemoveErrorAction
 } from "@/actions";
+import * as _ from "lodash";
 
 const initialState: IAppState = {
     loaders: [],
@@ -43,10 +44,10 @@ const addError = (state: IAppState, action: IAddErrorAction): IAppState => {
 };
 
 const removeError = (state: IAppState, action: IRemoveErrorAction): IAppState => {
-    const {scope} = action;
+    const {error} = action;
     return {
         ...state,
-        errors: state.errors.filter(x=>x.scope===scope)
+        errors: _.pull(state.errors,error)
     };
 };
 const reducer = (state = initialState, action: IAction) => {

@@ -1,4 +1,5 @@
 import ActionTypes, {IAction} from "./actionTypes";
+import {IError} from "@/models/State";
 
 export interface ILoadingStartAction extends IAction {
     type: ActionTypes.LOADING_STARTS;
@@ -22,7 +23,7 @@ export interface IAddErrorAction {
 
 export interface IRemoveErrorAction {
     type: ActionTypes.REMOVE_ERROR;
-    scope: string;
+    error: IError;
 }
 
 export const clearLoading = (): ILoadingClearAction => {
@@ -54,9 +55,9 @@ export const addError = (scope: string, message: string): IAddErrorAction => {
 };
 
 
-export const removeError= (scope: string): IRemoveErrorAction => {
+export const removeError= (error: IError): IRemoveErrorAction => {
     return {
         type: ActionTypes.REMOVE_ERROR,
-        scope,
+        error
     };
 };
