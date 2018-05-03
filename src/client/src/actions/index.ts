@@ -1,9 +1,8 @@
 export {
     authLogout,
     register,
-    authCheckState,
+    login,
     IAuthLogoutAction,
-    IAuthFailAction,
     IAuthSuccessAction,
     IAuthUpdateAccessTokenAction
 } from "./auth";
@@ -15,5 +14,12 @@ export {
 
 export {
     startLoading,
-    endLoading
-} from "./loading";
+    endLoading,
+    addError,
+    removeError,
+    IAddErrorAction,
+    IRemoveErrorAction,
+    ILoadingClearAction,
+    ILoadingEndAction,
+    ILoadingStartAction
+} from "./app";

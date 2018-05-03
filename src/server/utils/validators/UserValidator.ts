@@ -6,6 +6,29 @@ import * as _ from "lodash";
 import UserDB from "@DB/UserDB";
 import RootValidator from "./RootValidator";
 const logger=Logger(module);
+
+
+class NameValidation extends AbstractValidator{
+    private static _instance: NameValidation = new NameValidation();
+
+    public static getInstance() {
+        return this._instance;
+    }
+
+    public async validateByPath(path: string[], value: any): Promise<ValidationErrorDescription> {
+        const key = "name";
+        if (validator.isEmpty(value)) {
+            return { key, message: "Is empty" };
+        }
+        if (!/^([A-Z][A-Za-z]{1,20}?\s?)+$/.test(value)) {
+            return { key, message: "Name should contain only letters and start with uppercase letter" };
+        }
+        return null;
+    }
+    private constructor() {
+        super();
+    }
+}
 class EmailValidation extends AbstractValidator {
     private static _instance: EmailValidation = new EmailValidation();
 
@@ -43,9 +66,9 @@ class PasswordlValidation extends AbstractValidator {
         if (validator.isEmpty(value)) {
             return { key, message: "Is empty" };
         }
-        if (!passwordRegex.test(value)) {
-            return { key, message: "Is not a valid password. Please", help: "Password must be minimum 8, and maximum 20 characters at least: 1 Uppercase Alphabet, 1 Lowercase Alphabet, 1 Number" };
-        }
+        // if (!passwordRegex.test(value)) {
+            // return { key, message: "Is not a valid password. Please", help: "Password must be minimum 8, and maximum 20 characters at least: 1 uppercase letter, 1 lowercase letter, 1 number" };
+        // }
         return null;
     }
     private constructor() {
@@ -65,6 +88,7 @@ class UserValidator extends AbstractValidator {
         super();
         this.setHandler("password",PasswordlValidation.getInstance());
         this.setHandler("email",EmailValidation.getInstance());
+        this.setHandler("name",NameValidation.getInstance());
     }
 
 }

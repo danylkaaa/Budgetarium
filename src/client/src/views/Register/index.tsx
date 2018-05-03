@@ -11,17 +11,11 @@ import {IState} from "@/models/State";
 import * as Redux from "redux";
 import * as actions from "@/actions";
 import * as _ from "lodash";
-import * as validator from "validator";
 import {Redirect} from "react-router";
-import {default as ValidatedInput, IField} from "@comp/ValidatedInput";
 import {reduxForm} from "redux-form";
-
-// own state
-interface IRegisterState {
-    email: string;
-    password: string;
-    name: string;
-}
+import RegisterForm from "@/views/Register/Form";
+import Loader from "@comp/Loader";
+import ErrorMessage from "@comp/ErrorMessage";
 
 // own props
 interface IOwnProps extends IThemableProp<Register> {
@@ -35,7 +29,7 @@ interface IDispatchProps {
 
 // props from state
 interface IStateProps {
-    loading: boolean;
+    isLoading: boolean;
     isAuthenticated: boolean;
 }
 
@@ -107,7 +101,7 @@ const styles = (theme: Theme) => ({
 });
 
 
-class Register extends React.Component<IRegisterProps, IRegisterState> {
+class Register extends React.Component<IRegisterProps, {}> {
     public static propTypes = {
         ...themablePropTypes
     };
@@ -121,53 +115,9 @@ class Register extends React.Component<IRegisterProps, IRegisterState> {
         };
     }
 
-    private handleConfirm = () => {
-        this.props.onConfirm(this.state.email, this.state.password, this.state.name);
-    }
-    private getFields = (): IField[] => {
-        return [
-            {
-                name: "email",
-                label: "Email",
-                rules: [
-                    {
-                        validator: validator.isEmail,
-                        errorMessage: "Value is not an email"
-                    }
-                ],
-                type: "text"
-            },
-            {
-                name: "password",
-                label: "Password",
-                rules: [
-                    {
-                        validator: (value: string) => /^(?=.*\d.*)(?=.*[a-z].*)(?=.*[A-Z].*)(?=.*[!#$%&?]*.*).{8,20}$/.test(value),
-                    }
-                ],
-                type: "password"
-            },
-            {
-                name: "passwordConfirmation",
-                label: "Confirm password",
-                rules: [
-                    {
-                        validator: (value: string) => /^(?=.*\d.*)(?=.*[a-z].*)(?=.*[A-Z].*)(?=.*[!#$%&?]*.*).{8,20}$/.test(value),
-                    }
-                ],
-                type: "password"
-            }
-        ];
-    }
-    private buildInputs = () => {
-        const extraProps = {fullWidth: true};
-        return this.getFields().map((field: IField, i: number) => (
-            <ValidatedInput
-                key={i}
-                field={field}
-                extraProps={extraProps}
-            />
-        ));
+    private handleConfirm = (args: any) => {
+        console.log(args);
+        this.props.onConfirm(args.email, args.password, args.name);
     }
 
     public render() {
@@ -177,19 +127,23 @@ class Register extends React.Component<IRegisterProps, IRegisterState> {
         }
         return (
             <MuiThemeProvider theme={ThemeDefault}>
+                <ErrorMessage trigger={/auth/}/>
+                <Loader
+                    isLoading={Boolean(this.props.isLoading)}
+                    color="primary"
+                />
+                <Button
+                    href="/"
+                    className={classes.flatButton}>
+                    <FontAwesome
+                        name="home"
+                        size="lg"
+                        className={classes.rightIcon}/>
+                </Button>
                 <div>
                     <div className={classes.loginContainer}>
                         <Paper className={classes.paper}>
-                            {this.buildInputs()}
-                            <div>
-                                <Button
-                                    variant="raised"
-                                    color="primary"
-                                    onClick={this.handleConfirm}
-                                    className={classes.confirmBtn}>
-                                    Confirm
-                                </Button>
-                            </div>
+                            <RegisterForm onSubmit={this.handleConfirm}/>
                         </Paper>
                         <div className={classNames(classes.buttonsDiv)}>
                             <Typography variant="button" className={classes.label}>
@@ -223,18 +177,21 @@ class Register extends React.Component<IRegisterProps, IRegisterState> {
 
 const mapStateToProps = (state: IState): IStateProps => {
     return {
-        loading: _.indexOf(state.loading.scopes, "auth") > -1,
-        isAuthenticated: state.auth.user !== null
+        isLoading: _.indexOf(state.app.loaders, "auth") > -1,
+        isAuthenticated: Boolean(state.auth.user)
     };
 };
 
 const mapDispatchToProps = (dispatch: Redux.Dispatch<any, IState>): IDispatchProps => {
     return {
-        onConfirm: (email: string, password: string, name: string) => dispatch(actions.register({
-            email,
-            password,
-            name
-        })),
+        onConfirm: (email: string, password: string, name: string) => {
+            dispatch(actions.addError("auth", "NEW ERROR"));
+            // dispatch(actions.register({
+            //     email,
+            //     password,
+            //     name
+            // }))
+        },
     };
 };
 

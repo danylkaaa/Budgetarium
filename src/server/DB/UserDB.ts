@@ -29,8 +29,8 @@ class UserDB extends AbstractDB<IUser>{
         return this.findOne({ id: token.id, jwtSalts: { [kind]: token.salt } });
     }
 
-    public create({ email, password }: { email: string, password: string }): Promise<IUser> {
-        return super.create({ email, password });
+    public create({ email, password,name }: { email: string, password: string,name:string }): Promise<IUser> {
+        return super.create({ email, password,profile:{name} });
     }
 }
 

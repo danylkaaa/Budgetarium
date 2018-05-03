@@ -25,14 +25,19 @@ export interface IRegisterMutationVars {
     password: string;
 }
 
-export interface ILoginArgs {
+export interface ILoginMutationVars{
     email: string;
     password: string;
 }
 
 export const REGISTER_MUTATION = gql`
-    mutation{
+    mutation signup($email:String!, $password:String!,$name:String!){
         signup(email:$email,password:$password,name:$name){
+            me{
+                id
+                name
+                avatar
+            }
             accessToken{
                 token
                 expiredIn
@@ -47,8 +52,13 @@ export const REGISTER_MUTATION = gql`
 
 
 export const LOGIN_MUTATION = gql`
-    mutation{
+    mutation signin($email:String!,$password:String!){
         signin(email:$email,password:$password){
+             me{
+                id
+                name
+                avatar
+            }
             accessToken{
                 token
                 expiredIn

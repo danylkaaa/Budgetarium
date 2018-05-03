@@ -1,16 +1,14 @@
 import {combineReducers} from "redux";
 import {persistReducer} from "redux-persist";
 import auth from "./auth";
+import app from "./app";
 import {IState} from "@/models/State";
 import storage from "redux-persist/lib/storage";
-import loading from "./loading";
-import apolloClient from "@/graphql";
-import {ApolloClient} from "apollo-client";
-import {reducer as form} from  "redux-form";
+import {reducer as form} from "redux-form";
 
 const rootReducer = combineReducers<IState>({
     auth,
-    loading,
+    app,
     form
 });
 

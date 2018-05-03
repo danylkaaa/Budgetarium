@@ -17,6 +17,7 @@ import {connect} from "react-redux";
 import {IState} from "@/models/State";
 import * as Redux from "redux";
 import * as actions from "@/actions";
+import Loader from "@comp/Loader";
 
 interface IOwnProps extends IThemableProp<MainLayout> {
     width?: Breakpoint;
@@ -28,6 +29,7 @@ interface IDispatchProps {
 
 interface IStateProps {
     isAuthenticated: boolean;
+    isLoading: boolean;
 }
 
 interface IMainLayoutState {
@@ -80,20 +82,20 @@ class MainLayout extends React.Component<IMainLayoutProps, IMainLayoutState> {
             {
                 path: "/login",
                 title: "Login",
-                shown:!this.props.isAuthenticated,
+                shown: !this.props.isAuthenticated,
                 icon: <ListItemIcon><Icons.Person/></ListItemIcon>,
                 hiddenOn: {xsDown: true}
             },
             {
                 path: "/register",
                 title: "Register",
-                shown:!this.props.isAuthenticated,
+                shown: !this.props.isAuthenticated,
                 icon: <ListItemIcon><Icons.PersonAdd/></ListItemIcon>,
                 hiddenOn: {xsDown: true},
             },
             {
                 title: "Logout",
-                shown:this.props.isAuthenticated,
+                shown: this.props.isAuthenticated,
                 icon: <ListItemIcon><Icons.ExitToApp/></ListItemIcon>,
                 hiddenOn: {xsDown: true},
                 action: this.props.onLogout,
@@ -132,6 +134,10 @@ class MainLayout extends React.Component<IMainLayoutProps, IMainLayoutState> {
                         iconsToggleHandler={this.handleDrawerIconsToggle}
                         isSidebarOpen={this.state.isSidebarOpen}
                         onlyIcons={this.state.onlyIconsInSidebar}/>
+                    <Loader
+                        isLoading={Boolean(this.props.isLoading)}
+                        color="primary"
+                    />
                     <Sidebar
                         links={this.sidebarButtons()}
                         openToggleHandler={this.handleDrawerToggle}
@@ -152,6 +158,7 @@ class MainLayout extends React.Component<IMainLayoutProps, IMainLayoutState> {
 const mapStateToProps = (state: IState): IStateProps => {
     return {
         isAuthenticated: Boolean(state.auth.user),
+        isLoading: !state.app.loaders.length
     };
 };
 

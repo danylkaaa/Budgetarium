@@ -5,6 +5,7 @@ import {GraphQLError} from "graphql";
 import {IUser} from "@DB/models/User";
 
 interface ISignupMutation {
+    name:string;
     email: string;
     password: string;
 }
@@ -29,11 +30,11 @@ export default {
     Mutation: {
         async signup(__: any, data: ISignupMutation) {
             logger.debug(JSON.stringify(data));
-            const {email, password} = data;
-            let errors: Array<ValidationErrorDescription> = await Promise.all([Validator.validate("user.email.signup", email), Validator.validate("user.password", password)]);
+            const {email, password,name} = data;
+            let errors: Array<ValidationErrorDescription> = await Promise.all([Validator.validate("user.email.signup", email), Validator.validate("user.password", password),Validator.validate("user.name", name)]);
             errors = _.compact(errors);
             if (errors.length) throw new ValidationError(errors);
-            let user = await UserDB.create({email, password});
+            let user = await UserDB.create({email, password,name});
             return {
                 ...user.jwt(),
                 me: {

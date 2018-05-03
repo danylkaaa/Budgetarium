@@ -14,6 +14,17 @@ export interface ILoadingClearAction extends IAction {
     type: ActionTypes.LOADING_CLEAR;
 }
 
+export interface IAddErrorAction {
+    type: ActionTypes.ADD_ERROR;
+    message: string;
+    scope: string;
+}
+
+export interface IRemoveErrorAction {
+    type: ActionTypes.REMOVE_ERROR;
+    scope: string;
+}
+
 export const clearLoading = (): ILoadingClearAction => {
     return {
         type: ActionTypes.LOADING_CLEAR,
@@ -31,5 +42,21 @@ export const endLoading = (scope: string): ILoadingEndAction => {
     return {
         type: ActionTypes.LOADING_ENDS,
         scope
+    };
+};
+
+export const addError = (scope: string, message: string): IAddErrorAction => {
+    return {
+        type: ActionTypes.ADD_ERROR,
+        scope,
+        message
+    };
+};
+
+
+export const removeError= (scope: string): IRemoveErrorAction => {
+    return {
+        type: ActionTypes.REMOVE_ERROR,
+        scope,
     };
 };

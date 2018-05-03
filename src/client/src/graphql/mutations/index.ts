@@ -3,5 +3,6 @@ export {
     IRegisterMutationResponse,
     ILoginMutationResponse,
     IRegisterMutationVars,
-    ILoginArgs
+    LOGIN_MUTATION,
+    ILoginMutationVars
 } from "./auth";

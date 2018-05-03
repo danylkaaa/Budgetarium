@@ -8,8 +8,6 @@ import Root from "@cont/Root";
 import "./index.scss";
 import client from "@/graphql";
 import {ApolloProvider} from "react-apollo";
-
-
 ReactDOM.render(
     <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>

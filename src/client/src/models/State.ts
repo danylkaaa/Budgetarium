@@ -2,15 +2,22 @@ import {IToken, IUser} from "@/models/User";
 
 export interface IState {
     auth: IAuthState;
-    loading:ILoadingState;
-    apollo?:any;
-    form:any;
+    app: IAppState;
+    apollo?: any;
+    form: any;
 }
+
 export interface IAuthState {
     readonly accessToken: IToken | null;
     readonly refreshToken: IToken | null;
     user: IUser | null;
 }
-export interface ILoadingState {
-    scopes: string[];
+
+export interface IError {
+    scope:string;
+    message:string;
+}
+export interface IAppState {
+    loaders: string[];
+    errors:IError[];
 }
