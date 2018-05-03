@@ -5,7 +5,7 @@ export const security: object = {
     SALT_LENGTH: 10,
     TOKEN_GENERATOR_ALGORITHM:"HS256",
 };
-export const CURRENCY_UPDATE_TIMEOUT=1000*60*60;
+export const CURRENCY_UPDATE_TIMEOUT=1000*60*60*10;
 export const CURRENCY_CONVERTATION_BASE="UAH";
 
 export const ALLOWED_CURRENCIES= [

@@ -16,6 +16,7 @@ export const currencyRateReqOptions = {
 };
 
 export function runRequestLoop(interval: number): any {
+    logger.info("Run currency updater with timeout " + interval / 1000 + "s");
     return setInterval(updateCurrencyRate, interval);
 }
 
@@ -26,7 +27,7 @@ export function updateCurrencyRate() {
             body.forEach(x => x.rate = 1 / x.rate);
             return CurrencyDB.updateAll(body);
         }).then(c => {
-        logger.debug(`Save ${c.length} currencies`);
+        logger.debug(`Save ${c.length} currencies in DB`);
     }).catch(err => {
         logger.error(err);
     });

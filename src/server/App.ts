@@ -16,7 +16,7 @@ const mongoose = require("mongoose");
 const bluebird = require("bluebird");
 const morgan = require("morgan");
 const compression = require("compression");
-
+const favicon=require("express-favicon");
 class App {
 
     public static getInstance(): App {
@@ -90,7 +90,6 @@ class App {
             process.exit(0);
         });
         this.timer = Currencies.runRequestLoop(config.get("CURRENCY_UPDATE_TIMEOUT"));
-        setTimeout(() => CurrencyConverterFactory.getConverter().then(c => console.log(c.convert("USD", "UAH", 1))), 2000);
     }
 
     private usePlugins(): void {
@@ -107,6 +106,7 @@ class App {
         this.app.use(compression());
         this.app.use(express.static(path.join(__dirname, "public"), {maxAge: "10h"}));
         this.app.use(auth());
+        this.app.use(favicon(path.join(__dirname,"/public/favicon.ico")));
         logs.info("App configured");
     }
 

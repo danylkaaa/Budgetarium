@@ -1,7 +1,6 @@
 import * as mongoose from "mongoose";
-import {Logger} from "@utils";
-import {UserSchema} from "@DB/models/User";
-import config from "config";
+import {IModel, Logger} from "@utils";
+import config from "@config";
 
 const logger = Logger(module);
 /**
@@ -16,26 +15,44 @@ const logger = Logger(module);
 /**
  * Defines Transaction model
  */
-export interface IWallet extends mongoose.Document {
-    wallet: mongoose.Types.ObjectId;
-    creator: mongoose.Types.ObjectId;
-    value: number;
+export interface IWalletProps {
+    owner: mongoose.Types.ObjectId;
     name: string;
-    category: string;
+    currency: string;
+
 }
 
-export const IWalletSchema: mongoose.Schema = new mongoose.Schema({
+export interface IWallet extends mongoose.Document, IWalletProps {
+    sharedWith:string[];
+    spending: number;
+    gain: number;
+}
+
+export const WalletSchema: mongoose.Schema = new mongoose.Schema({
     // who create it
-    owner: {type: mongoose.Types.ObjectId, required: true},
+    owner: {type:String, required: true},
     // value of transaction
-    sharedWith: {type: [mongoose.Types.ObjectId], default: []},
+    sharedWith: {type:[String], default: []},
     // name of transaction
     name: String,
     // eq (movie, food etc.)
     currency: {
         type: String,
         enum: config.get("ALLOWED_CURRENCIES")
+    },
+    // sum of expenses of wallet
+    spending: {
+        type: Number,
+        default: 0
+    },
+    // sum of gains of wallet
+    gain: {
+        type: Number,
+        default: 0
     }
 }, {timestamps: true});
-UserSchema.plugin(require("mongoose-paginate"));
 
+
+WalletSchema.plugin(require("mongoose-paginate"));
+WalletSchema.index({owner: 1});
+export const WalletModel: IModel<IWallet> = mongoose.model<IWallet>("Wallet", WalletSchema);

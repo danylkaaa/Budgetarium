@@ -1,12 +1,11 @@
 import * as passport from "passport";
+import UserDB from "@DB/UserDB";
+import {IPayload, IUser} from "@DB/models/User";
+import config from "@config";
+import {Logger} from "@utils";
+
 const passportLocal = require("passport-local");
 const passportJWT = require("passport-jwt");
-import UserDB from "@DB/UserDB";
-import { IUser, IPayload } from "@DB/models/User";
-import config from "@config";
-import { Logger } from "@utils";
-import * as _ from "lodash";
-import { Router } from "express-serve-static-core";
 
 const logger = Logger(module);
 
@@ -16,13 +15,14 @@ function setupJwt(kind: string): passport.Strategy {
     var opts = {
         jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
         secretOrKey: config.get(`security.secrets.${kind.toUpperCase()}`),
+        passReqToCallback: true
     };
     return new JWTStrategy(opts, async (req: any, jwt_payload: IPayload, next: any) => {
         logger.debug("payload received", jwt_payload);
-        req.usedStrategy = kind;
         // usually this would be a database call:
         const user: IUser = await UserDB.getByToken(kind, jwt_payload);
         if (user) {
+            (user as any).usedStrategy = kind;
             next(null, user);
         } else {
             next(null, false);
@@ -32,18 +32,17 @@ function setupJwt(kind: string): passport.Strategy {
 
 function setupLocal(): passport.Strategy {
     const LocalStrategy = passportLocal.Strategy;
-    return new LocalStrategy(async (req: any, username: string, password: string, done: any) => {
+    return new LocalStrategy({passReqToCallback: true}, async (req: any, username: string, password: string, done: any) => {
         logger.debug(username, password);
         const user: IUser = await UserDB.getByCredentials(username, password);
-        req.usedStrategy = "local";
         if (user) {
+            (user as any).usedStrategy = "local";
             return done(null, user);
         } else {
-            return done(undefined, false, { message: "Invalid email or password." });
+            return done(undefined, false, {message: "Invalid email or password."});
         }
     });
 }
-
 
 
 export default function setup(): any {

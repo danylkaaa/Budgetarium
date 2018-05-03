@@ -1,6 +1,5 @@
 import * as mongoose from "mongoose";
-import {Logger} from "@utils";
-import {UserSchema} from "@DB/models/User";
+import {IModel, Logger} from "@utils";
 
 const logger = Logger(module);
 /**
@@ -15,19 +14,22 @@ const logger = Logger(module);
 /**
  * Defines Transaction model
  */
-export interface ITransaction extends mongoose.Document {
-    wallet: mongoose.Types.ObjectId;
-    creator: mongoose.Types.ObjectId;
+export interface ITransactionProps {
+     walletId: string;
+    creator: string;
     value: number;
     name: string;
     category: string;
 }
+export interface ITransaction extends mongoose.Document,ITransactionProps {
+
+}
 
 export const TransactionSchema: mongoose.Schema = new mongoose.Schema({
     // stored in
-    wallet: {type: mongoose.Types.ObjectId},
+    walletId: {type:String,required:true},
     // who create it
-    creator: {type: mongoose.Types.ObjectId, required: true},
+    creator: {type: String, required: true},
     // value of transaction
     value: {type: Number, required: true},
     // name of transaction
@@ -35,5 +37,11 @@ export const TransactionSchema: mongoose.Schema = new mongoose.Schema({
     // eq (movie, food etc.)
     category: String
 }, {timestamps: true});
-UserSchema.plugin(require("mongoose-paginate"));
+TransactionSchema.plugin(require("mongoose-paginate"));
+
+
+TransactionSchema.plugin(require("mongoose-paginate"));
+TransactionSchema.index({wallet: 1});
+export const TransactionModel: IModel<ITransaction> = mongoose.model<ITransaction>("Transaction", TransactionSchema);
+
 

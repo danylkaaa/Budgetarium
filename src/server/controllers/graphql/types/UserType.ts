@@ -6,9 +6,9 @@ type User implements Paginable{
     " The user's unique id."
     id:ID!
     " The user's real name."
-    name:String
+    name:String!
     " The user's avatar."
-    avatar:String
+    avatar:String!
 }
 
 type Query{

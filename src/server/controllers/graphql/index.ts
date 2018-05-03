@@ -39,7 +39,7 @@ router.use(GraphQLHTTP(
              * Try to authenticate using passport,
              * but never block the call from here.
              */
-            passport.authenticate(['access'], { session: false }, (err, loginOptions) => {
+            passport.authenticate(["access","refresh","local"], { session: false }, (err, loginOptions) => {
                 next(loginOptions);
             })(req, res, next);
         })

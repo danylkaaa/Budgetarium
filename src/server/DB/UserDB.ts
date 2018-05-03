@@ -1,14 +1,16 @@
 import AbstractDB from "./AbstractDB";
-import { IUser, IPayload, UserModel } from "./models/User";
-import mongoose from "mongoose";
-import jsonwebtoken from "jsonwebtoken";
+import {IPayload, IUser, UserModel} from "./models/User";
+import {Logger} from "@utils";
 
-class UserDB extends AbstractDB<IUser>{
+const logger = Logger(module);
+
+class UserDB extends AbstractDB<IUser> {
 
     constructor() {
         super();
         this._model = UserModel;
     }
+
     protected static _instance: UserDB;
 
     public static getInstance(): UserDB {
@@ -19,18 +21,32 @@ class UserDB extends AbstractDB<IUser>{
     }
 
     public async getByCredentials(email: string, password: string): Promise<IUser> {
-        const user: IUser = await this.findOne({ email: email });
+        const user: IUser = await this.findOne({email: email});
         if (user && await user.comparePassword(password)) {
             return user;
         }
         return null;
     }
-    public getByToken(kind: string, token: IPayload): Promise<IUser> {
-        return this.findOne({ id: token.id, jwtSalts: { [kind]: token.salt } });
+
+    public async getByToken(kind: string, token: IPayload): Promise<IUser> {
+        const user = await this.findById(token.id);
+        if (!user) return null;
+        if ((user.jwtSecrets as any)[kind] === token.salt) {
+            return user;
+        } else {
+            return null;
+        }
     }
 
-    public create({ email, password,name }: { email: string, password: string,name:string }): Promise<IUser> {
-        return super.create({ email, password,profile:{name} });
+    public create({email, password, name}: { email: string, password: string, name: string }): Promise<IUser> {
+        return super.create({email, password, name});
+    }
+
+    public plainFields() {
+        return {
+            id: 1,
+            name: 1
+        };
     }
 }
 

@@ -42,21 +42,17 @@ export interface IJWTPayload {
 /**
  * Defines User model
  */
-export interface IUser extends mongoose.Document{
+export interface IUser extends mongoose.Document {
     email: string;
     password: string;
-    passwordResetToken: string
+    passwordResetToken: string;
     passwordResetExpires: Date;
-    jwtSalts: {
+    jwtSecrets: {
         access: string,
         refresh: string
     };
-    facebook: string;
-    tokens: IAuthToken[];
-    profile: {
-        name: string,
-        picture: string
-    };
+    name: string;
+    picture: string;
     comparePassword: comparePasswordFunction;
     generateAccessToken: tokenGeneratorFunction;
     generateRefreshToken: tokenGeneratorFunction;
@@ -65,6 +61,7 @@ export interface IUser extends mongoose.Document{
     avatar: avatarGenerator;
     gravatar: avatarGenerator;
 }
+
 export const UserSchema: mongoose.Schema = new mongoose.Schema({
     email: {
         type: String,
@@ -82,12 +79,11 @@ export const UserSchema: mongoose.Schema = new mongoose.Schema({
         access: String,
         refresh: String
     },
-    facebook: String,
-    tokens: Array,
-    profile: {
-        name: String,
-        picture: String
-    }
+    name: {
+        type:String,
+        required:true,
+    },
+    picture: String,
 }, {timestamps: true});
 
 
@@ -162,13 +158,13 @@ UserSchema.methods.jwt = function (): IJWTPayload {
     };
 };
 UserSchema.methods.avatar = function (): string {
-    if (this.profile.avatar) {
-        return this.profile.avatar;
+    if (this.picture) {
+        return this.picture;
     } else {
         return this.gravatar(250);
     }
-}
-UserSchema.methods.gravatar = function(avatarSize: number = 250): string {
+};
+UserSchema.methods.gravatar = function (avatarSize: number = 250): string {
     if (!this.email) {
         return `https://gravatar.com/avatar/?s=${avatarSize}&d=retro`;
     } else {

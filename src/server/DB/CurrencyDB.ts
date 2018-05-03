@@ -26,7 +26,7 @@ class CurrencyDB extends AbstractDB<ICurrency> {
 
     public async updateAll(newValues: ICurrencyProps[]): Promise<any> {
         const allowedCurrencies: string[] = config.get("ALLOWED_CURRENCIES");
-        const filteredValues = newValues.filter(x => allowedCurrencies.find(v=>v==x.cc) );
+        const filteredValues = newValues.filter(x => allowedCurrencies.find(v => v == x.cc));
         return Promise.all(filteredValues.map(c => this.updateRateOrCreate(c)));
     }
 
@@ -50,6 +50,14 @@ class CurrencyDB extends AbstractDB<ICurrency> {
 
     public create({txt, rate, cc, exchangedate}: ICurrencyProps): Promise<ICurrency> {
         return super.create({txt, rate, cc, exchangedate});
+    }
+    public plainFields(){
+        return {
+            cc:1,
+            txt:1,
+            rate:1,
+            exchangedate:1
+        };
     }
 }
 

@@ -10,9 +10,9 @@ type  Pagination{
     " Total count of documents"
     total:Int!
     " Number of documents per page"
-    limit:Int!,
+    limit:Int!
     " Nuber of documents, that was skipped"
-    offset:Int!,
+    offset:Int!
     " List of documnets"
     results:[Paginable!]!
 }

@@ -8,5 +8,5 @@ export default function AuthMiddleware(allowedStrategies: string[], done: any): 
             err.status = 401;
             throw err;
         }
-    }
+    };
 }
