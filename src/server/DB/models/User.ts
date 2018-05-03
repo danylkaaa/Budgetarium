@@ -42,29 +42,29 @@ export interface IJWTPayload {
 /**
  * Defines User model
  */
-export type IUser = mongoose.Document & {
-    email: string,
-    password: string,
-    passwordResetToken: string,
-    passwordResetExpires: Date,
+export interface IUser extends mongoose.Document{
+    email: string;
+    password: string;
+    passwordResetToken: string
+    passwordResetExpires: Date;
     jwtSalts: {
         access: string,
         refresh: string
-    }
-    facebook: string,
-    tokens: IAuthToken[],
+    };
+    facebook: string;
+    tokens: IAuthToken[];
     profile: {
         name: string,
         picture: string
-    },
-    comparePassword: comparePasswordFunction,
-    generateAccessToken: tokenGeneratorFunction,
-    generateRefreshToken: tokenGeneratorFunction,
-    regenerateJWTSalts: tokenSaltGenerator,
-    jwt: jwtGenerator,
-    avatar: avatarGenerator,
-    gravatar: avatarGenerator,
-};
+    };
+    comparePassword: comparePasswordFunction;
+    generateAccessToken: tokenGeneratorFunction;
+    generateRefreshToken: tokenGeneratorFunction;
+    regenerateJWTSalts: tokenSaltGenerator;
+    jwt: jwtGenerator;
+    avatar: avatarGenerator;
+    gravatar: avatarGenerator;
+}
 export const UserSchema: mongoose.Schema = new mongoose.Schema({
     email: {
         type: String,

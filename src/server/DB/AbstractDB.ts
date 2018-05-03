@@ -1,11 +1,18 @@
 import { Document, Query, PaginateOptions, PaginateModel, PaginateResult } from "mongoose";
 import { IModel } from "@utils";
+import {ICurrency} from "@DB/models/Currencies";
 
 abstract class AbstractDB<T extends Document>{
     protected _model: IModel<T>;
 
     public get model(): IModel<T> {
         return this._model;
+    }
+    public find(query: any): Promise<T[]> {
+        return this._model.find(query).exec();
+    }
+    public getFields(query:any,fields:any):Promise<any>{
+        return this._model.find(query).select(fields).exec();
     }
     public findOne(query: any): Promise<T> {
         return this._model.findOne(query).exec();

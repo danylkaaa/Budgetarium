@@ -1,6 +1,11 @@
 require("module-alias/register");
 const path = require("path");
-import { Logger } from "@utils";
+import {Currencies, CurrencyConverterFactory, Logger} from "@utils";
+import config from "@config";
+import {Application} from "express";
+import routes from "@routes";
+import auth from "./services/auth";
+
 const logs = Logger(module);
 const bodyParser = require("body-parser");
 const expressValidator = require("express-validator");
@@ -11,13 +16,9 @@ const mongoose = require("mongoose");
 const bluebird = require("bluebird");
 const morgan = require("morgan");
 const compression = require("compression");
-import * as  passport from "passport";
-import config from "@config";
-import { Application } from "express";
-import routes from "@routes";
-import auth from "./services/auth";
 
 class App {
+
     public static getInstance(): App {
         if (!this.instance) {
             this.instance = new App();
@@ -25,6 +26,7 @@ class App {
         return this.instance;
     }
 
+    private timer: any;
     private static instance: App;
 
     private readonly app: Application;
@@ -53,7 +55,7 @@ class App {
     private connectToDB(): void {
         logs.debug(`Try to connect to ${config.get("DB_URL")}`);
         mongoose.Promise = bluebird;
-        mongoose.connect(config.get("DB_URL"))
+        return mongoose.connect(config.get("DB_URL"))
             .then(() => {
                 logs.info("Connected to MongoDB");
             }).catch((err: any) => {
@@ -76,6 +78,19 @@ class App {
 
     private configure(): void {
         this.app.set("port", this.normalizePort(process.env.PORT || "3000"));
+        Currencies.updateCurrencyRate();
+        process.on("exit", (code) => {
+            clearTimeout(this.timer);
+            process.exit(code);
+        }).on("SIGABRT", () => {
+            clearTimeout(this.timer);
+            process.exit(0);
+        }).on("SIGINT", () => {
+            clearTimeout(this.timer);
+            process.exit(0);
+        });
+        this.timer = Currencies.runRequestLoop(config.get("CURRENCY_UPDATE_TIMEOUT"));
+        setTimeout(() => CurrencyConverterFactory.getConverter().then(c => console.log(c.convert("USD", "UAH", 1))), 2000);
     }
 
     private usePlugins(): void {
@@ -86,11 +101,11 @@ class App {
         this.app.use(cors());
         // this.app.use(/\/((?!graphql).)*/, bodyParser.urlencoded({ extended: true }));
         // this.app.use(/\/((?!graphql).)*/, bodyParser.json());
-        this.app.use(bodyParser.urlencoded({ extended: true }));
+        this.app.use(bodyParser.urlencoded({extended: true}));
         this.app.use(bodyParser.json());
         this.app.use(expressValidator());
         this.app.use(compression());
-        this.app.use(express.static(path.join(__dirname, "public"), { maxAge: "10h" }));
+        this.app.use(express.static(path.join(__dirname, "public"), {maxAge: "10h"}));
         this.app.use(auth());
         logs.info("App configured");
     }
