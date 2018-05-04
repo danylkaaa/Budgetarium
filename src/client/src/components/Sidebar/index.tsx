@@ -7,7 +7,7 @@ import {ISidebarLink} from "@comp/Sidebar/SidebarItem";
 import {IThemableProp} from "@/models/PropInterfaces";
 import {IState} from "@/models/State";
 import * as Redux from "redux";
-import {toggleSidebar} from "@/actions/app";
+import {toggleSidebar} from "@/actions/appArgs";
 import "./index.scss";
 interface IOwnProps extends IThemableProp<Sidebar> {
     links: ISidebarLink[];

@@ -74,6 +74,12 @@ class MainLayout extends React.Component<IMainLayoutProps> {
                 icon: <ListItemIcon><Icons.Home/></ListItemIcon>,
             },
             {
+                title: "Wallets",
+                shown: this.props.isAuthenticated,
+                icon: <ListItemIcon><Icons.AccountBalanceWallet/></ListItemIcon>,
+                path:"/",
+            },
+            {
                 divider: true,
                 hiddenOn: {xsDown: true}
             },
@@ -107,18 +113,6 @@ class MainLayout extends React.Component<IMainLayoutProps> {
         classes: PropTypes.object.isRequired,
         theme: PropTypes.object.isRequired,
     };
-    public buttons = () => {
-        return _.range(0, 100).map(x => (
-            <div>
-                <button
-                    onClick={this.props.reloadAccessToken}
-                    className="button is-info">
-                    click me
-                </button>
-            </div>
-        ));
-    }
-
     public render() {
         const {classes}: any = this.props;
         const isDesktop = this.sizeUp("md");
@@ -141,9 +135,6 @@ class MainLayout extends React.Component<IMainLayoutProps> {
                         links={this.sidebarButtons()}/>
                     <div className={classes.content} style={contentStyle}>
                         <div className={classes.toolbar}/>
-                        {
-                            this.buttons()
-                        }
                         {this.props.children}
                     </div>
                 </div>
@@ -161,9 +152,9 @@ const mapStateToProps = (state: IState): IStateProps => {
 //
 // const mapDispatchToProps = (dispatch: Redux.Dispatch<any, IState>): IDispatchProps => {
 //         return {
-//             onLogout: () => dispatch(new AuthActions.LogoutAction().execute()),
+//             onLogout: () => dispatch(new AuthCommands.LogoutCommand().execute()),
 //             handleClick:()=>{
-//                 dispatch(new AuthActions.RefreshAccessTokenAction().execute());
+//                 dispatch(new AuthCommands.RefreshAccessTokenCommand().execute());
 //             }
 //         };
 //     };

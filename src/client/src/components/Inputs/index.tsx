@@ -52,3 +52,29 @@ export const renderTextField = ({input, label, meta: {touched, error}, ...custom
         </div>
     );
 };
+
+export const renderSelect = ({input, label, meta: {touched, error}, ...custom}: IInput) => {
+    const hasError = error && touched;
+    const noError = !error && touched;
+    const rightIcon = getStatusIcon(error, touched);
+    const leftIcon = getFieldIcon(custom.icon, error, touched);
+    return (
+        <div className="field">
+            <label className="label">
+                {label}
+            </label>
+            <div className={className("control has-icons-right", {"has-icons-left": custom.icon}, {"error": error})}>
+                <select
+                    className={className("input", {"is-danger": hasError}, {"is-success": noError})}
+                    placeholder={label} {...input}>
+                    {...custom.children}
+                </select>
+                {leftIcon}
+                {rightIcon}
+            </div>
+            {error &&
+            <p className="help is-danger">{hasError ? error : null}</p>
+            }
+        </div>
+    );
+};

@@ -9,7 +9,7 @@ import * as FontAwesome from "react-fontawesome";
 import {connect} from "react-redux";
 import {IState} from "@/models/State";
 import * as Redux from "redux";
-import {AuthActions} from "@/actions";
+import {AuthCommands} from "@/actions";
 import * as _ from "lodash";
 import {Redirect} from "react-router";
 import {reduxForm} from "redux-form";
@@ -187,7 +187,7 @@ const mapStateToProps = (state: IState): IStateProps => {
 const mapDispatchToProps = (dispatch: Redux.Dispatch<any, IState>): IDispatchProps => {
     return {
         onConfirm: (email: string, password: string, name: string) => {
-            dispatch(new AuthActions.RegisterAction().execute({
+            dispatch(new AuthCommands.RegisterCommand().execute({
                 email,
                 password,
                 name

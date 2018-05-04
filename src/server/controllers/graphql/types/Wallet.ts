@@ -21,6 +21,7 @@ type Wallet implements Paginable{
     transactions:[Transaction]!
     " List of users, who have access to wallet"
     sharedWith:[User]!
+    created:String!
 }
 
 type Query{

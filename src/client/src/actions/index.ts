@@ -1,9 +1,12 @@
-import * as AuthArgs from "./auth";
-import * as AuthActions from "./authAction";
-import * as App from "./app";
-
+import * as AuthArgs from "./authArgs";
+import * as AuthCommands from "./authCommands";
+import * as App from "./appArgs";
+import * as WalletsCommands from "./walletCommands";
+import * as WalletsArgs from "./walletArgs";
 export {default as ActionTypes} from "./actionTypes";
 
 export {App};
-export {AuthActions};
+export {AuthCommands};
 export {AuthArgs};
+export {WalletsCommands};
+export {WalletsArgs};

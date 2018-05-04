@@ -12,7 +12,7 @@ import {default as HeaderButton, IHeaderButtonProps} from "@comp/Header/HeaderBu
 import {connect} from "react-redux";
 import {IState} from "@/models/State";
 import * as Redux from "redux";
-import {toggleSidebar} from "@/actions/app";
+import {toggleSidebar} from "@/actions/appArgs";
 
 export interface IOwnProps extends IThemableProp<CommonHeader> {
     isDesktop: boolean;

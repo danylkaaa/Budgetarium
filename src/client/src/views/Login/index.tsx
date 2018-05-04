@@ -9,7 +9,7 @@ import * as FontAwesome from "react-fontawesome";
 import {connect} from "react-redux";
 import {IState} from "@/models/State";
 import * as Redux from "redux";
-import {AuthActions} from "@/actions";
+import {AuthCommands} from "@/actions";
 import * as _ from "lodash";
 import {Redirect} from "react-router";
 import {reduxForm} from "redux-form";
@@ -186,7 +186,7 @@ const mapStateToProps = (state: IState): IStateProps => {
 
 const mapDispatchToProps = (dispatch: Redux.Dispatch<any, IState>): IDispatchProps => {
     return {
-        onConfirm: (email: string, password: string) => dispatch(new AuthActions.LoginAction().execute({
+        onConfirm: (email: string, password: string) => dispatch(new AuthCommands.LoginCommand().execute({
             email,
             password,
         })),
@@ -197,5 +197,5 @@ const mapDispatchToProps = (dispatch: Redux.Dispatch<any, IState>): IDispatchPro
 let Component = withStyles(styles as any, {withTheme: true})(Login);
 Component = connect<IStateProps, IDispatchProps, IRegisterProps>(mapStateToProps, mapDispatchToProps)(Component);
 export default reduxForm({
-    form: "lo",
+    form: "LoginForm",
 })(Component);

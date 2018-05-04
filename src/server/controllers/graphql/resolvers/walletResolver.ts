@@ -100,6 +100,12 @@ export default {
         }),
     },
     Wallet: {
+        async owner(data:IWallet){
+            const ownerId=(await WalletDB.getFieldsById(data.id,{owner:1})).owner;
+            return {
+                id:ownerId
+            }
+        },
         async spending(data: IWallet) {
             return (await WalletDB.getFieldsById(data.id, {spending: 1})).spending;
         },
@@ -127,6 +133,9 @@ export default {
             logger.info("transactions wallet" + data);
             return (await WalletDB.getFieldsById(data.id, {transactions: 1}))
                 .map((id: any) => ({id}));
+        }
+        async created(data:IWallet){
+            return (await WalletDB.getFieldsById(data.id, {createdAt: 1})).createdAt;
         }
     }
 };

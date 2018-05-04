@@ -1,27 +1,34 @@
 import {IAction} from "./actionTypes";
 import {IAuthState, IState} from "@/models/State";
 import * as Redux from "redux";
-import {ILoginMutationVars, IRegisterMutationVars, LOGIN_MUTATION, REGISTER_MUTATION,REFRESH_ACCESS_TOKEN_MUTATION} from "@/graphql/mutations";
-import {addError, endLoading, startLoading} from "@/actions/app";
+import {
+    ILoginMutationVars,
+    IRegisterMutationVars,
+    LOGIN_MUTATION,
+    REFRESH_ACCESS_TOKEN_MUTATION,
+    REGISTER_MUTATION
+} from "@/graphql/mutations";
+import {addError, endLoading, startLoading} from "@/actions/appArgs";
 import {clientAccess, clientRefresh} from "@/graphql";
-import {authLogout, authSuccess, authUpdateAccessToken} from "@/actions/auth";
+import {authLogout, authSuccess, authUpdateAccessToken} from "@/actions/authArgs";
 
-abstract class AuthAction extends IAction<IAuthState> {
-    protected authFailAction: AuthFailAction;
+abstract class AuthCommand extends IAction<IAuthState> {
+    protected authFailAction: AuthFailCommand;
 
     public constructor() {
         super();
-        this.authFailAction = new AuthFailAction();
+        this.authFailAction = new AuthFailCommand();
     }
 }
 
 
-const makeAuthRequerst = (apolloClient: any, options: any, dispatch: Redux.Dispatch<any, IState>, name: string, authFailAction: AuthFailAction) => {
+const makeAuthRequerst = (apolloClient: any, options: any, dispatch: Redux.Dispatch<any, IState>, name: string, authFailAction: AuthFailCommand) => {
     apolloClient.mutate(options)
         .then((response: any) => {
             if (!response.data) {
                 throw Error("Server returns empty response");
             } else {
+                dispatch(endLoading("auth"));
                 const {accessToken, refreshToken, me} = response.data[name];
                 dispatch(authSuccess(accessToken, refreshToken, me));
             }
@@ -37,7 +44,7 @@ const makeAuthRequerst = (apolloClient: any, options: any, dispatch: Redux.Dispa
 
 
 // get new pair of access and refresh token
-export class LoginAction extends AuthAction {
+export class LoginCommand extends AuthCommand {
     public execute(args: ILoginMutationVars) {
         return (dispatch: Redux.Dispatch<any, IState>, getState: () => IState) => {
             dispatch(startLoading("auth"));
@@ -49,7 +56,7 @@ export class LoginAction extends AuthAction {
 }
 
 // register new user and get new pair of access and refresh token
-export class RegisterAction extends AuthAction {
+export class RegisterCommand extends AuthCommand {
     public execute(args: IRegisterMutationVars) {
         return (dispatch: Redux.Dispatch<any, IState>, getState: () => IState) => {
             dispatch(startLoading("auth"));
@@ -61,7 +68,7 @@ export class RegisterAction extends AuthAction {
 }
 
 // remove tokens from storage
-export class LogoutAction extends AuthAction {
+export class LogoutCommand extends AuthCommand {
     public execute() {
         return (dispatch: Redux.Dispatch<any, IState>, getState: () => IState) => {
             dispatch(authLogout());
@@ -70,7 +77,7 @@ export class LogoutAction extends AuthAction {
 }
 
 // get new access token from server
-export class RefreshAccessTokenAction extends AuthAction {
+export class RefreshAccessTokenCommand extends AuthCommand {
     public execute() {
         return (dispatch: Redux.Dispatch<any, IState>, getState: () => IState): any => {
             // get current refresh token
@@ -84,13 +91,13 @@ export class RefreshAccessTokenAction extends AuthAction {
             }
             // load new access token
             dispatch(startLoading("auth"));
-            clientRefresh.mutate({mutation:REFRESH_ACCESS_TOKEN_MUTATION})
+            clientRefresh.mutate({mutation: REFRESH_ACCESS_TOKEN_MUTATION})
                 .then((response: any) => {
                     if (!response.data) {
                         throw Error("Server returns empty response");
                     } else {
                         const {token, expiredIn} = response.data.access;
-                        console.log(token,expiredIn);
+                        console.log(token, expiredIn);
                         console.log(response.data);
                         dispatch(authUpdateAccessToken({token, expiredIn}));
                         dispatch(endLoading("auth"));
@@ -109,8 +116,8 @@ export class RefreshAccessTokenAction extends AuthAction {
 }
 
 // end fetching data end show error message
-export class AuthFailAction extends IAction<IAuthState> {
-    public execute(message: string ) {
+export class AuthFailCommand extends IAction<IAuthState> {
+    public execute(message: string) {
         return (dispatch: Redux.Dispatch<any, IState>, getState: () => IState) => {
             dispatch(endLoading("auth"));
             console.log(message);

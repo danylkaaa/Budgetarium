@@ -5,7 +5,7 @@ export const CURRENCY_UPDATE_TIMEOUT = 1000*60;
 export const security: object = {
     TOKEN_SECRET_LENGTH: 10,
     tokenLife: {
-        ACCESS: 60 * 60,
+        ACCESS: 60 * 60*10,
         REFRESH: 60 * 60 * 24,
     },
     secrets: {

@@ -29,8 +29,7 @@ const childRoutes: IChildRoute[] = [
     },
     {
         path: "/",
-        component: withAuthGuard({unauthorizedComponent: <Login/>})(Home),
-        exactly: true
+        component: withAuthGuard({unauthorizedComponent: <Login/>})(Home)
     },
 ];
 
