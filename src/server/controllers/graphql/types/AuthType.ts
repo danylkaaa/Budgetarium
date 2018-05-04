@@ -16,7 +16,7 @@ type AuthPayload{
 
 type Mutation{
     " Get new access JWT token"
-    access:String
+    access:Token!
     " Signup in this service"
     signup(email:String!,password:String!, name:String!):AuthPayload
     " Exit from all openned sessions"

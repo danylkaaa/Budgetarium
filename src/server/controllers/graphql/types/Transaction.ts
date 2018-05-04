@@ -15,6 +15,8 @@ type Transaction implements Paginable{
     category:Float!
     " The transaction's creator."
     creator:User!
+    " Currency of transaction"
+    currency:String!
 }
 
 type Query{

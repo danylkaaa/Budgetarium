@@ -34,6 +34,13 @@ const logger = Logger(module);
 
 export default {
     Mutation: {
+        access: AuthMiddleware(["refresh"], async (_: any, __: any, context: IContext): Promise<any> => {
+            const currTime = new Date().getTime();
+            return {
+                token: context.user.generateAccessToken(),
+                expiredIn: currTime + Number(config.get("security.tokenLife.ACCESS")) * 1000
+            };
+        }),
         async signup(__: any, data: ISignupMutation) {
             try {
                 const {email, password, name} = data;
@@ -71,8 +78,8 @@ export default {
             return UserDB.getPlainFields(context.user as IUser);
         }),
         async user(__: any, data: IUserQuery) {
-            const target: IUser = await UserDB.getFieldsById(data.id,UserDB.plainFields());
-            console.log(data,target.id);
+            const target: IUser = await UserDB.getFieldsById(data.id, UserDB.plainFields());
+            console.log(data, target.id);
             if (target) {
                 return target;
             } else {

@@ -28,6 +28,21 @@ interface ICreateMutation {
     wallet: string;
 }
 
+interface IDeleteMutation {
+    id: string;
+}
+
+interface ITransactionsQuery {
+    name?: string;
+    id?: string[];
+    category?: string;
+    walletId?: string;
+}
+
+interface ITransactionQuery {
+    id: string;
+}
+
 export default {
     Mutation: {
         createTransaction: AuthMiddleware(["access"], async (__: any, data: ICreateMutation, context: IContext): Promise<any> => {
@@ -68,8 +83,54 @@ export default {
                 throw new GraphQLError(e);
             }
         }),
+        deleteTransaction: AuthMiddleware(["access"], async (__: any, data: IDeleteMutation, context: IContext): Promise<any> => {
+            try {
+                let {id} = data;
+                // get transaction from DB
+                const transaction: any = TransactionDB.getFieldsById(id, {walletId: 1, owner: 1});
+                // return 404
+                if (!transaction) {
+                    throw new GraphQLError("No such transaction found");
+                }
+                // get container
+                const walletContainer = await WalletDB.findById(transaction.walletId);
+                // return 401
+                if (!walletContainer.owner == context.user.id) {
+                    throw new GraphQLError("You are not an owner of wallet with transaction");
+                }
+                // affect to wallet gain and processing
+                await walletContainer.removeTransaction(transaction);
+                await TransactionDB.removeById(id);
+                return true;
+            } catch (e) {
+                logger.error(e);
+                throw new GraphQLError(e);
+            }
+        }),
     },
-    Query: {},
+    Query: {
+        transactions: AuthMiddleware(["access"], async (__: any, data: ITransactionsQuery, context: IContext): Promise<ITransaction[]> => {
+            try {
+                const {name, id, category, walletId} = data;
+                const query: any = TransactionDB.buildSearchQuery(data);
+                query.owner = context.user.id;
+                logger.info(query);
+                return await TransactionDB.getFields(query, TransactionDB.plainFields());
+            } catch (e) {
+                logger.error(e);
+                throw new GraphQLError(e);
+            }
+        }),
+        wallet: AuthMiddleware(["access"], async (_: any, data: ITransactionQuery, context: IContext): Promise<ITransaction> => {
+            try {
+                let {id} = data;
+                return await TransactionDB.getFields(id, TransactionDB.plainFields());
+            } catch (e) {
+                logger.error(e);
+                throw new GraphQLError(e);
+            }
+        }),
+    },
     Transaction: {
         async wallet(data: ITransaction) {
             const walletId = (await TransactionDB.getFieldsById(data.id, {walletId: 1})).walletId;
@@ -89,5 +150,15 @@ export default {
                 id: (await TransactionDB.getFieldsById(data.id, {creator: 1})).creator
             };
         },
+        async currency(data: ITransaction) {
+            if ((data as any).wallet) {
+                return (data as any).wallet.currency;
+            }
+            let walletId = data.walletId;
+            if (!walletId) {
+                walletId = (await TransactionDB.getFieldsById(data.id, {walletId: 1})).walletId;
+            }
+            return (await WalletDB.getFieldsById(walletId, {currency: 1})).currency;
+        }
     }
 };

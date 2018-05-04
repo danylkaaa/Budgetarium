@@ -29,6 +29,7 @@ export interface IWallet extends mongoose.Document, IWalletProps {
     spending: number;
     gain: number;
     addTransaction: ITrasactionAffect;
+    removeTransaction:ITrasactionAffect;
 }
 
 
@@ -64,6 +65,14 @@ WalletSchema.methods.addTransaction = function (t: ITransaction) {
         this.gain += t.value;
     } else {
         this.spending += t.value;
+    }
+    return this.save();
+};
+WalletSchema.methods.removeTransaction = function (t: ITransaction) {
+    if (t.value >= 0) {
+        this.gain -= t.value;
+    } else {
+        this.spending -= t.value;
     }
     return this.save();
 };
