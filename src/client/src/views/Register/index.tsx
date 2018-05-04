@@ -16,6 +16,7 @@ import {reduxForm} from "redux-form";
 import RegisterForm from "@/views/Register/Form";
 import Loader from "@comp/Loader";
 import ErrorMessanger from "@comp/ErrorMessanger";
+import {Link} from "react-router-dom";
 
 // own props
 interface IOwnProps extends IThemableProp<Register> {
@@ -148,12 +149,13 @@ class Register extends React.Component<IRegisterProps, {}> {
                         <div className={classNames(classes.buttonsDiv)}>
                             <Typography variant="button" className={classes.label}>
                                 Already have the account?
-                                <Button
-                                    href="/login"
-                                    className={classes.flatButton}>
-                                    <Person className={classes.leftIcon}/>
-                                    Login
-                                </Button>
+                                <Link to="/login" style={{textDecoration:"none"}}>
+                                    <Button
+                                        className={classes.flatButton}>
+                                        <Person className={classes.leftIcon}/>
+                                        Login
+                                    </Button>
+                                </Link>
                             </Typography>
                         </div>
                         <div className={classes.buttonsDiv}>

@@ -5,6 +5,8 @@ import {Store} from "react-redux";
 import Login from "@/views/Login";
 import Home from "@/views/Home";
 import Register from "@/views/Register";
+import {withAuthGuard} from "@hoc/AuthGuard";
+import "./index.scss";
 
 const history = createHistory();
 
@@ -27,7 +29,7 @@ const childRoutes: IChildRoute[] = [
     },
     {
         path: "/",
-        component: Home,
+        component: withAuthGuard({unauthorizedComponent: <Login/>})(Home),
         exactly: true
     },
 ];
@@ -44,12 +46,21 @@ class Root extends React.Component<{}, {}> {
     }
 
     public render(): any {
+        const style = {
+            // backgroundImage: "url(" + bgImage + ")",
+            /* Center and scale the image nicely */
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+        };
         return (
-            <Router history={history}>
-                <Switch>
-                    {this.routes()}
-                </Switch>
-            </Router>
+            <div style={style}>
+                <Router history={history}>
+                    <Switch>
+                        {this.routes()}
+                    </Switch>
+                </Router>
+            </div>
         );
     }
 }

@@ -32,7 +32,8 @@ type IHeaderProps = IDispatchProps & IStateProps & IOwnProps;
 const styles = (theme: Theme) => ({
     appBar: {
         marginLeft: DRAWER_WIDTH,
-        position: "absolute",
+        position: "fixed",
+        overflow:"hidden",
         [theme.breakpoints.up("md")]: {
             zIndex: theme.zIndex.drawer + 1,
             // width: `calc(100% - ${DRAWER_WIDTH}px)`,

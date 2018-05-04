@@ -67,6 +67,7 @@ class DesktopSidebar extends AbstractSidebar {
         return (
             <div>
                 <Drawer
+                    style={{position:"fixed"}}
                     open={isSidebarOpen}
                     variant="permanent"
                     ModalProps={{

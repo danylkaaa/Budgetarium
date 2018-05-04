@@ -2,6 +2,7 @@ import * as React from "react";
 import {Drawer} from "material-ui";
 import AbstractSidebar, {IAbstractSidebarProps, styles} from "./AbstractSidebar";
 import withStyles from "material-ui/styles/withStyles";
+import UserInfo from "@comp/Sidebar/UserInfo";
 
 class MobileSidebar extends AbstractSidebar {
     public constructor(props: IAbstractSidebarProps) {
@@ -23,6 +24,7 @@ class MobileSidebar extends AbstractSidebar {
                     classes={{
                         paper: classes.drawerPaper
                     }}>
+                    <UserInfo/>
                     {drawer}
                 </Drawer>
             </div>

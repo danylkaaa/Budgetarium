@@ -13,26 +13,25 @@ import * as Icons from "@material-ui/icons";
 import {isWidthUp} from "material-ui/es/utils/withWidth";
 import {Breakpoint} from "material-ui/styles/createBreakpoints";
 import withWidth from "material-ui/utils/withWidth";
-import {connect} from "react-redux";
-import {IState} from "@/models/State";
-import * as Redux from "redux";
-import {AuthActions} from "@/actions";
-
+import * as _ from "lodash";
 import Loader from "@comp/Loader";
-import {addError} from "@/actions/app";
+import withAuth, {IAuthorizationProps} from "@hoc/withAuth";
+import {connect} from "react-redux";
+import {DRAWER_WIDTH} from "@/constants";
+import {IState} from "@/models/State";
 
 interface IOwnProps extends IThemableProp<MainLayout> {
     width?: Breakpoint;
 }
 
-interface IDispatchProps {
-    onLogout: () => any;
-    handleClick:()=>any;
-}
-
+//
+// interface IDispatchProps {
+//     onLogout: () => any;
+//     handleClick: () => any;
+// }
+//
 interface IStateProps {
-    isAuthenticated: boolean;
-    isLoading: boolean;
+    isSidebarOpen: boolean;
 }
 
 const styles = (theme: Theme) => ({
@@ -47,11 +46,16 @@ const styles = (theme: Theme) => ({
     content: {
         flexGrow: 1,
         backgroundColor: theme.palette.background.default,
+        transition: theme.transitions.create(["width", "margin", "padding"], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+        }),
         padding: theme.spacing.unit * 3,
     },
     toolbar: theme.mixins.toolbar,
 });
-type IMainLayoutProps = IOwnProps & IDispatchProps & IStateProps;
+// type IMainLayoutProps = IOwnProps & IDispatchProps & IStateProps;
+type IMainLayoutProps = IOwnProps & IAuthorizationProps & IStateProps;
 
 class MainLayout extends React.Component<IMainLayoutProps> {
 
@@ -92,7 +96,7 @@ class MainLayout extends React.Component<IMainLayoutProps> {
                 shown: this.props.isAuthenticated,
                 icon: <ListItemIcon><Icons.ExitToApp/></ListItemIcon>,
                 hiddenOn: {xsDown: true},
-                action: this.props.onLogout,
+                action: this.props.logout,
             }
         ];
     }
@@ -103,10 +107,24 @@ class MainLayout extends React.Component<IMainLayoutProps> {
         classes: PropTypes.object.isRequired,
         theme: PropTypes.object.isRequired,
     };
+    public buttons = () => {
+        return _.range(0, 100).map(x => (
+            <div>
+                <button
+                    onClick={this.props.reloadAccessToken}
+                    className="button is-info">
+                    click me
+                </button>
+            </div>
+        ));
+    }
 
     public render() {
         const {classes}: any = this.props;
         const isDesktop = this.sizeUp("md");
+        const contentStyle = {
+            paddingLeft: isDesktop ? !this.props.isSidebarOpen ? DRAWER_WIDTH + 20 + "px" : "90px" : 0
+        };
         return (
             <MuiThemeProvider theme={ThemeDefault}>
                 <div className={classes.root}>
@@ -114,20 +132,18 @@ class MainLayout extends React.Component<IMainLayoutProps> {
                         isDesktop={isDesktop}
                         title="Budgetarium"
                         buttons={this.headerButtons()}
-                        />
+                    />
                     <Loader
-                        isLoading={Boolean(this.props.isLoading)}
+                        isLoading={Boolean(this.props.isLoadingAuth)}
                         color="primary"
                     />
                     <Sidebar
                         links={this.sidebarButtons()}/>
-                    <div className={classes.content}>
+                    <div className={classes.content} style={contentStyle}>
                         <div className={classes.toolbar}/>
-                        <button
-                            onClick={this.props.handleClick}
-                            className="button is-info">
-                            click me
-                        </button>
+                        {
+                            this.buttons()
+                        }
                         {this.props.children}
                     </div>
                 </div>
@@ -136,22 +152,26 @@ class MainLayout extends React.Component<IMainLayoutProps> {
     }
 }
 
-
+//
 const mapStateToProps = (state: IState): IStateProps => {
     return {
-        isAuthenticated: Boolean(state.auth.user),
-        isLoading: !state.app.loaders.length,
+        isSidebarOpen: Boolean(state.app.isSidebarOpen),
     };
 };
+//
+// const mapDispatchToProps = (dispatch: Redux.Dispatch<any, IState>): IDispatchProps => {
+//         return {
+//             onLogout: () => dispatch(new AuthActions.LogoutAction().execute()),
+//             handleClick:()=>{
+//                 dispatch(new AuthActions.RefreshAccessTokenAction().execute());
+//             }
+//         };
+//     };
 
-const mapDispatchToProps = (dispatch: Redux.Dispatch<any, IState>): IDispatchProps => {
-        return {
-            onLogout: () => dispatch(new AuthActions.LogoutAction().execute()),
-            handleClick:()=>{
-                dispatch(new AuthActions.RefreshAccessTokenAction().execute());
-            }
-        };
-    };
 
-export default connect<IStateProps, IDispatchProps, IOwnProps>(mapStateToProps, mapDispatchToProps)(
-    withWidth()(withStyles(styles as any, {withTheme: true})(MainLayout)));
+let Component = withStyles(styles as any, {withTheme: true})(MainLayout);
+Component = withWidth()(Component);
+Component = withAuth()(Component);
+Component = connect<IStateProps, {}, IOwnProps>(mapStateToProps)(Component);
+
+export default Component;
