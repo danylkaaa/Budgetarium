@@ -20,4 +20,5 @@ export interface IError {
 export interface IAppState {
     loaders: string[];
     errors:IError[];
+    isSidebarOpen:boolean;
 }

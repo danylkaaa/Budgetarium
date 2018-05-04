@@ -13,6 +13,7 @@ class Home extends React.Component<{}, {}> {
         return (
             <MainLayout>
                 <h2>Home</h2>
+
             </MainLayout>
         );
     }

@@ -9,17 +9,26 @@ import {withStyles} from "material-ui/styles";
 import {IThemableProp, themablePropTypes} from "@/models/PropInterfaces";
 import {ChevronRight} from "@material-ui/icons";
 import {default as HeaderButton, IHeaderButtonProps} from "@comp/Header/HeaderButton";
+import {connect} from "react-redux";
+import {IState} from "@/models/State";
+import * as Redux from "redux";
+import {toggleSidebar} from "@/actions/app";
 
-export interface IHeaderProps extends IThemableProp<CommonHeader> {
-    openToggleHandler: () => any;
-    iconsToggleHandler: () => any;
-    isSidebarOpen: boolean;
-    onlyIcons: boolean;
+export interface IOwnProps extends IThemableProp<CommonHeader> {
     isDesktop: boolean;
     title?: string;
     buttons?: IHeaderButtonProps[];
 }
 
+interface IStateProps {
+    isSidebarOpen: boolean;
+}
+
+interface IDispatchProps {
+    toggleSidebar: () => any;
+}
+
+type IHeaderProps = IDispatchProps & IStateProps & IOwnProps;
 const styles = (theme: Theme) => ({
     appBar: {
         marginLeft: DRAWER_WIDTH,
@@ -59,10 +68,6 @@ const styles = (theme: Theme) => ({
 class CommonHeader extends React.Component<IHeaderProps, {}> {
     public static propTypes = {
         ...themablePropTypes,
-        isSidebarOpen: PropTypes.bool.isRequired,
-        onlyIcons: PropTypes.bool.isRequired,
-        iconsToggleHandler: PropTypes.func.isRequired,
-        openToggleHandler: PropTypes.func.isRequired,
         title: PropTypes.string,
         buttons: PropTypes.array,
         isDesktop: PropTypes.bool.isRequired,
@@ -73,11 +78,7 @@ class CommonHeader extends React.Component<IHeaderProps, {}> {
     }
 
     private handleBurgerButtonClick = () => {
-        if (this.props.isDesktop) {
-            this.props.iconsToggleHandler();
-        } else {
-            this.props.openToggleHandler();
-        }
+        this.props.toggleSidebar();
     }
     private headerButtons = () => {
         if (this.props.buttons) {
@@ -89,14 +90,14 @@ class CommonHeader extends React.Component<IHeaderProps, {}> {
     }
 
     public render() {
-        const {classes, onlyIcons, title, isDesktop}: any = this.props;
+        const {classes, isSidebarOpen, title, isDesktop}: any = this.props;
         return (
-            <AppBar className={classNames(classes.appBar, !(!isDesktop || onlyIcons) && classes.appBarShift)}>
+            <AppBar className={classNames(classes.appBar, !(!isDesktop || isSidebarOpen) && classes.appBarShift)}>
                 <Toolbar>
                     <IconButton
                         onClick={this.handleBurgerButtonClick}
                         color="inherit"
-                        className={classNames(classes.menuButton, isDesktop && !onlyIcons && classes.hide)}>
+                        className={classNames(classes.menuButton, isDesktop && !isSidebarOpen && classes.hide)}>
                         {isDesktop ? <ChevronRight/> : <MenuIcon/>}
                     </IconButton>
                     <Typography variant="title" color="inherit" noWrap={true}>
@@ -110,5 +111,23 @@ class CommonHeader extends React.Component<IHeaderProps, {}> {
 }
 
 
-export default withStyles(styles as any, {withTheme: true})(CommonHeader);
+const mapStateToProps = (state: IState): IStateProps => {
+    return {
+        isSidebarOpen: state.app.isSidebarOpen,
+    };
+};
+
+const mapDispatchToProps = (dispatch: Redux.Dispatch<any, IState>): IDispatchProps => {
+        return {
+            toggleSidebar: () => {
+                console.log("header clicked");
+                dispatch(toggleSidebar());
+            }
+        };
+    }
+;
+
+let Component = withStyles(styles as any, {withTheme: true})(CommonHeader);
+Component = connect<IStateProps, IDispatchProps, IOwnProps>(mapStateToProps, mapDispatchToProps)(Component);
+export default Component;
 

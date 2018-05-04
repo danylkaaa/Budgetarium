@@ -6,7 +6,9 @@ import {IThemableProp, themablePropTypes} from "@/models/PropInterfaces";
 import {DRAWER_WIDTH} from "@/constants";
 
 export const styles = (theme: Theme) => ({
-    toolbar: theme.mixins.toolbar,
+    toolbar: {
+        ...theme.mixins.toolbar,
+    },
     drawerPaper: {
         width: DRAWER_WIDTH,
         [theme.breakpoints.up("md")]: {
@@ -21,23 +23,19 @@ export const styles = (theme: Theme) => ({
 });
 
 export interface IAbstractSidebarProps extends IThemableProp<AbstractSidebar> {
-    openToggleHandler: () => any;
-    isSidebarOpen: boolean;
-    iconsToggleHandler: () => any;
-    onlyIcons: boolean;
     links: ISidebarLink[];
+    isSidebarOpen: boolean;
+    toggle:()=>any;
 }
 
-export default class AbstractSidebar extends React.Component<IAbstractSidebarProps, {}> {
+
+class AbstractSidebar extends React.Component<IAbstractSidebarProps, {}> {
     public static propTypes = {
         ...themablePropTypes,
-        isSidebarOpen: PropTypes.bool.isRequired,
-        openToggleHandler: PropTypes.func.isRequired,
-        iconsToggleHandler: PropTypes.func.isRequired,
-        onlyIcons: PropTypes.bool.isRequired,
         links: PropTypes.array.isRequired
     };
-    protected buildDrawerList = (classes: any) => {
+
+    public buildDrawerList = (classes: any) => {
         const links = this.props.links;
         return (
             <div className={classes.root}>
@@ -56,3 +54,6 @@ export default class AbstractSidebar extends React.Component<IAbstractSidebarPro
         super(props);
     }
 }
+
+
+export default AbstractSidebar;

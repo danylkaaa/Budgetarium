@@ -1,23 +1,19 @@
 import {IToken, IUser} from "@/models/User";
-import ActionTypes, {IAction} from "./actionTypes";
-import {IState} from "@/models/State";
-import * as Redux from "redux";
-import {addError, endLoading, startLoading} from "@/actions/app";
-import apolloClient from "@/graphql";
-import {ILoginMutationVars, IRegisterMutationVars, LOGIN_MUTATION, REGISTER_MUTATION} from "@/graphql/mutations";
+import ActionTypes, {IActionArgs} from "./actionTypes";
 
-export interface IAuthSuccessAction extends IAction {
+
+export interface IAuthSuccessAction extends IActionArgs {
     type: ActionTypes.AUTH_SUCCESS;
     accessToken: IToken;
     refreshToken: IToken;
     user: IUser;
 }
 
-export interface IAuthLogoutAction extends IAction {
+export interface IAuthLogoutAction extends IActionArgs {
     type: ActionTypes.AUTH_LOGOUT;
 }
 
-export interface IAuthUpdateAccessTokenAction extends IAction {
+export interface IAuthUpdateAccessTokenAction extends IActionArgs {
     type: ActionTypes.AUTH_UPDATE_ACCESS_TOKEN;
     accessToken: IToken;
 }
@@ -37,110 +33,10 @@ export const authLogout = (): IAuthLogoutAction => {
     };
 };
 
-export const updateAccessToken = (accessToken: IToken): IAuthUpdateAccessTokenAction => {
+export const authUpdateAccessToken = (accessToken: IToken): IAuthUpdateAccessTokenAction => {
     return {
         type: ActionTypes.AUTH_UPDATE_ACCESS_TOKEN,
         accessToken
     };
 };
 
-export const checkAuthTimeout = (expirationTime: number) => {
-    return (dispatch: Redux.Dispatch<any, IState>) => {
-        setTimeout(() => {
-            dispatch(authLogout());
-        }, expirationTime);
-    };
-};
-
-
-const makeAuthRequerst = (options: any, dispatch: Redux.Dispatch<any, IState>,name:string) => {
-    apolloClient.mutate(options)
-        .then((response: any) => {
-            if (!response.data) {
-                throw Error("Server returns empty response");
-            } else {
-                const {accessToken, refreshToken, me} = response.data[name];
-                dispatch(authSuccess(accessToken, refreshToken, me));
-                dispatch(checkAuthTimeout(response.data.accessToken.expiredIn - new Date().getTime()));
-            }
-        }).catch((err: any) => {
-        console.log(JSON.stringify(err, null));
-        if (err.graphQLErrors) {
-            err.graphQLErrors.forEach((e: any) => dispatch(authFail(e.message)));
-        } else {
-            dispatch(authFail(err.message));
-        }
-    });
-};
-
-export const login = (payload: ILoginMutationVars) => {
-    return (dispatch: Redux.Dispatch<any, IState>) => {
-        dispatch(startLoading("auth"));
-        const variables: ILoginMutationVars = {...payload};
-        const mutation = LOGIN_MUTATION;
-        makeAuthRequerst({mutation, variables}, dispatch,"login");
-    };
-};
-
-export const register = (payload: IRegisterMutationVars) => {
-    return async (dispatch: Redux.Dispatch<any, IState>) => {
-        dispatch(startLoading("auth"));
-        const variables: IRegisterMutationVars = {...payload};
-        const mutation = REGISTER_MUTATION;
-        makeAuthRequerst({mutation, variables}, dispatch,"signup");
-    };
-};
-
-
-export const authCheckAccessToken = () => {
-    return (dispatch: Redux.Dispatch<any, IState>, getState: () => IState) => {
-        const {accessToken} = getState().auth;
-        if (accessToken == null) {
-            return dispatch(authLogout());
-        }
-        const expirationDate = new Date(accessToken.expiredIn);
-        if (expirationDate <= new Date()) {
-            return dispatch(authCheckRefreshToken());
-        }
-        return null;
-    };
-};
-
-export const authCheckRefreshToken = () => {
-    return (dispatch: Redux.Dispatch<any, IState>, getState: () => IState): any => {
-        const {refreshToken} = getState().auth;
-        if (refreshToken == null) {
-            return dispatch(authLogout());
-        }
-        const expirationDate = new Date(refreshToken.expiredIn);
-        if (expirationDate <= new Date()) {
-            return dispatch(authLogout());
-        } else {
-            return dispatch(authReloadAccessToken());
-        }
-    };
-};
-
-export const authCheckState = () => {
-    return (dispatch: Redux.Dispatch<any, IState>) => {
-        dispatch(authCheckAccessToken());
-    };
-};
-
-export const authReloadAccessToken = () => {
-    return (dispatch: Redux.Dispatch<any, IState>) => {
-        dispatch(updateAccessToken({token: "newAccessToken", expiredIn: 1000}));
-    };
-};
-
-
-export const authFail = (errorMessage: string) => {
-    return (dispatch: Redux.Dispatch<any, IState>) => {
-        dispatch(endLoading("auth"));
-        if (errorMessage) {
-            dispatch(addError("auth", errorMessage));
-        } else {
-            dispatch(addError("auth", "Some error"));
-        }
-    };
-};

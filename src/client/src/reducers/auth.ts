@@ -1,6 +1,6 @@
 import {IAuthState} from "@/models/State";
-import {ActionTypes, IAuthLogoutAction, IAuthSuccessAction} from "@/actions";
-import {IAction} from "@/actions/actionTypes";
+import {ActionTypes, AuthArgs} from "@/actions";
+import {IActionArgs} from "@/actions/actionTypes";
 
 const initialState: IAuthState = {
     accessToken: null,
@@ -8,7 +8,7 @@ const initialState: IAuthState = {
     user: null,
 };
 
-const authSuccess = (state: IAuthState, action: IAuthSuccessAction): IAuthState => {
+const authSuccess = (state: IAuthState, action: AuthArgs.IAuthSuccessAction): IAuthState => {
     return {
         ...state,
         accessToken: action.accessToken,
@@ -16,7 +16,7 @@ const authSuccess = (state: IAuthState, action: IAuthSuccessAction): IAuthState 
         user: action.user,
     };
 };
-const authLogout = (state: IAuthState, action: IAuthLogoutAction): IAuthState => {
+const authLogout = (state: IAuthState, action: AuthArgs.IAuthLogoutAction): IAuthState => {
     return {
         ...state,
         refreshToken: null,
@@ -24,12 +24,22 @@ const authLogout = (state: IAuthState, action: IAuthLogoutAction): IAuthState =>
         user: null
     };
 };
-const reducer = (state = initialState, action: IAction) => {
+
+const authUpdateAccessToken = (state: IAuthState, action: AuthArgs.IAuthUpdateAccessTokenAction): IAuthState => {
+    return {
+        ...state,
+        accessToken: action.accessToken
+    };
+};
+
+const reducer = (state = initialState, action: IActionArgs) => {
     switch (action.type) {
         case ActionTypes.AUTH_SUCCESS:
-            return authSuccess(state, action as IAuthSuccessAction);
+            return authSuccess(state, action as AuthArgs.IAuthSuccessAction);
         case ActionTypes.AUTH_LOGOUT:
-            return authLogout(state, action as IAuthLogoutAction);
+            return authLogout(state, action as AuthArgs.IAuthLogoutAction);
+        case ActionTypes.AUTH_UPDATE_ACCESS_TOKEN:
+            return authUpdateAccessToken(state, action as AuthArgs.IAuthUpdateAccessTokenAction);
         default:
             return state;
     }

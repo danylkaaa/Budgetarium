@@ -16,8 +16,10 @@ import withWidth from "material-ui/utils/withWidth";
 import {connect} from "react-redux";
 import {IState} from "@/models/State";
 import * as Redux from "redux";
-import * as actions from "@/actions";
+import {AuthActions} from "@/actions";
+
 import Loader from "@comp/Loader";
+import {addError} from "@/actions/app";
 
 interface IOwnProps extends IThemableProp<MainLayout> {
     width?: Breakpoint;
@@ -25,16 +27,12 @@ interface IOwnProps extends IThemableProp<MainLayout> {
 
 interface IDispatchProps {
     onLogout: () => any;
+    handleClick:()=>any;
 }
 
 interface IStateProps {
     isAuthenticated: boolean;
     isLoading: boolean;
-}
-
-interface IMainLayoutState {
-    isSidebarOpen: boolean;
-    onlyIconsInSidebar: boolean;
 }
 
 const styles = (theme: Theme) => ({
@@ -55,14 +53,10 @@ const styles = (theme: Theme) => ({
 });
 type IMainLayoutProps = IOwnProps & IDispatchProps & IStateProps;
 
-class MainLayout extends React.Component<IMainLayoutProps, IMainLayoutState> {
+class MainLayout extends React.Component<IMainLayoutProps> {
 
     constructor(props: IMainLayoutProps) {
         super(props);
-        this.state = {
-            isSidebarOpen: false,
-            onlyIconsInSidebar: false,
-        };
     }
 
     private headerButtons = (): IHeaderButtonProps[] => {
@@ -109,16 +103,6 @@ class MainLayout extends React.Component<IMainLayoutProps, IMainLayoutState> {
         classes: PropTypes.object.isRequired,
         theme: PropTypes.object.isRequired,
     };
-    private handleDrawerToggle = () => {
-        this.setState({...this.state, isSidebarOpen: !this.state.isSidebarOpen});
-    }
-
-    private handleDrawerIconsToggle = () => {
-        this.setState({
-            ...this.state,
-            onlyIconsInSidebar: !this.state.onlyIconsInSidebar
-        });
-    }
 
     public render() {
         const {classes}: any = this.props;
@@ -130,22 +114,20 @@ class MainLayout extends React.Component<IMainLayoutProps, IMainLayoutState> {
                         isDesktop={isDesktop}
                         title="Budgetarium"
                         buttons={this.headerButtons()}
-                        openToggleHandler={this.handleDrawerToggle}
-                        iconsToggleHandler={this.handleDrawerIconsToggle}
-                        isSidebarOpen={this.state.isSidebarOpen}
-                        onlyIcons={this.state.onlyIconsInSidebar}/>
+                        />
                     <Loader
                         isLoading={Boolean(this.props.isLoading)}
                         color="primary"
                     />
                     <Sidebar
-                        links={this.sidebarButtons()}
-                        openToggleHandler={this.handleDrawerToggle}
-                        iconsToggleHandler={this.handleDrawerIconsToggle}
-                        isSidebarOpen={this.state.isSidebarOpen}
-                        onlyIcons={this.state.onlyIconsInSidebar}/>
+                        links={this.sidebarButtons()}/>
                     <div className={classes.content}>
                         <div className={classes.toolbar}/>
+                        <button
+                            onClick={this.props.handleClick}
+                            className="button is-info">
+                            click me
+                        </button>
                         {this.props.children}
                     </div>
                 </div>
@@ -158,16 +140,18 @@ class MainLayout extends React.Component<IMainLayoutProps, IMainLayoutState> {
 const mapStateToProps = (state: IState): IStateProps => {
     return {
         isAuthenticated: Boolean(state.auth.user),
-        isLoading: !state.app.loaders.length
+        isLoading: !state.app.loaders.length,
     };
 };
 
 const mapDispatchToProps = (dispatch: Redux.Dispatch<any, IState>): IDispatchProps => {
         return {
-            onLogout: () => dispatch(actions.authLogout())
+            onLogout: () => dispatch(new AuthActions.LogoutAction().execute()),
+            handleClick:()=>{
+                dispatch(new AuthActions.RefreshAccessTokenAction().execute());
+            }
         };
-    }
-;
+    };
 
 export default connect<IStateProps, IDispatchProps, IOwnProps>(mapStateToProps, mapDispatchToProps)(
     withWidth()(withStyles(styles as any, {withTheme: true})(MainLayout)));

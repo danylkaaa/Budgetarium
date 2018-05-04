@@ -12,4 +12,5 @@ export interface IToken {
 export interface IUser {
     name:string;
     id:string;
+    avatar:string;
 }

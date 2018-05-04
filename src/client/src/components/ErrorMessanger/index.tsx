@@ -2,7 +2,7 @@ import * as React from "react";
 import {IError, IState} from "@/models/State";
 import {connect} from "react-redux";
 import * as Redux from "redux";
-import {removeError} from "@/actions";
+import {App} from "@/actions";
 import * as _ from "lodash";
 import Alert from "react-s-alert";
 
@@ -60,7 +60,7 @@ const mapStateToProps = (state: IState, props: IOwnProps): IStateProps => {
 
 const mapDispatchToProps = (dispatch: Redux.Dispatch<any, IState>): IDispatchProps => {
     return {
-        removeError: (err: IError) => dispatch(removeError(err))
+        removeError: (err: IError) => dispatch(App.removeError(err))
     };
 };
 

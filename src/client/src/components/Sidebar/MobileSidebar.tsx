@@ -1,9 +1,7 @@
 import * as React from "react";
-import {DRAWER_WIDTH} from "@/constants";
+import {Drawer} from "material-ui";
+import AbstractSidebar, {IAbstractSidebarProps, styles} from "./AbstractSidebar";
 import withStyles from "material-ui/styles/withStyles";
-import {IconButton, Drawer, Theme} from "material-ui";
-import {default as AbstractSidebar, IAbstractSidebarProps, styles} from "./AbstractSidebar";
-import * as classNames from "classnames";
 
 class MobileSidebar extends AbstractSidebar {
     public constructor(props: IAbstractSidebarProps) {
@@ -11,13 +9,13 @@ class MobileSidebar extends AbstractSidebar {
     }
 
     public render() {
-        const {classes, openToggleHandler, isSidebarOpen}: any = this.props;
-        const drawer = this.buildDrawerList(classes);
+        const {classes, toggle, isSidebarOpen}: any = this.props;
+        const drawer = (this as any).buildDrawerList(classes);
         return (
             <div>
                 <Drawer
                     open={isSidebarOpen}
-                    onClose={openToggleHandler}
+                    onClose={toggle}
                     variant="temporary"
                     ModalProps={{
                         keepMounted: true, // Better open performance on mobile.
@@ -32,4 +30,4 @@ class MobileSidebar extends AbstractSidebar {
     }
 }
 
-export default withStyles(styles as any, {withTheme: true})(MobileSidebar);
+export default withStyles(styles as any,{withTheme:true})(MobileSidebar);
