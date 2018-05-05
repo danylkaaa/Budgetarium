@@ -9,7 +9,7 @@ interface IExternalProps {
 }
 
 interface IStateInjectedProps {
-    isLoading: (scope: string) => boolean;
+    isLoadingScope: (scope: string) => boolean;
 }
 
 interface IDispatchInjectedProps {
@@ -23,7 +23,7 @@ export {IInjectedProps as ILoadingProps};
 
 const mapStateToProps = (state: IState): IStateInjectedProps => {
     return {
-        isLoading: (scope) => state.app.loaders.indexOf(scope) >= 0,
+        isLoadingScope: (scope) => state.app.loaders.indexOf(scope) >= 0,
     };
 };
 

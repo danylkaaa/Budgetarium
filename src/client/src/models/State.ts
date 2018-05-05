@@ -1,12 +1,14 @@
 import {IToken, IUser} from "@/models/User";
 import {IWallet} from "@/models/Wallet";
+import {ITransaction} from "@/models/Transaction";
 
 export interface IState {
     auth: IAuthState;
     app: IAppState;
     apollo?: any;
     form: any;
-    wallets:IWalletsState;
+    wallets: IWalletsState;
+    transactions: ITransactionsState;
 }
 
 export interface IAuthState {
@@ -16,16 +18,22 @@ export interface IAuthState {
 }
 
 export interface IError {
-    scope:string;
-    message:string;
+    scope: string;
+    message: string;
 }
+
 export interface IAppState {
     loaders: string[];
-    errors:IError[];
-    isSidebarOpen:boolean;
+    errors: IError[];
+    isSidebarOpen: boolean;
 }
 
 export interface IWalletsState {
-    wallets:IWallet[];
-    selectedWallet:IWallet|null;
+    wallets: IWallet[];
+    selectedWallet: IWallet | null;
+}
+
+export interface ITransactionsState {
+    selectedTransactions: ITransaction[];
+    selectedTransaction: ITransaction | null;
 }

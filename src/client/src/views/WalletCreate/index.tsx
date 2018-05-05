@@ -6,35 +6,50 @@ import Loader from "@comp/Loader";
 import ErrorMessanger from "@comp/ErrorMessanger";
 import withWallets, {IWalletsProps} from "@hoc/withWallets";
 import {default as withLoading, ILoadingProps} from "@hoc/withLoading";
-import {IAuthorizationProps} from "@hoc/withAuth";
+import {IAuthorizationProps, default as withAuth} from "@hoc/withAuth";
+import {Redirect} from "react-router";
 
-
+interface ICState{
+    shouldRedirect:boolean;
+}
 // final props
 type IProps = ILoadingProps & IWalletsProps & IAuthorizationProps;
 
 
-class WalletCreatePage extends React.Component<IProps, {}> {
-    public static propTypes = {
-        ...themablePropTypes
-    };
+class WalletCreatePage extends React.Component<IProps, ICState> {
 
     public constructor(props: any) {
         super(props);
+        this.state={
+            shouldRedirect:false,
+        };
     }
 
     private handleConfirm = (args: any) => {
-        console.log(args);
+        this.props.createWallet(args);
+    }
+    public componentWillReceiveProps(newProps:IProps){
+        if(newProps.selectedWallet && newProps.selectedWallet!==this.props.selectedWallet){
+            this.setState({...this.state,shouldRedirect:true});
+        }
+    }
+    public  componentDidMount(){
+        this.props.disableSelectedWallet();
     }
 
     public render() {
-        // if (!this.props.isAuthenticated) {
-        //     return (<Redirect to="/"/>);
-        // }
+        if (!this.props.isAuthenticated) {
+            return (<Redirect to="/"/>);
+        }
+        const wallet=this.props.selectedWallet;
+        if(this.state.shouldRedirect){
+            return (<Redirect to={wallet?`/wallet/${wallet.id}`:"/wallets"}/>);
+        }
         return (
             <div>
-                <ErrorMessanger trigger={/auth/} stackLength={3}/>
+                <ErrorMessanger trigger={/wallet/} stackLength={3}/>
                 <Loader
-                    isLoading={Boolean(this.props.isLoading("wallet"))}
+                    isLoading={Boolean(this.props.isLoadingScope("wallet"))}
                     color="primary"
                 />
                 <div>
@@ -47,6 +62,7 @@ class WalletCreatePage extends React.Component<IProps, {}> {
 
 
 let Component = withLoading()(WalletCreatePage as any);
+Component=withAuth()(Component as any) as any;
 Component = withWallets()(Component as any) as any;
 Component = reduxForm({
     form: "Create wallet",

@@ -82,7 +82,7 @@ abstract class AbstractDB<T extends Document> {
     }
 
     public removeById(id: any): Promise<T> {
-        return this._model.remove(id).exec();
+        return this._model.findByIdAndRemove(id).exec();
     }
 
     public remove(query: any): Promise<T> {

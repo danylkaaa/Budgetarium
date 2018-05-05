@@ -150,6 +150,9 @@ export default {
                 id: (await TransactionDB.getFieldsById(data.id, {creator: 1})).creator
             };
         },
+        async created(data: ITransaction) {
+            return (await TransactionDB.getFieldsById(data.id, {createdAt: 1})).createdAt;
+        },
         async currency(data: ITransaction) {
             if ((data as any).wallet) {
                 return (data as any).wallet.currency;

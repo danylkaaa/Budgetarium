@@ -1,5 +1,5 @@
 import gql from "graphql-tag";
-import {IUserShema} from "@/graphql/schemas/user";
+import {IUser} from "@/models/User";
 
 
 export interface IToken {
@@ -8,13 +8,13 @@ export interface IToken {
 }
 
 export interface IRegisterMutationResponse {
-    me: IUserShema;
+    me: IUser;
     accessToken: IToken;
     refreshToken: IToken;
 }
 
 export interface ILoginMutationResponse {
-    me: IUserShema;
+    me: IUser;
     accessToken: IToken;
     refreshToken: IToken;
 }

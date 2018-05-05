@@ -1,8 +1,9 @@
 require("module-alias/register");
-const path = require("path");
-import {Currencies, CurrencyConverterFactory, Logger} from "@utils";
 import config from "@config";
-import {Application} from "express";
+
+const path = require("path");
+import { Currencies, CurrencyConverterFactory, Logger } from "@utils";
+import { Application } from "express";
 import routes from "@routes";
 import auth from "./services/auth";
 
@@ -16,7 +17,7 @@ const mongoose = require("mongoose");
 const bluebird = require("bluebird");
 const morgan = require("morgan");
 const compression = require("compression");
-const favicon=require("express-favicon");
+const favicon = require("express-favicon");
 class App {
 
     public static getInstance(): App {
@@ -78,7 +79,7 @@ class App {
 
     private configure(): void {
         this.app.set("port", this.normalizePort(process.env.PORT || "3000"));
-        Currencies.updateCurrencyRate();
+        // Currencies.updateCurrencyRate();
         process.on("exit", (code) => {
             clearTimeout(this.timer);
             process.exit(code);
@@ -100,13 +101,13 @@ class App {
         this.app.use(cors());
         // this.app.use(/\/((?!graphql).)*/, bodyParser.urlencoded({ extended: true }));
         // this.app.use(/\/((?!graphql).)*/, bodyParser.json());
-        this.app.use(bodyParser.urlencoded({extended: true}));
+        this.app.use(bodyParser.urlencoded({ extended: true }));
         this.app.use(bodyParser.json());
         this.app.use(expressValidator());
         this.app.use(compression());
-        this.app.use(express.static(path.join(__dirname, "public"), {maxAge: "10h"}));
+        this.app.use(express.static(path.join(__dirname, "public"), { maxAge: "10h" }));
         this.app.use(auth());
-        this.app.use(favicon(path.join(__dirname,"/public/favicon.ico")));
+        this.app.use(favicon(path.join(__dirname, "/public/favicon.ico")));
         logs.info("App configured");
     }
 

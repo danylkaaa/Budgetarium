@@ -4,7 +4,11 @@ import * as App from "./appArgs";
 import * as WalletsCommands from "./walletCommands";
 import * as WalletsArgs from "./walletArgs";
 export {default as ActionTypes} from "./actionTypes";
+import * as TransactionsArgs from "./transactionsArgs";
+import * as TransactionsCommands from "./transactionsCommands";
 
+export {TransactionsCommands};
+export {TransactionsArgs};
 export {App};
 export {AuthCommands};
 export {AuthArgs};

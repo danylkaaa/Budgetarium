@@ -29,6 +29,7 @@ const makeAuthRequerst = (apolloClient: any, options: any, dispatch: Redux.Dispa
                 throw Error("Server returns empty response");
             } else {
                 dispatch(endLoading("auth"));
+                apolloClient.cache.reset();
                 const {accessToken, refreshToken, me} = response.data[name];
                 dispatch(authSuccess(accessToken, refreshToken, me));
             }
@@ -96,6 +97,7 @@ export class RefreshAccessTokenCommand extends AuthCommand {
                     if (!response.data) {
                         throw Error("Server returns empty response");
                     } else {
+                        clientAccess.cache.reset();
                         const {token, expiredIn} = response.data.access;
                         console.log(token, expiredIn);
                         console.log(response.data);

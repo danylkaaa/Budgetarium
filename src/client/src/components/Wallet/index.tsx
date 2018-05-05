@@ -3,10 +3,14 @@ import {IWallet} from "@/models/Wallet";
 import {Theme} from "material-ui";
 import {IThemableProp} from "@/models/PropInterfaces";
 import walletImage from "@/images/wallet.png";
-import withWallets, {IWalletsProps} from "@hoc/withWallets";
+import {default as withWallets, IWalletsProps} from "@hoc/withWallets";
+import * as FontAwesome from "react-fontawesome";
+import {Link} from "react-router-dom";
 
 interface IOwnProps {
     wallet: IWallet;
+    onDelete?: () => any;
+    onAdd?: () => any;
 }
 
 const styles = (theme: Theme) => ({
@@ -37,42 +41,59 @@ class WalletView extends React.Component<IProps> {
     public render() {
         const {wallet}: any = this.props;
         return (
+
             <div className="box">
-                <article className="media">
-                    <div className="media-left">
-                        <figure className="image is-128x128">
-                            <img src={walletImage} alt="Image"/>
-                        </figure>
-                    </div>
-                    <div className="media-content">
-                        <div className="content">
-                            <p className="title is-3">{wallet.name}</p>
-                            <p><strong>{wallet.owner.name}</strong></p>
-                            <small>{new Date(wallet.created).toLocaleDateString()}</small>
-                            <br/>
+                <div className="field has-addons">
+                    <p className="control">
+                        {this.props.onDelete &&
+                        <button className="is-danger button" onClick={this.props.onDelete}>
+                            <FontAwesome name="trash"/>
+                        </button>
+                        }
+                        {this.props.onAdd &&
+                        <button className="is-link button" onClick={this.props.onAdd}>
+                            <FontAwesome name="plus"/>
+                        </button>
+                        }
+                    </p>
+                </div>
+                <Link to={`/wallets/${wallet.id}`} style={{textDecoration: "none"}}>
+                    <article className="media">
+                        <div className="media-left">
+                            <figure className="image is-128x128">
+                                <img src={walletImage} alt="Image"/>
+                            </figure>
+                        </div>
+                        <div className="media-content">
+                            <div className="content">
+                                <p className="title">{wallet.name}</p>
+                                <p><strong>{wallet.owner.name}</strong></p>
+                                <small>{new Date(wallet.created).toLocaleDateString()}</small>
+                                <br/>
+                            </div>
+                        </div>
+                    </article>
+                    <div className="tile is-ancestor">
+                        <div className="tile is-parent">
+                            <article className="tile is-child notification is-info">
+                                <div className="title is-6">Total</div>
+                                <div>{wallet.total.toFixed(2) + wallet.currency}</div>
+                            </article>
+                        </div>
+                        <div className="tile is-parent is-success">
+                            <article className="tile is-child notification is-success">
+                                <div className="title is-6">Gain</div>
+                                <div>{wallet.gain.toFixed(2) + wallet.currency}</div>
+                            </article>
+                        </div>
+                        <div className="tile is-parent">
+                            <article className="tile is-child box notification is-danger">
+                                <div className="title is-6">Spending</div>
+                                <div>{wallet.spending.toFixed(2) + wallet.currency}</div>
+                            </article>
                         </div>
                     </div>
-                </article>
-                <div className="tile is-ancestor">
-                    <div className="tile is-parent">
-                        <article className="tile is-child notification is-info">
-                            <div className="title">Total</div>
-                            <div className="subtitle">{wallet.total.toFixed(2)+wallet.currency}</div>
-                        </article>
-                    </div>
-                    <div className="tile is-parent is-success">
-                        <article className="tile is-child notification is-success">
-                            <div className="title">Gain</div>
-                            <div className="subtitle">{wallet.gain.toFixed(2)+wallet.currency}</div>
-                        </article>
-                    </div>
-                    <div className="tile is-parent">
-                        <article className="tile is-child box notification is-danger">
-                            <div className="title">Spending</div>
-                            <div className="subtitle">{wallet.spending.toFixed(2)+wallet.currency}</div>
-                        </article>
-                    </div>
-                </div>
+                </Link>
             </div>
         );
     }

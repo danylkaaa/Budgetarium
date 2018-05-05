@@ -92,7 +92,7 @@ export default {
         wallet: AuthMiddleware(["access"], async (_: any, data: IWalletQuery, context: IContext): Promise<IWallet> => {
             try {
                 let {id} = data;
-                return await WalletDB.getFields(id, WalletDB.plainFields());
+                return await WalletDB.getFieldsById(id, WalletDB.plainFields());
             } catch (e) {
                 logger.error(e);
                 throw new GraphQLError(e);
@@ -131,9 +131,9 @@ export default {
         },
         async transactions(data: IWallet) {
             logger.info("transactions wallet" + data);
-            return (await WalletDB.getFieldsById(data.id, {transactions: 1}))
-                .map((id: any) => ({id}));
-        }
+            return (await TransactionDB.getFields({walletId:data.id}, {_id: 1}))
+                .map((_id: any) => ({id:_id}));
+        },
         async created(data:IWallet){
             return (await WalletDB.getFieldsById(data.id, {createdAt: 1})).createdAt;
         }

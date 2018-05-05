@@ -6,10 +6,12 @@ import {IState} from "@/models/State";
 import storage from "redux-persist/lib/storage";
 import {reducer as form} from "redux-form";
 import wallets from "./walletReducer";
+import transactions from "./transactionReducer";
 
 const rootReducer = combineReducers<IState>({
     auth,
     wallets,
+    transactions,
     app,
     form
 });

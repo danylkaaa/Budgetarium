@@ -56,7 +56,25 @@ export const WALLET_DELETE_MUTATION = gql`
 
 export const WALLET_GET_QUERY = gql`
     query  GetWallet($id:ID!){
-        wallet(id:$id)
+        wallet(id:$id){
+            id
+            name
+            created
+            currency
+            gain
+            spending
+            total
+            owner{
+                id
+                name
+            }
+            transactions{
+                name
+                category
+                value
+                created
+            }
+        }
     }
 `;
 
@@ -73,6 +91,10 @@ export const WALLETS_GET_QUERY = gql`
             owner{
                 id
                 name
+            }
+            transactions{
+                value
+                created
             }
         }
     }
