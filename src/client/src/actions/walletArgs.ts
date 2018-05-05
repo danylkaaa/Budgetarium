@@ -25,6 +25,11 @@ export interface ISelectWalletAction {
     wallet: IWallet;
 }
 
+export interface IRemoveTransactionFromSelectedWallet {
+    type: ActionTypes.REMOVE_TRANSACTION_FROM_CURRENT_WALLET;
+    id: string;
+}
+
 export const walletCreationSuccess = (wallet: IWallet): ICreateWalletSuccessAction => {
     return {
         type: ActionTypes.WALLET_CREATE_SUCCESS,
@@ -48,7 +53,12 @@ export const walletDeleteSuccess = (id: string): IDeleteWalletAction => {
         id
     };
 };
-
+export const removeTransactionFromSelectedWallet = (id: string): IRemoveTransactionFromSelectedWallet => {
+    return {
+        type: ActionTypes.REMOVE_TRANSACTION_FROM_CURRENT_WALLET,
+        id
+    };
+};
 export const selectWallet = (wallet: IWallet): ISelectWalletAction => {
     return {
         type: ActionTypes.SELECT_WALLET,

@@ -7,8 +7,8 @@ export interface IWalletCreateMutationResponse {
     gain: number;
     spending: number;
     currency: string;
-    owner:{
-        id:string
+    owner: {
+        id: string
     };
 }
 
@@ -30,6 +30,7 @@ export interface IWalletsGetQueryVars {
 export interface IWalletDeleteMutationVars {
     id: string;
 }
+
 export const WALLET_CREATE_MUTATION = gql`
     mutation CreateWallet($name:String!, $currency:String){
         createWallet(name:$name, currency:$currency){
@@ -45,7 +46,6 @@ export const WALLET_CREATE_MUTATION = gql`
         }
     }
 `;
-
 
 
 export const WALLET_DELETE_MUTATION = gql`
@@ -69,6 +69,7 @@ export const WALLET_GET_QUERY = gql`
                 name
             }
             transactions{
+                id
                 name
                 category
                 value
@@ -91,10 +92,6 @@ export const WALLETS_GET_QUERY = gql`
             owner{
                 id
                 name
-            }
-            transactions{
-                value
-                created
             }
         }
     }

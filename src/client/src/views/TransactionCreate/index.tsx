@@ -55,7 +55,7 @@ class TransactionCreatePage extends React.Component<IProps, ICState> {
         if (!this.props.isAuthenticated || !this.props.selectedWallet) {
             return (<Redirect to="/"/>);
         }
-        const wallet = this.props.selectedTransaction;
+        const wallet = this.props.selectedWallet;
         if (this.state.shouldRedirect) {
             return (<Redirect to={wallet ? `/wallet/${wallet.id}` : "/wallets"}/>);
         }

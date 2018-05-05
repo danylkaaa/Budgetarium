@@ -72,12 +72,12 @@ export default {
                     creator: context.user.id,
                     name: name,
                     value: value,
-                    walletId: wallet,
+                    walletId: walletContainer.id,
                     category: category ? category : value > 0 ? "Gain" : "Spending",
                 });
                 // affect to wallet gain and processing
                 await walletContainer.addTransaction(transaction);
-                return TransactionDB.getPlainFields(transaction);
+                return await TransactionDB.getPlainFields(transaction);
             } catch (e) {
                 logger.error(e);
                 throw new GraphQLError(e);
@@ -87,13 +87,17 @@ export default {
             try {
                 let {id} = data;
                 // get transaction from DB
-                const transaction: any = TransactionDB.getFieldsById(id, {walletId: 1, owner: 1});
+                const transaction: any = await TransactionDB.findById(id);
                 // return 404
                 if (!transaction) {
                     throw new GraphQLError("No such transaction found");
                 }
+                logger.debug(transaction);
                 // get container
                 const walletContainer = await WalletDB.findById(transaction.walletId);
+                if(!walletContainer){
+                    throw new GraphQLError("Cannot find wallet with this transaction");
+                }
                 // return 401
                 if (!walletContainer.owner == context.user.id) {
                     throw new GraphQLError("You are not an owner of wallet with transaction");
@@ -114,17 +118,17 @@ export default {
                 const {name, id, category, walletId} = data;
                 const query: any = TransactionDB.buildSearchQuery(data);
                 query.owner = context.user.id;
-                logger.info(query);
-                return await TransactionDB.getFields(query, TransactionDB.plainFields());
+                logger.info(query,1234);
+                return await TransactionDB.find(query);
             } catch (e) {
                 logger.error(e);
                 throw new GraphQLError(e);
             }
         }),
-        wallet: AuthMiddleware(["access"], async (_: any, data: ITransactionQuery, context: IContext): Promise<ITransaction> => {
+        transaction: AuthMiddleware(["access"], async (_: any, data: ITransactionQuery, context: IContext): Promise<ITransaction> => {
             try {
                 let {id} = data;
-                return await TransactionDB.getFields(id, TransactionDB.plainFields());
+                return await TransactionDB.findById(id);
             } catch (e) {
                 logger.error(e);
                 throw new GraphQLError(e);

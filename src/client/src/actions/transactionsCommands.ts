@@ -12,6 +12,7 @@ import {
 } from "@/graphql/mutations/transaction";
 import {clientAccess} from "@/graphql";
 import {transactionCreationSuccess, transactionDeleteSuccess, transactionsLoadSuccess} from "@/actions/transactionsArgs";
+import {removeTransactionFromSelectedWallet} from "@/actions/walletArgs";
 
 abstract class TransactionCommand extends IAction<ITransactionsState> {
     protected fetchFailed: TransactionFetchFailedCommand;
@@ -59,7 +60,7 @@ export class CreateTransactionCommand extends TransactionCommand {
 export class DeleteTransactionCommand extends TransactionCommand {
     public execute({id}: ITransactionDeleteMutationVars) {
         return (dispatch: Redux.Dispatch<any, IState>, getState: () => IState) => {
-            dispatch(startLoading("transactions-delete"));
+            dispatch(startLoading("transactions"));
             const mutation = TRANSACTION_DELETE_MUTATION;
             const variables = {id};
             clientAccess.mutate({mutation, variables})
@@ -70,15 +71,16 @@ export class DeleteTransactionCommand extends TransactionCommand {
                     if (!answer) {
                         throw Error("Server returns empty response");
                     } else {
-                        dispatch(endLoading("transactions-delete"));
+                        dispatch(endLoading("transactions"));
+                        dispatch(removeTransactionFromSelectedWallet(id));
                         dispatch(transactionDeleteSuccess(id));
                     }
                 })
                 .catch((err: any) => {
                         if (err.graphQLErrors && err.graphQLErrors.length) {
-                            err.graphQLErrors.forEach((e: any) => dispatch(this.fetchFailed.execute(e.message, "transactions-delete")));
+                            err.graphQLErrors.forEach((e: any) => dispatch(this.fetchFailed.execute(e.message, "transactions")));
                         } else {
-                            dispatch(this.fetchFailed.execute(err.message, "transactions-delete"));
+                            dispatch(this.fetchFailed.execute(err.message, "transactions"));
                         }
                     }
                 );

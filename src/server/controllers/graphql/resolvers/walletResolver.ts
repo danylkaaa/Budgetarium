@@ -52,7 +52,10 @@ export default {
                     currency: currency || config.get("CURRENCY_CONVERTATION_BASE"),
                     name: name.trim()
                 });
-                return WalletDB.getPlainFields(wallet);
+                logger.info(wallet);
+                return {
+                    ...wallet
+                }
             } catch (e) {
                 logger.error(e);
                 throw new GraphQLError(e);
@@ -92,7 +95,15 @@ export default {
         wallet: AuthMiddleware(["access"], async (_: any, data: IWalletQuery, context: IContext): Promise<IWallet> => {
             try {
                 let {id} = data;
-                return await WalletDB.getFieldsById(id, WalletDB.plainFields());
+                let wallet=(await WalletDB.findById(id));                
+                console.log(id, typeof wallet,await WalletDB.findById(id));
+                if(!wallet){
+                    throw new GraphQLError("No such wallet");
+                }
+                if(wallet.owner!==context.user.id){
+                    throw new GraphQLError("You are not the owner of wallet")
+                }
+                return wallet;
             } catch (e) {
                 logger.error(e);
                 throw new GraphQLError(e);
@@ -131,8 +142,7 @@ export default {
         },
         async transactions(data: IWallet) {
             logger.info("transactions wallet" + data);
-            return (await TransactionDB.getFields({walletId:data.id}, {_id: 1}))
-                .map((_id: any) => ({id:_id}));
+            return await TransactionDB.find({walletId:data.id});
         },
         async created(data:IWallet){
             return (await WalletDB.getFieldsById(data.id, {createdAt: 1})).createdAt;

@@ -21,7 +21,7 @@ const saveWallets = (state: IWalletsState, action: WalletsArgs.ILoadWalletsSucce
     };
 };
 const deleteWallets = (state: IWalletsState, action: WalletsArgs.IDeleteWalletAction): IWalletsState => {
-    const selectedWallet=state.selectedWallet?state.selectedWallet.id === action.id ? null : state.selectedWallet:null;
+    const selectedWallet = state.selectedWallet ? state.selectedWallet.id === action.id ? null : state.selectedWallet : null;
     return {
         ...state,
         wallets: state.wallets.filter(x => x.id !== action.id),
@@ -42,6 +42,17 @@ const selectWallet = (state: IWalletsState, action: WalletsArgs.ISelectWalletAct
         selectedWallet: action.wallet,
     };
 };
+
+const removeTransactionFromSelectedWallet = (state: IWalletsState, action: WalletsArgs.IRemoveTransactionFromSelectedWallet): IWalletsState => {
+    const selectedWallet = {...state.selectedWallet} as any;
+    if (selectedWallet) {
+        selectedWallet.transactions = selectedWallet.transactions.filter((x: any) => x.id !== action.id);
+    }
+    return {
+        ...state,
+        selectedWallet,
+    };
+};
 const reducer = (state = initialState, action: IActionArgs): IWalletsState => {
     switch (action.type) {
         case ActionTypes.WALLET_CREATE_SUCCESS:
@@ -50,10 +61,14 @@ const reducer = (state = initialState, action: IActionArgs): IWalletsState => {
             return saveWallets(state, action as WalletsArgs.ILoadWalletsSuccessAction);
         case ActionTypes.WALLET_DELETE_SUCCESS:
             return deleteWallets(state, action as WalletsArgs.IDeleteWalletAction);
-        case ActionTypes.DISABLE_SELECTED_WALLET:
+        case ActionTypes.AUTH_LOGOUT:
             return disableSelected(state);
         case ActionTypes.SELECT_WALLET:
             return selectWallet(state, action as WalletsArgs.ISelectWalletAction);
+        case ActionTypes.AUTH_LOGOUT:
+            return initialState;
+        case ActionTypes.REMOVE_TRANSACTION_FROM_CURRENT_WALLET:
+            return removeTransactionFromSelectedWallet(state, action as WalletsArgs.IRemoveTransactionFromSelectedWallet);
         default:
             return state;
     }

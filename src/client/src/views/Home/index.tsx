@@ -28,8 +28,11 @@ class Home extends React.Component<IProps, {}> {
                 <ErrorMessanger trigger={/.+/} stackLength={3}/>
                 <Switch>
                     <Route path="/wallets/new" exactly={true} component={WalletCreatePage}/>
+                    <Route path="/wallet/new" exactly={true} component={WalletCreatePage}/>
                     <Route path="/transaction/new" exactly={true} component={TransactionCreatePage}/>
+                    <Route path="/transactions/new" exactly={true} component={TransactionCreatePage}/>
                     <Route path="/wallets/:id" component={WalletFullView}/>
+                    <Route path="/wallet/:id" component={WalletFullView}/>
                     <Route component={WalletsView}/>
                 </Switch>
             </MainLayout>

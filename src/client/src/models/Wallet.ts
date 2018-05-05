@@ -1,3 +1,5 @@
+import {ITransaction} from "@/models/Transaction";
+
 export interface IWallet {
     name: string;
     currency: string;
@@ -11,4 +13,5 @@ export interface IWallet {
     };
     id: string;
     total: string;
+    transactions:ITransaction[];
 }

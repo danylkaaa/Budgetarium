@@ -1,7 +1,7 @@
 export interface ITransaction {
     name:string;
     id:string;
-    value:string;
+    value:number;
     currency:string;
     category:string;
     wallet:{
