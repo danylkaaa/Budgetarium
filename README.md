@@ -34,8 +34,6 @@ service lifecycle. To run server in production mode, just use next command
     npm start
     ```
 ## Running the tests
-**Note**, all tests require created .env file
-
 #### Unit test
 Run unit tests with command
 ```bash
@@ -45,12 +43,7 @@ npm run test
 Lint code of server using rules, defined in [.eslintrc.js](.eslintrc.js) file
 ```bash
 npm run lint
-```    
-#### Code coverage
-If you want to look code coverage data, just use next command
-```bash
-npm run test:coverage
-```  
+```
 
 ## Deployment
 
@@ -63,6 +56,8 @@ npm run test:coverage
 * [MongoDB](https://www.mongodb.com/)
 * [Chai](http://chaijs.com)
 * [Mocha](https://mochajs.org)
+* [Typescript](https://www.typescriptlang.org/)
+* [Apollo GraphQL](https://www.apollographql.com)
 
 
 ## Versioning

@@ -43,6 +43,11 @@ class CurrencyConverter implements ICurrencyConverter {
     public convert(from: string, to: string, value: number): number {
         return this._converter.convert(value, {from, to}).toFixed(2);
     }
+    public clone(){
+        let newObj = new CurrencyConverter(config.get("CURRENCY_CONVERTATION_BASE"));
+        newObj.setRates(this._rates);
+        return newObj;
+    }
 }
 
 
@@ -63,12 +68,10 @@ class CurrencyConverterFactory {
 
     public async getConverter(): Promise<CurrencyConverter> {
         try {
-            let newObj = new CurrencyConverter(config.get("CURRENCY_CONVERTATION_BASE"));
             if (this._proto.isOutDated()) {
                 this._proto.setRates(await CurrencyDB.find({}));
             }
-            newObj.setRates(this._proto.getRates());
-            return newObj;
+            return this._proto.clone();
         } catch (err) {
             throw err;
         }

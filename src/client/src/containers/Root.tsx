@@ -6,7 +6,6 @@ import Login from "@/views/Login";
 import Home from "@/views/Home";
 import Register from "@/views/Register";
 import {withAuthGuard} from "@hoc/AuthGuard";
-import "./index.scss";
 
 const history = createHistory();
 

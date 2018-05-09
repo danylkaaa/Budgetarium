@@ -52,10 +52,7 @@ export default {
                     currency: currency || config.get("CURRENCY_CONVERTATION_BASE"),
                     name: name.trim()
                 });
-                logger.info(wallet);
-                return {
-                    ...wallet
-                }
+                return wallet;
             } catch (e) {
                 logger.error(e);
                 throw new GraphQLError(e);
@@ -101,7 +98,7 @@ export default {
                     throw new GraphQLError("No such wallet");
                 }
                 if(wallet.owner!==context.user.id){
-                    throw new GraphQLError("You are not the owner of wallet")
+                    throw new GraphQLError("You are not the owner of wallet");
                 }
                 return wallet;
             } catch (e) {
@@ -115,7 +112,7 @@ export default {
             const ownerId=(await WalletDB.getFieldsById(data.id,{owner:1})).owner;
             return {
                 id:ownerId
-            }
+            };
         },
         async spending(data: IWallet) {
             return (await WalletDB.getFieldsById(data.id, {spending: 1})).spending;

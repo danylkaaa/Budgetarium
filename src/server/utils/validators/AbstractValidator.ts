@@ -6,13 +6,8 @@ import * as _ from "lodash";
 import {Logger} from "@utils";
 
 const logger=Logger(module);
-export interface IValidator {
-    setHandler(path: string, handler: IValidator): void;
-    validate(path: string | [string], value: any): Promise<ValidationErrorDescription>;
-    validateByPath(path: string[], value: any): Promise<ValidationErrorDescription>;
-}
 
-export default abstract class AbstractValidator implements IValidator {
+export default abstract class AbstractValidator {
     protected _handlers: { [key: string]: AbstractValidator }={};
 
     public setHandler(path: string, handler: AbstractValidator): void {

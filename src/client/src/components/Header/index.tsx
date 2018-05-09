@@ -3,7 +3,6 @@ import * as PropTypes from "prop-types";
 import * as classNames from "classnames";
 import {AppBar, IconButton, Theme, Toolbar, Typography} from "material-ui";
 import MenuIcon from "@material-ui/icons/Menu";
-import "./index.scss";
 import {DRAWER_WIDTH} from "@/constants";
 import {withStyles} from "material-ui/styles";
 import {IThemableProp, themablePropTypes} from "@/models/PropInterfaces";

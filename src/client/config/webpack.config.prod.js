@@ -43,10 +43,10 @@ const cssFilename = 'static/css/[name].[contenthash:8].css';
 // (See https://github.com/webpack-contrib/extract-text-webpack-plugin/issues/27)
 // However, our output is structured with css, js and media folders.
 // To have this structure working with relative paths, we have to use custom options.
-const extractTextPluginOptions = shouldUseRelativeAssetPaths
-  ? // Making sure that the publicPath goes back to to build folder.
-    { publicPath: Array(cssFilename.split('/').length).join('../') }
-  : {};
+const extractTextPluginOptions = shouldUseRelativeAssetPaths ? // Making sure that the publicPath goes back to to build folder.
+  {
+    publicPath: Array(cssFilename.split('/').length).join('../')
+  } : {};
 
 // This is the production configuration.
 // It compiles slowly and is focused on producing a fast and minimal bundle.
@@ -72,8 +72,8 @@ module.exports = {
     // Point sourcemap entries to original disk location (format as URL on Windows)
     devtoolModuleFilenameTemplate: info =>
       path
-        .relative(paths.appSrc, info.absoluteResourcePath)
-        .replace(/\\/g, '/'),
+      .relative(paths.appSrc, info.absoluteResourcePath)
+      .replace(/\\/g, '/'),
   },
   resolve: {
     // This allows you to set a fallback for where Webpack should look for modules.
@@ -103,7 +103,13 @@ module.exports = {
       '.jsx',
     ],
     alias: {
-      
+      '@comp': path.resolve(__dirname, '../src/components/'),
+      '@cont': path.resolve(__dirname, '../src/containers/'),
+      '@store': path.resolve(__dirname, '../src/store/'),
+      '@err': path.resolve(__dirname, '../src/components/errors/'),
+      "@hoc": path.resolve(__dirname, '../src/hoc/'),
+      "@route": path.resolve(__dirname, "../src/route/index"),
+      "@": path.resolve(__dirname, "../src/"),
       // Support React Native Web
       // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
       'react-native': 'react-native-web',
@@ -115,12 +121,37 @@ module.exports = {
       // please link the files into your node_modules/ and let module-resolution kick in.
       // Make sure your source files are compiled, as they will not be processed in any way.
       new ModuleScopePlugin(paths.appSrc, [paths.appPackageJson]),
-      new TsconfigPathsPlugin({ configFile: paths.appTsConfig }),
+      new TsconfigPathsPlugin({
+        configFile: paths.appTsConfig
+      }),
     ],
   },
   module: {
     strictExportPresence: true,
-    rules: [
+
+    rules: [{
+        test: /\.scss$/,
+        use: [{
+            loader: require.resolve('style-loader')
+          },
+          {
+            loader: require.resolve('css-loader'),
+            options: {
+              modules: true,
+              sourceMap: true,
+              localIdentName: "[local]___[hash:base64:5]",
+            }
+          },
+          {
+            loader: 'sass-loader',
+            options: {
+              outputStyle: "expanded",
+              sourceMap: true,
+            },
+          }
+        ]
+      },
+
       // TODO: Disable require.ensure as it's not a standard language feature.
       // We are waiting for https://github.com/facebookincubator/create-react-app/issues/2176.
       // { parser: { requireEnsure: false } },
@@ -138,7 +169,7 @@ module.exports = {
           // "url" loader works just like "file" loader but it also embeds
           // assets smaller than specified size as data URLs to avoid requests.
           {
-            test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
+            test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/, /\.jpg$/],
             loader: require.resolve('url-loader'),
             options: {
               limit: 10000,
@@ -150,7 +181,7 @@ module.exports = {
             include: paths.appSrc,
             loader: require.resolve('babel-loader'),
             options: {
-              
+
               compact: true,
             },
           },
@@ -158,15 +189,13 @@ module.exports = {
           {
             test: /\.(ts|tsx)$/,
             include: paths.appSrc,
-            use: [
-              {
-                loader: require.resolve('ts-loader'),
-                options: {
-                  // disable type checker - we will use it in fork plugin
-                  transpileOnly: true,
-                },
+            use: [{
+              loader: require.resolve('ts-loader'),
+              options: {
+                // disable type checker - we will use it in fork plugin
+                transpileOnly: true,
               },
-            ],
+            }, ],
           },
           // The notation here is somewhat confusing.
           // "postcss" loader applies autoprefixer to our CSS.
@@ -183,16 +212,14 @@ module.exports = {
           {
             test: /\.css$/,
             loader: ExtractTextPlugin.extract(
-              Object.assign(
-                {
+              Object.assign({
                   fallback: {
                     loader: require.resolve('style-loader'),
                     options: {
                       hmr: false,
                     },
                   },
-                  use: [
-                    {
+                  use: [{
                       loader: require.resolve('css-loader'),
                       options: {
                         importLoaders: 1,
@@ -237,7 +264,7 @@ module.exports = {
             // it's runtime that would otherwise processed through "file" loader.
             // Also exclude `html` and `json` extensions so they get processed
             // by webpacks internal loaders.
-            exclude: [/\.(js|jsx|mjs)$/, /\.html$/, /\.json$/],
+            exclude: [/\.js$/, /\.html$/, /\.json$/, /\.scss$/,],
             options: {
               name: 'static/media/[name].[hash:8].[ext]',
             },
@@ -313,7 +340,7 @@ module.exports = {
       // Enable file caching
       cache: true,
       sourceMap: shouldUseSourceMap,
-    }),    // Note: this won't work without ExtractTextPlugin.extract(..) in `loaders`.
+    }), // Note: this won't work without ExtractTextPlugin.extract(..) in `loaders`.
     new ExtractTextPlugin({
       filename: cssFilename,
     }),

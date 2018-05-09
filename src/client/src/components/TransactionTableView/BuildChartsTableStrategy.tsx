@@ -2,11 +2,11 @@ import * as React from "react";
 import {ITransaction} from "@/models/Transaction";
 import {IWallet} from "@/models/Wallet";
 import AbstaractTableBuilderStrategy from "@comp/TransactionTableView/AbstaractTableBuilderStrategy";
-
+import * as _ from "lodash";
 import {Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis} from "recharts";
 
 export default class BuildChartsTableStrategy extends AbstaractTableBuilderStrategy {
-    public buildPlot = (data: any) => {
+    public buildPlot = (data: any, fill:string) => {
         return (
             <ResponsiveContainer width="100%" height={300}>
                 <AreaChart data={data}
@@ -15,17 +15,26 @@ export default class BuildChartsTableStrategy extends AbstaractTableBuilderStrat
                     <YAxis/>
                     <CartesianGrid strokeDasharray="3 3"/>
                     <Tooltip/>
-                    <Area type="monotone" dataKey="value" stroke="#8884d8" fill="#8884d8"/>
+                    <Area type="monotone" dataKey="value" stroke={fill} fill={fill}/>
                 </AreaChart>
             </ResponsiveContainer>
         );
     }
 
     public buildHead(transactions: ITransaction[], wallet: IWallet, onDelete?: (transaction: ITransaction) => any): JSX.Element {
+        const totals=[{value:0, created:wallet.created}];
+        _.sortBy(transactions,x=>x.created).forEach(x=>{
+            totals.push(
+                {
+                    value:totals[totals.length-1].value+x.value,
+                    created:x.created,
+                }
+            );
+        });
         return (
             <div>
                 <p className={"title is-3"}> All transactions</p>
-                {this.buildPlot(transactions)}
+                {this.buildPlot(totals,"#009cff")}
             </div>
         );
     }
@@ -34,7 +43,7 @@ export default class BuildChartsTableStrategy extends AbstaractTableBuilderStrat
         return (
             <div>
                 <p className={"title is-3"}> All spellings</p>
-                {this.buildPlot(transactions.filter(x => x.value <= 0))}
+                {this.buildPlot(transactions.filter(x => x.value <= 0).map(x=>({...x,value:-x.value})),"#d82200")}
             </div>
         );
     }
@@ -43,7 +52,7 @@ export default class BuildChartsTableStrategy extends AbstaractTableBuilderStrat
         return (
             <div>
                 <p className={"title is-3"}> All gains</p>
-                {this.buildPlot(transactions.filter(x => x.value > 0))}
+                {this.buildPlot(transactions.filter(x => x.value > 0),"#00BD08")}
             </div>
         );
     }

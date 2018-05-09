@@ -1,11 +1,11 @@
 require("module-alias/register");
 import config from "@config";
-
-const path = require("path");
-import { Currencies, CurrencyConverterFactory, Logger } from "@utils";
-import { Application } from "express";
+import {Currencies, Logger} from "@utils";
+import {Application} from "express";
 import routes from "@routes";
 import auth from "./services/auth";
+
+const path = require("path");
 
 const logs = Logger(module);
 const bodyParser = require("body-parser");
@@ -18,6 +18,7 @@ const bluebird = require("bluebird");
 const morgan = require("morgan");
 const compression = require("compression");
 const favicon = require("express-favicon");
+
 class App {
 
     public static getInstance(): App {
@@ -99,13 +100,16 @@ class App {
             this.app.use(errorhandler());
         }
         this.app.use(cors());
-        // this.app.use(/\/((?!graphql).)*/, bodyParser.urlencoded({ extended: true }));
-        // this.app.use(/\/((?!graphql).)*/, bodyParser.json());
-        this.app.use(bodyParser.urlencoded({ extended: true }));
+        this.app.use(bodyParser.urlencoded({extended: true}));
         this.app.use(bodyParser.json());
         this.app.use(expressValidator());
         this.app.use(compression());
-        this.app.use(express.static(path.join(__dirname, "public"), { maxAge: "10h" }));
+        if(config.get("isDev")) {
+            logs.info("aaaaaaaa");
+            this.app.use(express.static(path.join(__dirname, "public")));
+        }else{
+            this.app.use(express.static(path.join(__dirname, "public"), {maxAge: "10h"}));
+        }
         this.app.use(auth());
         this.app.use(favicon(path.join(__dirname, "/public/favicon.ico")));
         logs.info("App configured");

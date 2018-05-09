@@ -1,10 +1,9 @@
-import { Router, Request, Response, NextFunction } from "express";
 import * as express from "express";
+import {NextFunction, Request, Response, Router} from "express";
 import * as path from "path";
 import {GraphQLRouter} from "@GraphQL/index";
-import { Logger, errorMiddleware } from "@utils";
+import {Logger} from "@utils";
 import config from "@config";
-import { IUser } from "@DB/models/User";
 
 const logs = Logger(module);
 const router: Router = express.Router();
@@ -27,13 +26,13 @@ function onError(err: any, req: Request, res: Response): void {
 }
 
 function onSPA(req: Request, res: Response): void {
+    logs.info(path.join(__dirname,"../public/index.html"));
     res.sendFile(path.join(__dirname, "../public/index.html"));
 }
-
-
 router.use("/api/graphql", GraphQLRouter);
-router.use("*", onSPA);
-router.use(error404);
-router.use(onError);
+router.use("/",onSPA);
+
+// router.use(error404);
+// router.use(onError);
 
 export default router;

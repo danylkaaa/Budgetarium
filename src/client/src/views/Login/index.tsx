@@ -158,18 +158,6 @@ class Login extends React.Component<IRegisterProps, {}> {
                                 </Link>
                             </Typography>
                         </div>
-                        <div className={classes.buttonsDiv}>
-                            <Button
-                                color="primary"
-                                variant="raised"
-                                className={classNames(classes.btn, classes.btnFacebook)}>
-                                Sign up with Facebook
-                                <FontAwesome
-                                    name="facebook"
-                                    size="lg"
-                                    className={classes.rightIcon}/>
-                            </Button>
-                        </div>
                     </div>
                 </div>
             </MuiThemeProvider>

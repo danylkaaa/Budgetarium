@@ -7,7 +7,6 @@ import {ISidebarLink} from "@comp/Sidebar/SidebarItem";
 import Header from "@comp/Header";
 import Sidebar from "@comp/Sidebar";
 import {IThemableProp} from "@/models/PropInterfaces";
-import "./index.scss";
 import {IHeaderButtonProps} from "@comp/Header/HeaderButton";
 import * as Icons from "@material-ui/icons";
 import {isWidthUp} from "material-ui/es/utils/withWidth";
