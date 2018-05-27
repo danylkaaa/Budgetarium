@@ -19,12 +19,14 @@ data about money, displaying statistical data on expenses and a convenient inter
  wallet.
  
 ### Features
-1. User can register by email and password
-2. User can create wallet with specific name and currency
-3. User can add transaction to wallet with different currency, then it was specified in wallet
-4. User can delete wallet and transactions
-5. User can view chart with all transactions
-6. Server requests National Bank of Ukraine every day and gets actual currencies rate 
+1. The user can register by email and password.
+1. The client is authorized by the server using a key JWT-strategy (access/refresh token). 
+2. The user can create wallet with specific name and currency.
+3. The user can add transaction to wallet with different currency, then it was specified in wallet.
+4. The user can delete wallet and transactions.
+5. The user can view chart with all transactions.
+6. The server makes requests National Bank of Ukraine and gets actual currencies rate every day. 
+7. The server and the client communicate using only GraphQL.
 
 ### Prerequisites
 
@@ -89,7 +91,7 @@ npm run lint
 | [Typescript](https://www.typescriptlang.org/)|[Typescript](https://www.typescriptlang.org/)|
 | [Apollo GraphQL Server](https://www.apollographql.com/server/)|[Apollo GraphQL Client](https://www.apollographql.com/client/) |
 | [Heroku](https://heroku.com/) |[Material UI](https://material-ui.com/)|
-| |[Bulma.io](https://bulma.io/)|
+| [Passport.js](http://www.passportjs.org/)|[Bulma.io](https://bulma.io/)|
 ## Versioning
 
 We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/ZulusK/Budgetarium/tags). 
