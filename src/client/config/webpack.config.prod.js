@@ -90,18 +90,7 @@ module.exports = {
     // https://github.com/facebookincubator/create-react-app/issues/290
     // `web` extension prefixes have been added for better support
     // for React Native Web.
-    extensions: [
-      '.mjs',
-      '.web.ts',
-      '.ts',
-      '.web.tsx',
-      '.tsx',
-      '.web.js',
-      '.js',
-      '.json',
-      '.web.jsx',
-      '.jsx',
-    ],
+    extensions: ['.re', '.ml', '.web.js', '.js', '.json', '.web.jsx', '.jsx', '.mjs','.web.ts','.ts','.tsx'],
     alias: {
       '@comp': path.resolve(__dirname, '../src/components/'),
       '@cont': path.resolve(__dirname, '../src/containers/'),
@@ -129,26 +118,13 @@ module.exports = {
   module: {
     strictExportPresence: true,
 
-    rules: [{
+    rules: [
+      {
         test: /\.scss$/,
-        use: [{
-            loader: require.resolve('style-loader')
-          },
-          {
-            loader: require.resolve('css-loader'),
-            options: {
-              modules: true,
-              sourceMap: true,
-              localIdentName: "[local]___[hash:base64:5]",
-            }
-          },
-          {
-            loader: 'sass-loader',
-            options: {
-              outputStyle: "expanded",
-              sourceMap: true,
-            },
-          }
+        loader: [
+          require.resolve('style-loader'),
+          require.resolve('css-loader'),
+          require.resolve('sass-loader'),
         ]
       },
 

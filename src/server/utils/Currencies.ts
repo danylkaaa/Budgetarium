@@ -24,7 +24,9 @@ export function updateCurrencyRate() {
     request(currencyRateReqOptions)
         .then((body: ICurrencyProps[]) => {
             logger.info(`Currencies has been received, total: ${body.length}`);
-            body.forEach(x => x.rate = 1 / x.rate);
+            body.forEach(x => {
+                x.rate = 1 / x.rate;
+            });
             return CurrencyDB.updateAll(body);
         }).then(c => {
         logger.debug(`Save ${c.length} currencies in DB`);

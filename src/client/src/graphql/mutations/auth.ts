@@ -30,7 +30,7 @@ export interface ILoginMutationVars {
     password: string;
 }
 
-export const REGISTER_MUTATION = gql`
+export const REGISTER_MUTATION = gql(`
     mutation Signup($email:String!, $password:String!,$name:String!){
         signup(email:$email,password:$password,name:$name){
             me{
@@ -48,10 +48,10 @@ export const REGISTER_MUTATION = gql`
             }
         }
     }
-`;
+`);
 
 
-export const LOGIN_MUTATION = gql`
+export const LOGIN_MUTATION = gql(`
     mutation Login($email:String!,$password:String!){
         login(email:$email,password:$password){
             me{
@@ -69,19 +69,19 @@ export const LOGIN_MUTATION = gql`
             }
         }
     }
-`;
+`);
 
-export const LOGOUT_MUTATION = gql`
+export const LOGOUT_MUTATION = gql(`
     mutation Logout{
         logout
     }
-`;
+`);
 
-export const REFRESH_ACCESS_TOKEN_MUTATION=gql`
+export const REFRESH_ACCESS_TOKEN_MUTATION=gql(`
     mutation Access{
         access{
             token
             expiredIn
         }
     }
-`;
+`);

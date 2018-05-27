@@ -31,7 +31,7 @@ export interface IWalletDeleteMutationVars {
     id: string;
 }
 
-export const WALLET_CREATE_MUTATION = gql`
+export const WALLET_CREATE_MUTATION = gql(`
     mutation CreateWallet($name:String!, $currency:String){
         createWallet(name:$name, currency:$currency){
             id
@@ -45,16 +45,16 @@ export const WALLET_CREATE_MUTATION = gql`
             }
         }
     }
-`;
+`);
 
 
-export const WALLET_DELETE_MUTATION = gql`
+export const WALLET_DELETE_MUTATION = gql(`
     mutation deleteWallet($id:ID!){
         deleteWallet(id:$id)
     }
-`;
+`);
 
-export const WALLET_GET_QUERY = gql`
+export const WALLET_GET_QUERY = gql(`
     query  GetWallet($id:ID!){
         wallet(id:$id){
             id
@@ -77,9 +77,9 @@ export const WALLET_GET_QUERY = gql`
             }
         }
     }
-`;
+`);
 
-export const WALLETS_GET_QUERY = gql`
+export const WALLETS_GET_QUERY = gql(`
     query GetWallets($name:String){
         wallets(name:$name){
             id
@@ -95,4 +95,4 @@ export const WALLETS_GET_QUERY = gql`
             }
         }
     }
-`;
+`);

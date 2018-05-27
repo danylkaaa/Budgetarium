@@ -30,17 +30,17 @@ class CurrencyDB extends AbstractDB<ICurrency> {
         return Promise.all(filteredValues.map(c => this.updateRateOrCreate(c)));
     }
 
-    public async updateRateOrCreate({txt, rate, cc, exchangedate}: ICurrencyProps): Promise<ICurrency> {
+    public async updateRateOrCreate({txt, rate, cc}: ICurrencyProps): Promise<ICurrency> {
         try {
             let currency = await this.findOne({cc});
             if (currency) {
                 if (currency.rate !== rate) {
                     currency.rate = rate;
                 }
-                currency.exchangedate = exchangedate;
+                currency.exchangedate = new Date();
                 return currency.save();
             } else {
-                return this.create({txt, rate, cc, exchangedate});
+                return this.create({txt, rate, cc, exchangedate:new Date()});
             }
         } catch (e) {
             logger.error(e);

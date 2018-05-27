@@ -80,7 +80,7 @@ class App {
 
     private configure(): void {
         this.app.set("port", this.normalizePort(process.env.PORT || "3000"));
-        // Currencies.updateCurrencyRate();
+        Currencies.updateCurrencyRate();
         process.on("exit", (code) => {
             clearTimeout(this.timer);
             process.exit(code);
@@ -105,7 +105,6 @@ class App {
         this.app.use(expressValidator());
         this.app.use(compression());
         if(config.get("isDev")) {
-            logs.info("aaaaaaaa");
             this.app.use(express.static(path.join(__dirname, "public")));
         }else{
             this.app.use(express.static(path.join(__dirname, "public"), {maxAge: "10h"}));

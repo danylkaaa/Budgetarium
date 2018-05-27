@@ -32,7 +32,7 @@ class CurrencyConverter implements ICurrencyConverter {
         const ccs = currencies.map(x => x.cc);
         const values = currencies.map(x => x.rate);
         this._converter.rates = _.zipObject(ccs, values);
-        this._updatedAt = new Date(currencies[0].exchangedate.getTime());
+        this._updatedAt = currencies.length? new Date(currencies[0].exchangedate.getTime()): new Date();
     }
 
     public isOutDated(): boolean {

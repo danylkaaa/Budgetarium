@@ -33,7 +33,7 @@ export interface ITransactionDeleteMutationVars {
     id: string;
 }
 
-export const TRANSACTION_CREATE_MUTATION = gql`
+export const TRANSACTION_CREATE_MUTATION = gql(`
     mutation CreateTransaction($name:String!, $currency:String, $category:String, $value:Float!,$wallet:ID!){
         createTransaction(name:$name, currency:$currency, category:$category, value:$value,wallet:$wallet){
             id
@@ -46,22 +46,22 @@ export const TRANSACTION_CREATE_MUTATION = gql`
             }
         }
     }
-`;
+`);
 
 
-export const TRANSACTION_DELETE_MUTATION = gql`
+export const TRANSACTION_DELETE_MUTATION = gql(`
     mutation deleteTransaction($id:ID!){
         deleteTransaction(id:$id)
     }
-`;
+`);
 
-export const TRANSACTION_GET_QUERY = gql`
+export const TRANSACTION_GET_QUERY = gql(`
     query  GetTransaction($id:ID!){
         transaction(id:$id)
     }
-`;
+`);
 
-export const TRANSACTIONS_GET_QUERY = gql`
+export const TRANSACTIONS_GET_QUERY = gql(`
     query GetTransactions($walletId:String){
         transactions(walletId:$walletId){
             id
@@ -74,4 +74,4 @@ export const TRANSACTIONS_GET_QUERY = gql`
             }
         }
     }
-`;
+`);
