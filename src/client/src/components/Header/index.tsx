@@ -120,7 +120,6 @@ const mapStateToProps = (state: IState): IStateProps => {
 const mapDispatchToProps = (dispatch: Redux.Dispatch<any, IState>): IDispatchProps => {
         return {
             toggleSidebar: () => {
-                console.log("header clicked");
                 dispatch(toggleSidebar());
             }
         };

@@ -117,7 +117,6 @@ class Register extends React.Component<IRegisterProps, {}> {
     }
 
     private handleConfirm = (args: any) => {
-        console.log(args);
         this.props.onConfirm(args.email, args.password, args.name);
     }
 

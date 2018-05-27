@@ -34,7 +34,6 @@ const makeAuthRequerst = (apolloClient: any, options: any, dispatch: Redux.Dispa
                 dispatch(authSuccess(accessToken, refreshToken, me));
             }
         }).catch((err: any) => {
-        console.log(JSON.stringify(err, null));
         if (err.graphQLErrors) {
             err.graphQLErrors.forEach((e: any) => dispatch(authFailAction.execute(e.message)));
         } else {
@@ -99,14 +98,11 @@ export class RefreshAccessTokenCommand extends AuthCommand {
                     } else {
                         clientAccess.cache.reset();
                         const {token, expiredIn} = response.data.access;
-                        console.log(token, expiredIn);
-                        console.log(response.data);
                         dispatch(authUpdateAccessToken({token, expiredIn}));
                         dispatch(endLoading("auth"));
                     }
                 })
                 .catch(err => {
-                    console.log(JSON.stringify(err, null));
                     if (err.graphQLErrors) {
                         err.graphQLErrors.forEach((e: any) => this.authFailAction.execute(e.message));
                     } else {
@@ -122,7 +118,6 @@ export class AuthFailCommand extends IAction<IAuthState> {
     public execute(message: string) {
         return (dispatch: Redux.Dispatch<any, IState>, getState: () => IState) => {
             dispatch(endLoading("auth"));
-            console.log(message);
             if (message) {
                 dispatch(addError("auth", message));
             } else {

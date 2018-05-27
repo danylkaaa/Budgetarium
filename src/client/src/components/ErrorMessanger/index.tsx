@@ -31,10 +31,19 @@ class ErrorMessanger extends React.Component<IProps, {}> {
         };
     }
 
+    protected getErrorMessage=(error:any):string=>{
+        if(typeof error ==="string"){
+            return error;
+        }else if(error.message){
+            return this.getErrorMessage(error.message);
+        }else {
+            return JSON.stringify(error);
+        }
+    }
     public componentWillUpdate(nextProps: IProps) {
         const newErrors = _.difference(nextProps.errors,this.props.errors,);
         newErrors.forEach(error =>
-            Alert.error(JSON.stringify(error.message?(error.message as any).message:error.message)||JSON.stringify(error), {
+            Alert.error(this.getErrorMessage(error), {
                 position: "bottom-right",
                 onClose: this.handleClose(error),
                 effect: "slide",

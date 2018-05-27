@@ -5,9 +5,8 @@ import {InMemoryCache} from "apollo-cache-inmemory";
 import {store} from "@/store";
 
 const httpLink = createHttpLink({
-    uri: "http://127.0.0.1:3000/api/graphql",
+    uri: process.env.NODE_ENV==="development"?"http://127.0.0.1:3000/api/graphql":"https://budgetarium.herokuapp.com/api/graphql",
 });
-
 const authLinkAccess = setContext((_: any, {headers}: any) => {
     // get the authentication token from local storage if it exists
     if (store.getState().auth.accessToken) {

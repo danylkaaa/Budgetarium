@@ -30,7 +30,6 @@ export class CreateTransactionCommand extends TransactionCommand {
             dispatch(startLoading("transactions"));
             const mutation = TRANSACTION_CREATE_MUTATION;
             const variables = data;
-            console.log(variables);
             clientAccess.mutate({mutation, variables})
                 .then(response => {
                     dispatch(endLoading("transactions"));
@@ -45,7 +44,6 @@ export class CreateTransactionCommand extends TransactionCommand {
                     }
                 })
                 .catch((err: any) => {
-                        console.log(JSON.stringify(err, null));
                         if (err.graphQLErrors) {
                             err.graphQLErrors.forEach((e: any) => dispatch(this.fetchFailed.execute(e.message)));
                         } else {
@@ -65,7 +63,6 @@ export class DeleteTransactionCommand extends TransactionCommand {
             const variables = {id};
             clientAccess.mutate({mutation, variables})
                 .then(response => {
-                    console.log(response);
                     const answer = (response.data as any);
                     clientAccess.cache.reset();
                     if (!answer) {
@@ -94,10 +91,8 @@ export class LoadTransactionsCommand extends TransactionCommand {
             dispatch(startLoading("transactions"));
             const query = TRANSACTIONS_GET_QUERY;
             const variables = queryData;
-            console.log(queryData, "query");
             clientAccess.query({query, variables})
                 .then(response => {
-                    console.log(response);
                     const answer = response.data as any;
                     clientAccess.cache.reset();
                     if (!answer || !answer.transactions) {
@@ -126,7 +121,6 @@ class TransactionFetchFailedCommand extends IAction<IState> {
     public execute(message: string, scope = "transactions") {
         return (dispatch: Redux.Dispatch<any, IState>, getState: () => IState) => {
             dispatch(endLoading(scope));
-            console.log(message);
             if (message) {
                 dispatch(addError(scope, message));
             } else {

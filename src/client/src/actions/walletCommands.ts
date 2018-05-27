@@ -45,7 +45,6 @@ export class CreateWalletCommand extends WalletCommand {
                     }
                 })
                 .catch((err: any) => {
-                        console.log(JSON.stringify(err, null));
                         if (err.graphQLErrors) {
                             err.graphQLErrors.forEach((e: any) => dispatch(this.fetchFailed.execute(e.message)));
                         } else {
@@ -65,7 +64,6 @@ export class DeleteWalletCommand extends WalletCommand {
             const variables = {id};
             clientAccess.mutate({mutation, variables})
                 .then(response => {
-                    console.log(response);
                     const answer = (response.data as any);
                     clientAccess.cache.reset();
                     if (!answer) {
@@ -93,10 +91,8 @@ export class LoadWalletsCommand extends WalletCommand {
             dispatch(startLoading("wallets"));
             const query = WALLETS_GET_QUERY;
             const variables = queryData;
-            console.log(queryData, "query");
             clientAccess.query({query, variables})
                 .then(response => {
-                    console.log(response);
                     const answer = response.data as any;
                     clientAccess.cache.reset();
                     if (!answer || !answer.wallets) {
@@ -125,10 +121,8 @@ export class LoadWalletCommand extends WalletCommand {
             dispatch(startLoading("wallets"));
             const query = WALLET_GET_QUERY;
             const variables = queryData;
-            console.log(queryData, "query");
             clientAccess.query({query, variables})
                 .then(response => {
-                    console.log(response);
                     const answer = response.data as any;
                     clientAccess.cache.reset();
                     if (!answer || !answer.wallet) {
@@ -139,7 +133,6 @@ export class LoadWalletCommand extends WalletCommand {
                     }
                 })
                 .catch((err: any) => {
-                        console.log(JSON.stringify(err,null,2));
                         if (err.graphQLErrors && err.graphQLErrors.length) {
                             err.graphQLErrors.forEach((e: any) => dispatch(this.fetchFailed.execute(e.message)));
                         } else {
@@ -157,7 +150,6 @@ class WalletFetchFailedCommand extends IAction<IState> {
     public execute(message: string, scope = "wallets") {
         return (dispatch: Redux.Dispatch<any, IState>, getState: () => IState) => {
             dispatch(endLoading(scope));
-            console.log(message);
             if (message) {
                 dispatch(addError(scope, message));
             } else {
