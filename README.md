@@ -98,7 +98,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## Authors
 
-* **Kazimirov Danil** - *Full stack development* - [ZulusK]((https://github.com/ZulusK))
+* **Kazimirov Danil** - *Full stack development* - [ZulusK](https://github.com/ZulusK)
 
 ## License
 
